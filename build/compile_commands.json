@@ -1,0 +1,7 @@
+[
+{
+  "directory": "/home/idra/Dropbox/NEA/OSTRICH/build",
+  "command": "/bin/clang++-12    -g   -o main/CMakeFiles/OSTRICH.dir/main.cpp.o -c /home/idra/Dropbox/NEA/OSTRICH/src/main/main.cpp",
+  "file": "/home/idra/Dropbox/NEA/OSTRICH/src/main/main.cpp"
+}
+]
