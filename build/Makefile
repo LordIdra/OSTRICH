@@ -110,6 +110,19 @@ depend:
 	$(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
 .PHONY : depend
 
+#=============================================================================
+# Target rules for targets named OSTRICH
+
+# Build rule for target.
+OSTRICH: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 OSTRICH
+.PHONY : OSTRICH
+
+# fast build rule for target.
+OSTRICH/fast:
+	$(MAKE) -f main/CMakeFiles/OSTRICH.dir/build.make main/CMakeFiles/OSTRICH.dir/build
+.PHONY : OSTRICH/fast
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -118,6 +131,7 @@ help:
 	@echo "... depend"
 	@echo "... rebuild_cache"
 	@echo "... edit_cache"
+	@echo "... OSTRICH"
 .PHONY : help
 
 

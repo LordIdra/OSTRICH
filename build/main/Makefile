@@ -110,6 +110,129 @@ depend:
 	cd /home/idra/Dropbox/NEA/OSTRICH/build && $(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
 .PHONY : depend
 
+# Convenience name for target.
+main/CMakeFiles/OSTRICH.dir/rule:
+	cd /home/idra/Dropbox/NEA/OSTRICH/build && $(MAKE) -f CMakeFiles/Makefile2 main/CMakeFiles/OSTRICH.dir/rule
+.PHONY : main/CMakeFiles/OSTRICH.dir/rule
+
+# Convenience name for target.
+OSTRICH: main/CMakeFiles/OSTRICH.dir/rule
+
+.PHONY : OSTRICH
+
+# fast build rule for target.
+OSTRICH/fast:
+	cd /home/idra/Dropbox/NEA/OSTRICH/build && $(MAKE) -f main/CMakeFiles/OSTRICH.dir/build.make main/CMakeFiles/OSTRICH.dir/build
+.PHONY : OSTRICH/fast
+
+control/control.o: control/control.cpp.o
+
+.PHONY : control/control.o
+
+# target to build an object file
+control/control.cpp.o:
+	cd /home/idra/Dropbox/NEA/OSTRICH/build && $(MAKE) -f main/CMakeFiles/OSTRICH.dir/build.make main/CMakeFiles/OSTRICH.dir/control/control.cpp.o
+.PHONY : control/control.cpp.o
+
+control/control.i: control/control.cpp.i
+
+.PHONY : control/control.i
+
+# target to preprocess a source file
+control/control.cpp.i:
+	cd /home/idra/Dropbox/NEA/OSTRICH/build && $(MAKE) -f main/CMakeFiles/OSTRICH.dir/build.make main/CMakeFiles/OSTRICH.dir/control/control.cpp.i
+.PHONY : control/control.cpp.i
+
+control/control.s: control/control.cpp.s
+
+.PHONY : control/control.s
+
+# target to generate assembly for a file
+control/control.cpp.s:
+	cd /home/idra/Dropbox/NEA/OSTRICH/build && $(MAKE) -f main/CMakeFiles/OSTRICH.dir/build.make main/CMakeFiles/OSTRICH.dir/control/control.cpp.s
+.PHONY : control/control.cpp.s
+
+main.o: main.cpp.o
+
+.PHONY : main.o
+
+# target to build an object file
+main.cpp.o:
+	cd /home/idra/Dropbox/NEA/OSTRICH/build && $(MAKE) -f main/CMakeFiles/OSTRICH.dir/build.make main/CMakeFiles/OSTRICH.dir/main.cpp.o
+.PHONY : main.cpp.o
+
+main.i: main.cpp.i
+
+.PHONY : main.i
+
+# target to preprocess a source file
+main.cpp.i:
+	cd /home/idra/Dropbox/NEA/OSTRICH/build && $(MAKE) -f main/CMakeFiles/OSTRICH.dir/build.make main/CMakeFiles/OSTRICH.dir/main.cpp.i
+.PHONY : main.cpp.i
+
+main.s: main.cpp.s
+
+.PHONY : main.s
+
+# target to generate assembly for a file
+main.cpp.s:
+	cd /home/idra/Dropbox/NEA/OSTRICH/build && $(MAKE) -f main/CMakeFiles/OSTRICH.dir/build.make main/CMakeFiles/OSTRICH.dir/main.cpp.s
+.PHONY : main.cpp.s
+
+util/logging.o: util/logging.cpp.o
+
+.PHONY : util/logging.o
+
+# target to build an object file
+util/logging.cpp.o:
+	cd /home/idra/Dropbox/NEA/OSTRICH/build && $(MAKE) -f main/CMakeFiles/OSTRICH.dir/build.make main/CMakeFiles/OSTRICH.dir/util/logging.cpp.o
+.PHONY : util/logging.cpp.o
+
+util/logging.i: util/logging.cpp.i
+
+.PHONY : util/logging.i
+
+# target to preprocess a source file
+util/logging.cpp.i:
+	cd /home/idra/Dropbox/NEA/OSTRICH/build && $(MAKE) -f main/CMakeFiles/OSTRICH.dir/build.make main/CMakeFiles/OSTRICH.dir/util/logging.cpp.i
+.PHONY : util/logging.cpp.i
+
+util/logging.s: util/logging.cpp.s
+
+.PHONY : util/logging.s
+
+# target to generate assembly for a file
+util/logging.cpp.s:
+	cd /home/idra/Dropbox/NEA/OSTRICH/build && $(MAKE) -f main/CMakeFiles/OSTRICH.dir/build.make main/CMakeFiles/OSTRICH.dir/util/logging.cpp.s
+.PHONY : util/logging.cpp.s
+
+window/window.o: window/window.cpp.o
+
+.PHONY : window/window.o
+
+# target to build an object file
+window/window.cpp.o:
+	cd /home/idra/Dropbox/NEA/OSTRICH/build && $(MAKE) -f main/CMakeFiles/OSTRICH.dir/build.make main/CMakeFiles/OSTRICH.dir/window/window.cpp.o
+.PHONY : window/window.cpp.o
+
+window/window.i: window/window.cpp.i
+
+.PHONY : window/window.i
+
+# target to preprocess a source file
+window/window.cpp.i:
+	cd /home/idra/Dropbox/NEA/OSTRICH/build && $(MAKE) -f main/CMakeFiles/OSTRICH.dir/build.make main/CMakeFiles/OSTRICH.dir/window/window.cpp.i
+.PHONY : window/window.cpp.i
+
+window/window.s: window/window.cpp.s
+
+.PHONY : window/window.s
+
+# target to generate assembly for a file
+window/window.cpp.s:
+	cd /home/idra/Dropbox/NEA/OSTRICH/build && $(MAKE) -f main/CMakeFiles/OSTRICH.dir/build.make main/CMakeFiles/OSTRICH.dir/window/window.cpp.s
+.PHONY : window/window.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -118,6 +241,19 @@ help:
 	@echo "... depend"
 	@echo "... rebuild_cache"
 	@echo "... edit_cache"
+	@echo "... OSTRICH"
+	@echo "... control/control.o"
+	@echo "... control/control.i"
+	@echo "... control/control.s"
+	@echo "... main.o"
+	@echo "... main.i"
+	@echo "... main.s"
+	@echo "... util/logging.o"
+	@echo "... util/logging.i"
+	@echo "... util/logging.s"
+	@echo "... window/window.o"
+	@echo "... window/window.i"
+	@echo "... window/window.s"
 .PHONY : help
 
 

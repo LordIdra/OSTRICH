@@ -25,7 +25,11 @@
 					},
 					"parentIndex" : 0,
 					"projectIndex" : 0,
-					"source" : "main"
+					"source" : "main",
+					"targetIndexes" : 
+					[
+						0
+					]
 				}
 			],
 			"name" : "Debug",
@@ -37,10 +41,23 @@
 						0,
 						1
 					],
-					"name" : "OSTRICH"
+					"name" : "OSTRICH",
+					"targetIndexes" : 
+					[
+						0
+					]
 				}
 			],
-			"targets" : []
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 1,
+					"id" : "OSTRICH::@15c4a824ab2728a3f5e7",
+					"jsonFile" : "target-OSTRICH-Debug-d9533fed68815006e880.json",
+					"name" : "OSTRICH",
+					"projectIndex" : 0
+				}
+			]
 		}
 	],
 	"kind" : "codemodel",

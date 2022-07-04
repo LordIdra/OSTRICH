@@ -12,10 +12,23 @@ set(CMAKE_MAKEFILE_DEPENDS
   "CMakeFiles/3.16.3/CMakeSystem.cmake"
   "/home/idra/Dropbox/NEA/OSTRICH/src/CMakeLists.txt"
   "/home/idra/Dropbox/NEA/OSTRICH/src/main/CMakeLists.txt"
+  "/home/idra/vcpkg/installed/x64-linux/share/glad/gladConfig.cmake"
+  "/home/idra/vcpkg/installed/x64-linux/share/glad/gladConfigVersion.cmake"
+  "/home/idra/vcpkg/installed/x64-linux/share/glad/gladTargets-debug.cmake"
+  "/home/idra/vcpkg/installed/x64-linux/share/glad/gladTargets-release.cmake"
+  "/home/idra/vcpkg/installed/x64-linux/share/glad/gladTargets.cmake"
+  "/home/idra/vcpkg/installed/x64-linux/share/glfw3/glfw3Config.cmake"
+  "/home/idra/vcpkg/installed/x64-linux/share/glfw3/glfw3ConfigVersion.cmake"
+  "/home/idra/vcpkg/installed/x64-linux/share/glfw3/glfw3Targets-debug.cmake"
+  "/home/idra/vcpkg/installed/x64-linux/share/glfw3/glfw3Targets-release.cmake"
+  "/home/idra/vcpkg/installed/x64-linux/share/glfw3/glfw3Targets.cmake"
+  "/home/idra/vcpkg/installed/x64-linux/share/glm/glm-config.cmake"
+  "/home/idra/vcpkg/scripts/buildsystems/vcpkg.cmake"
   "/usr/share/cmake-3.16/Modules/CMakeCInformation.cmake"
   "/usr/share/cmake-3.16/Modules/CMakeCXXInformation.cmake"
   "/usr/share/cmake-3.16/Modules/CMakeCheckCompilerFlagCommonPatterns.cmake"
   "/usr/share/cmake-3.16/Modules/CMakeCommonLanguageInclude.cmake"
+  "/usr/share/cmake-3.16/Modules/CMakeDependentOption.cmake"
   "/usr/share/cmake-3.16/Modules/CMakeGenericSystem.cmake"
   "/usr/share/cmake-3.16/Modules/CMakeInitializeConfigs.cmake"
   "/usr/share/cmake-3.16/Modules/CMakeLanguageInformation.cmake"
@@ -50,4 +63,5 @@ set(CMAKE_MAKEFILE_PRODUCTS
 
 # Dependency information for all targets:
 set(CMAKE_DEPEND_INFO_FILES
+  "main/CMakeFiles/OSTRICH.dir/DependInfo.cmake"
   )

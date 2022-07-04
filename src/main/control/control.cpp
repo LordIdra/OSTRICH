@@ -1,5 +1,6 @@
 #include "control.h"
 #include "../util/logging.h"
+#include "../window/window.h"
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
@@ -37,9 +38,14 @@ namespace control {
     }
 
 
-    auto Init() -> void {
-        InitGlad();
+    auto Init(const string &windowTitle) -> void {
         InitGLFW();
+        window::Init(windowTitle);
+        InitGlad();
+    }
+
+    auto Update() -> void {
+        window::Update();
     }
 }
 
