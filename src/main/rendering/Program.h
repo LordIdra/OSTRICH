@@ -1,31 +1,45 @@
+#pragma once
+
 #include "../util/Types.h"
+#include "Material.h"
 
 #include "Shader.h"
 
 
-namespace rendering {
-    class Program {
-    private:
-       // OpenGL assigns an ID to this program
-       unsigned int id;
 
-    public:
-       // the constructor will link two shaders (the vertex shader and fragment shader) into a single program, which can run on the GPU
-       Program(Shader vertex, Shader fragment);
+class Program {
+private:
+    unsigned int id;
 
-       // mark the program to be used in subsequent render calls
-       auto Use() -> void;
+    auto CheckLinkSuccess() const -> void;
+    auto PrintLinkLog() const -> void;
 
-       // lots of overloads for setting uniform values in the shaders
-       // a template is not used here because each type requires a different OpenGL function call
-       auto Set(string key, bool  value) -> void;
-       auto Set(string key, int   value) -> void;
-       auto Set(string key, float value) -> void;
-       auto Set(string key, vec2  value) -> void;
-       auto Set(string key, vec3  value) -> void;
-       auto Set(string key, vec4  value) -> void;
-       auto Set(string key, mat2  value) -> void;
-       auto Set(string key, mat3  value) -> void;
-       auto Set(string key, mat4  value) -> void;
-    };
-}
+public:
+    Program();
+    
+    // the initializer does nothing but generate a program - linking will come later
+    auto Init() -> void;
+
+    // add a shader to the program
+    auto AddShader(const Shader &shader) const -> void;
+
+    // only call this after adding all the shaders 
+    auto Link() -> void;
+
+    // mark the program to be used in subsequent render calls
+    auto Use() const -> void;
+
+    // lots of overloads for setting uniform values in the shaders
+    // a template is not used here because each type requires a different OpenGL function call
+    auto Set(const string &key, const bool  value) const -> void;
+    auto Set(const string &key, const int   value) const -> void;
+    auto Set(const string &key, const float value) const -> void;
+    auto Set(const string &key, const vec2  value) const -> void;
+    auto Set(const string &key, const vec3  value) const -> void;
+    auto Set(const string &key, const vec4  value) const -> void;
+    auto Set(const string &key, const mat2  value) const -> void;
+    auto Set(const string &key, const mat3  value) const -> void;
+    auto Set(const string &key, const mat4  value) const -> void;
+
+    auto Set(const string &key, const Material &material) -> void;
+};  

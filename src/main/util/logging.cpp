@@ -5,15 +5,15 @@
 namespace logging {
 
     auto Info(const std::string &value) -> void {
-        std::cout << "\x1B[97m" << "[INFO] " << "\033[0m" << value << "\n";
+        std::cout << WHITE << "[INFO] " << NO_COLOR << value << "\n";
     }
 
     auto Warn(const std::string &value) -> void {
-        std::cout << "\x1B[93m" << "[WARN] " << "\033[0m"<< value << "\n";
+        std::cout << YELLOW << "[WARN] " << NO_COLOR << value << "\n";
     }
 
     auto Error(const std::string &value) -> void {
-        std::cout << "\x1B[91m" << "[ERROR] " << "\033[0m"<< value << "\n";
+        std::cout << RED << "[ERROR] " << NO_COLOR << value << "\n";
     }
 }
 

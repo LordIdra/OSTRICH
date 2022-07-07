@@ -1,8 +1,7 @@
+#include "window.h"
+
 #include "../util/Types.h"
 #include "../util/logging.h"
-
-#include <glad/glad.h>
-#include <GLFW/glfw3.h>
 
 
 
@@ -71,10 +70,16 @@ namespace window {
         return glfwWindowShouldClose(window);
     }
 
-    auto GetWidth() -> unsigned int;
-    auto GetHeight() -> unsigned int;
+    auto GetWindow() -> GLFWwindow* {
+        return window;
+    }
 
-    auto ShowCursor() -> void;
-    auto HideCursor() -> void;
+    auto GetWidth() -> unsigned int {
+        return width;
+    }
+
+    auto GetHeight() -> unsigned int {
+        return height;
+    }
 };
 

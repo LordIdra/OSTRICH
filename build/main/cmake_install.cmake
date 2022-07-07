@@ -1,4 +1,4 @@
-# Install script for directory: /home/idra/Dropbox/NEA/OSTRICH/src/main
+# Install script for directory: /home/idra/Sync/NEA/OSTRICH/src/main
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)

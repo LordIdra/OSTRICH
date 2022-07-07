@@ -2,6 +2,9 @@
 
 #include "../util/Types.h"
 
+#include <glad/glad.h>
+#include <GLFW/glfw3.h>
+
 
 
 namespace window {
@@ -10,12 +13,14 @@ namespace window {
 
     auto Background(vec4 color) -> void;
 
-    auto GetWidth() -> int;
-    auto GetHeight() -> int;
+    auto GetWidth() -> unsigned int;
+    auto GetHeight() -> unsigned int;
 
     auto ShowCursor() -> void;
     auto HideCursor() -> void;
 
     auto Close() -> void;
     auto ShouldClose() -> bool;
+
+    auto GetWindow() -> GLFWwindow*;
 };

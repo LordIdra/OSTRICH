@@ -4,10 +4,16 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
-  "/home/idra/Dropbox/NEA/OSTRICH/src/main/control/control.cpp" "/home/idra/Dropbox/NEA/OSTRICH/build/main/CMakeFiles/OSTRICH.dir/control/control.cpp.o"
-  "/home/idra/Dropbox/NEA/OSTRICH/src/main/main.cpp" "/home/idra/Dropbox/NEA/OSTRICH/build/main/CMakeFiles/OSTRICH.dir/main.cpp.o"
-  "/home/idra/Dropbox/NEA/OSTRICH/src/main/util/logging.cpp" "/home/idra/Dropbox/NEA/OSTRICH/build/main/CMakeFiles/OSTRICH.dir/util/logging.cpp.o"
-  "/home/idra/Dropbox/NEA/OSTRICH/src/main/window/window.cpp" "/home/idra/Dropbox/NEA/OSTRICH/build/main/CMakeFiles/OSTRICH.dir/window/window.cpp.o"
+  "/home/idra/Sync/NEA/OSTRICH/src/main/control/control.cpp" "/home/idra/Sync/NEA/OSTRICH/build/main/CMakeFiles/OSTRICH.dir/control/control.cpp.o"
+  "/home/idra/Sync/NEA/OSTRICH/src/main/input/keys.cpp" "/home/idra/Sync/NEA/OSTRICH/build/main/CMakeFiles/OSTRICH.dir/input/keys.cpp.o"
+  "/home/idra/Sync/NEA/OSTRICH/src/main/input/mouse.cpp" "/home/idra/Sync/NEA/OSTRICH/build/main/CMakeFiles/OSTRICH.dir/input/mouse.cpp.o"
+  "/home/idra/Sync/NEA/OSTRICH/src/main/main.cpp" "/home/idra/Sync/NEA/OSTRICH/build/main/CMakeFiles/OSTRICH.dir/main.cpp.o"
+  "/home/idra/Sync/NEA/OSTRICH/src/main/rendering/Program.cpp" "/home/idra/Sync/NEA/OSTRICH/build/main/CMakeFiles/OSTRICH.dir/rendering/Program.cpp.o"
+  "/home/idra/Sync/NEA/OSTRICH/src/main/rendering/Shader.cpp" "/home/idra/Sync/NEA/OSTRICH/build/main/CMakeFiles/OSTRICH.dir/rendering/Shader.cpp.o"
+  "/home/idra/Sync/NEA/OSTRICH/src/main/rendering/VAO.cpp" "/home/idra/Sync/NEA/OSTRICH/build/main/CMakeFiles/OSTRICH.dir/rendering/VAO.cpp.o"
+  "/home/idra/Sync/NEA/OSTRICH/src/main/rendering/camera.cpp" "/home/idra/Sync/NEA/OSTRICH/build/main/CMakeFiles/OSTRICH.dir/rendering/camera.cpp.o"
+  "/home/idra/Sync/NEA/OSTRICH/src/main/util/logging.cpp" "/home/idra/Sync/NEA/OSTRICH/build/main/CMakeFiles/OSTRICH.dir/util/logging.cpp.o"
+  "/home/idra/Sync/NEA/OSTRICH/src/main/window/window.cpp" "/home/idra/Sync/NEA/OSTRICH/build/main/CMakeFiles/OSTRICH.dir/window/window.cpp.o"
   )
 set(CMAKE_CXX_COMPILER_ID "Clang")
 

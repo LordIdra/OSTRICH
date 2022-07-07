@@ -55,7 +55,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "/home/idra/Dropbox/NEA/OSTRICH/build"
+			"value" : "/home/idra/Sync/NEA/OSTRICH/build"
 		},
 		{
 			"name" : "CMAKE_CACHE_MAJOR_VERSION",
@@ -595,7 +595,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "/home/idra/Dropbox/NEA/OSTRICH/src"
+			"value" : "/home/idra/Sync/NEA/OSTRICH/src"
 		},
 		{
 			"name" : "CMAKE_INSTALL_PREFIX",
@@ -1147,7 +1147,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "/home/idra/Dropbox/NEA/OSTRICH/build/main"
+			"value" : "/home/idra/Sync/NEA/OSTRICH/build/main"
 		},
 		{
 			"name" : "OSTRICH_SOURCE_DIR",
@@ -1159,7 +1159,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "/home/idra/Dropbox/NEA/OSTRICH/src/main"
+			"value" : "/home/idra/Sync/NEA/OSTRICH/src/main"
 		},
 		{
 			"name" : "VCPKG_APPLOCAL_DEPS",

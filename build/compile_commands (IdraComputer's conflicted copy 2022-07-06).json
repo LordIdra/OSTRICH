@@ -1,0 +1,47 @@
+[
+{
+  "directory": "/home/idra/Dropbox/NEA/OSTRICH/build/main",
+  "command": "/usr/bin/clang++-12   -isystem /home/idra/vcpkg/installed/x64-linux/include  -g   -o CMakeFiles/OSTRICH.dir/main.cpp.o -c /home/idra/Dropbox/NEA/OSTRICH/src/main/main.cpp",
+  "file": "/home/idra/Dropbox/NEA/OSTRICH/src/main/main.cpp"
+},
+{
+  "directory": "/home/idra/Dropbox/NEA/OSTRICH/build/main",
+  "command": "/usr/bin/clang++-12   -isystem /home/idra/vcpkg/installed/x64-linux/include  -g   -o CMakeFiles/OSTRICH.dir/control/control.cpp.o -c /home/idra/Dropbox/NEA/OSTRICH/src/main/control/control.cpp",
+  "file": "/home/idra/Dropbox/NEA/OSTRICH/src/main/control/control.cpp"
+},
+{
+  "directory": "/home/idra/Dropbox/NEA/OSTRICH/build/main",
+  "command": "/usr/bin/clang++-12   -isystem /home/idra/vcpkg/installed/x64-linux/include  -g   -o CMakeFiles/OSTRICH.dir/input/keys.cpp.o -c /home/idra/Dropbox/NEA/OSTRICH/src/main/input/keys.cpp",
+  "file": "/home/idra/Dropbox/NEA/OSTRICH/src/main/input/keys.cpp"
+},
+{
+  "directory": "/home/idra/Dropbox/NEA/OSTRICH/build/main",
+  "command": "/usr/bin/clang++-12   -isystem /home/idra/vcpkg/installed/x64-linux/include  -g   -o CMakeFiles/OSTRICH.dir/window/window.cpp.o -c /home/idra/Dropbox/NEA/OSTRICH/src/main/window/window.cpp",
+  "file": "/home/idra/Dropbox/NEA/OSTRICH/src/main/window/window.cpp"
+},
+{
+  "directory": "/home/idra/Dropbox/NEA/OSTRICH/build/main",
+  "command": "/usr/bin/clang++-12   -isystem /home/idra/vcpkg/installed/x64-linux/include  -g   -o CMakeFiles/OSTRICH.dir/util/logging.cpp.o -c /home/idra/Dropbox/NEA/OSTRICH/src/main/util/logging.cpp",
+  "file": "/home/idra/Dropbox/NEA/OSTRICH/src/main/util/logging.cpp"
+},
+{
+  "directory": "/home/idra/Dropbox/NEA/OSTRICH/build/main",
+  "command": "/usr/bin/clang++-12   -isystem /home/idra/vcpkg/installed/x64-linux/include  -g   -o CMakeFiles/OSTRICH.dir/rendering/Shader.cpp.o -c /home/idra/Dropbox/NEA/OSTRICH/src/main/rendering/Shader.cpp",
+  "file": "/home/idra/Dropbox/NEA/OSTRICH/src/main/rendering/Shader.cpp"
+},
+{
+  "directory": "/home/idra/Dropbox/NEA/OSTRICH/build/main",
+  "command": "/usr/bin/clang++-12   -isystem /home/idra/vcpkg/installed/x64-linux/include  -g   -o CMakeFiles/OSTRICH.dir/rendering/Program.cpp.o -c /home/idra/Dropbox/NEA/OSTRICH/src/main/rendering/Program.cpp",
+  "file": "/home/idra/Dropbox/NEA/OSTRICH/src/main/rendering/Program.cpp"
+},
+{
+  "directory": "/home/idra/Dropbox/NEA/OSTRICH/build/main",
+  "command": "/usr/bin/clang++-12   -isystem /home/idra/vcpkg/installed/x64-linux/include  -g   -o CMakeFiles/OSTRICH.dir/rendering/VAO.cpp.o -c /home/idra/Dropbox/NEA/OSTRICH/src/main/rendering/VAO.cpp",
+  "file": "/home/idra/Dropbox/NEA/OSTRICH/src/main/rendering/VAO.cpp"
+},
+{
+  "directory": "/home/idra/Dropbox/NEA/OSTRICH/build/main",
+  "command": "/usr/bin/clang++-12   -isystem /home/idra/vcpkg/installed/x64-linux/include  -g   -o CMakeFiles/OSTRICH.dir/rendering/Camera.cpp.o -c /home/idra/Dropbox/NEA/OSTRICH/src/main/rendering/Camera.cpp",
+  "file": "/home/idra/Dropbox/NEA/OSTRICH/src/main/rendering/Camera.cpp"
+}
+]

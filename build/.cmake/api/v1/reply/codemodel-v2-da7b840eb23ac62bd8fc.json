@@ -53,7 +53,7 @@
 				{
 					"directoryIndex" : 1,
 					"id" : "OSTRICH::@15c4a824ab2728a3f5e7",
-					"jsonFile" : "target-OSTRICH-Debug-d9533fed68815006e880.json",
+					"jsonFile" : "target-OSTRICH-Debug-d8df3dc3ce8d20110061.json",
 					"name" : "OSTRICH",
 					"projectIndex" : 0
 				}
@@ -63,8 +63,8 @@
 	"kind" : "codemodel",
 	"paths" : 
 	{
-		"build" : "/home/idra/Dropbox/NEA/OSTRICH/build",
-		"source" : "/home/idra/Dropbox/NEA/OSTRICH/src"
+		"build" : "/home/idra/Sync/NEA/OSTRICH/build",
+		"source" : "/home/idra/Sync/NEA/OSTRICH/src"
 	},
 	"version" : 
 	{

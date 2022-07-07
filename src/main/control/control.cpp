@@ -1,4 +1,8 @@
 #include "control.h"
+
+#include "../input/keys.h"
+#include "../input/mouse.h"
+#include "../rendering/camera.h"
 #include "../util/logging.h"
 #include "../window/window.h"
 
@@ -42,10 +46,15 @@ namespace control {
         InitGLFW();
         window::Init(windowTitle);
         InitGlad();
+        keys::Init();
+        mouse::Init();
     }
 
     auto Update() -> void {
+        mouse::Update();
+        glfwPollEvents();
         window::Update();
+        camera::Update();
     }
 }
 
