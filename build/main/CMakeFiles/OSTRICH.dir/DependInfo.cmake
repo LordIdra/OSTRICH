@@ -12,6 +12,7 @@ set(CMAKE_DEPENDS_CHECK_CXX
   "/home/idra/Sync/NEA/OSTRICH/src/main/rendering/Shader.cpp" "/home/idra/Sync/NEA/OSTRICH/build/main/CMakeFiles/OSTRICH.dir/rendering/Shader.cpp.o"
   "/home/idra/Sync/NEA/OSTRICH/src/main/rendering/VAO.cpp" "/home/idra/Sync/NEA/OSTRICH/build/main/CMakeFiles/OSTRICH.dir/rendering/VAO.cpp.o"
   "/home/idra/Sync/NEA/OSTRICH/src/main/rendering/camera.cpp" "/home/idra/Sync/NEA/OSTRICH/build/main/CMakeFiles/OSTRICH.dir/rendering/camera.cpp.o"
+  "/home/idra/Sync/NEA/OSTRICH/src/main/rendering/geometry.cpp" "/home/idra/Sync/NEA/OSTRICH/build/main/CMakeFiles/OSTRICH.dir/rendering/geometry.cpp.o"
   "/home/idra/Sync/NEA/OSTRICH/src/main/util/logging.cpp" "/home/idra/Sync/NEA/OSTRICH/build/main/CMakeFiles/OSTRICH.dir/util/logging.cpp.o"
   "/home/idra/Sync/NEA/OSTRICH/src/main/window/window.cpp" "/home/idra/Sync/NEA/OSTRICH/build/main/CMakeFiles/OSTRICH.dir/window/window.cpp.o"
   )

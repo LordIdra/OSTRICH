@@ -10,7 +10,7 @@ class VAO {
 private:
     unsigned int vbo;
     unsigned int id;
-    unsigned int size;
+    unsigned int vertexCount;
 
 public:
     VAO();
@@ -26,7 +26,7 @@ public:
 
     // set the data inside the VBO
     // vectors are easier to manipulate, safer, and more modern than C-style arrays, which is why they're used here
-    auto Data(const vector<VERTEX_DATA_TYPE> &data, unsigned int mode) -> void;
+    auto Data(const vector<VERTEX_DATA_TYPE> &data, unsigned int vertexCount, unsigned int mode) -> void;
 
     auto Render() -> void;
 

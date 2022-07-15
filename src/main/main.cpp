@@ -7,6 +7,7 @@
 #include "rendering/VAO.h"
 #include "rendering/camera.h"
 
+#include "rendering/geometry.h"
 #include "util/Types.h"
 #include "util/logging.h"
 #include "window/window.h"
@@ -15,50 +16,6 @@
 #include <GLFW/glfw3.h>
 
 
-
-vector<VERTEX_DATA_TYPE> data = {
-    -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
-     0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f, 
-     0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f, 
-     0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f, 
-    -0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f, 
-    -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f, 
-
-    -0.5f, -0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
-     0.5f, -0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
-     0.5f,  0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
-     0.5f,  0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
-    -0.5f,  0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
-    -0.5f, -0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
-
-    -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
-    -0.5f,  0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
-    -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
-    -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
-    -0.5f, -0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
-    -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
-
-     0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
-     0.5f,  0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
-     0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
-     0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
-     0.5f, -0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
-     0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
-
-    -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
-     0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
-     0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
-     0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
-    -0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
-    -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
-
-    -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,
-     0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,
-     0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
-     0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
-    -0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
-    -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f
-};
 
 const Material material {
     .ambient = vec3(0.02, 0.05, 0.07),
@@ -97,7 +54,16 @@ auto InitialiseVAO() -> void {
         .normalised = GL_FALSE,
         .stride = 6 * sizeof(float),
         .offset = (void*)(3 * sizeof(float))});
-    vao.Data(data, GL_STATIC_DRAW);
+
+    vector<VERTEX_DATA_TYPE> data1 = geometry::Sphere(vec3(0.0, 0.0, 0.0), 1.0, PI/96);
+    vector<VERTEX_DATA_TYPE> data2 = geometry::Sphere(vec3(6.0, 0.0, 2.0), 0.5, PI/96);
+    vector<VERTEX_DATA_TYPE> data3 = geometry::Sphere(vec3(4.0, 0.0, -3.0), 0.7, PI/96);
+
+    data1.insert(data1.end(), data2.begin(), data2.end());
+    data1.insert(data1.end(), data3.begin(), data3.end());
+
+    unsigned int vertexCount = data1.size() / 6;
+    vao.Data(data1, vertexCount,  GL_STATIC_DRAW);
 }
 
 auto Initialisecamera() -> void {
@@ -108,6 +74,14 @@ auto InitialiseInput() -> void {
     mouse::Hide();
 }
 
+auto WireFrame(bool enabled) -> void {
+    if (enabled) {
+        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    } else {
+        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+    }
+}
+
 auto main() -> int {
     control::Init("TEST!");
 
@@ -116,12 +90,14 @@ auto main() -> int {
     Initialisecamera();
     InitialiseInput();
 
+    //WireFrame(true);
+
     while (!window::ShouldClose()) {
-        window::Background(vec4(0.4, 0.0, 0.0, 1.0));
+        window::Background(vec4(0.0, 0.0, 0.0, 1.0));
         camera::AddAngleDelta(mouse::GetPositionDelta());
         camera::AddZoomDelta(mouse::GetScrollDelta().y);
 
-        vec3 light_position(3.0, 2.0, 1.0);
+        vec3 light_position(9.0, 2.0, 1.0);
 
         program.Use();
         program.Set("cameraMatrix", camera::GetMatrix());

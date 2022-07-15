@@ -341,6 +341,33 @@ rendering/camera.cpp.s:
 	cd /home/idra/Sync/NEA/OSTRICH/build && $(MAKE) -f main/CMakeFiles/OSTRICH.dir/build.make main/CMakeFiles/OSTRICH.dir/rendering/camera.cpp.s
 .PHONY : rendering/camera.cpp.s
 
+rendering/geometry.o: rendering/geometry.cpp.o
+
+.PHONY : rendering/geometry.o
+
+# target to build an object file
+rendering/geometry.cpp.o:
+	cd /home/idra/Sync/NEA/OSTRICH/build && $(MAKE) -f main/CMakeFiles/OSTRICH.dir/build.make main/CMakeFiles/OSTRICH.dir/rendering/geometry.cpp.o
+.PHONY : rendering/geometry.cpp.o
+
+rendering/geometry.i: rendering/geometry.cpp.i
+
+.PHONY : rendering/geometry.i
+
+# target to preprocess a source file
+rendering/geometry.cpp.i:
+	cd /home/idra/Sync/NEA/OSTRICH/build && $(MAKE) -f main/CMakeFiles/OSTRICH.dir/build.make main/CMakeFiles/OSTRICH.dir/rendering/geometry.cpp.i
+.PHONY : rendering/geometry.cpp.i
+
+rendering/geometry.s: rendering/geometry.cpp.s
+
+.PHONY : rendering/geometry.s
+
+# target to generate assembly for a file
+rendering/geometry.cpp.s:
+	cd /home/idra/Sync/NEA/OSTRICH/build && $(MAKE) -f main/CMakeFiles/OSTRICH.dir/build.make main/CMakeFiles/OSTRICH.dir/rendering/geometry.cpp.s
+.PHONY : rendering/geometry.cpp.s
+
 util/logging.o: util/logging.cpp.o
 
 .PHONY : util/logging.o
@@ -428,6 +455,9 @@ help:
 	@echo "... rendering/camera.o"
 	@echo "... rendering/camera.i"
 	@echo "... rendering/camera.s"
+	@echo "... rendering/geometry.o"
+	@echo "... rendering/geometry.i"
+	@echo "... rendering/geometry.s"
 	@echo "... util/logging.o"
 	@echo "... util/logging.i"
 	@echo "... util/logging.s"

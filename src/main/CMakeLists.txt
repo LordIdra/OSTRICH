@@ -20,17 +20,25 @@ set(FILES
     "util/logging.cpp"
     "util/Types.h"
 
-    "rendering/Shader.h"
-    "rendering/Shader.cpp"
+    "rendering/camera.h"
+    "rendering/camera.cpp"
+
+    "rendering/geometry.cpp"
+    "rendering/geometry.h"
+
+    "rendering/Material.h"
 
     "rendering/Program.h"
     "rendering/Program.cpp"
 
+    "rendering/Shader.h"
+    "rendering/Shader.cpp"
+
     "rendering/VAO.h"
     "rendering/VAO.cpp"
 
-    "rendering/camera.h"
-    "rendering/camera.cpp"
+    "rendering/VertexAttribute.h"
+
 )
 
 set(CMAKE_TOOLCHAIN_FILE "~/vcpkg/scripts/buildsystems/vcpkg.cmake")

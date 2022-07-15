@@ -31,8 +31,13 @@
 },
 {
   "directory": "/home/idra/Sync/NEA/OSTRICH/build/main",
-  "command": "/usr/bin/clang++-12   -isystem /home/idra/vcpkg/installed/x64-linux/include  -g   -o CMakeFiles/OSTRICH.dir/rendering/Shader.cpp.o -c /home/idra/Sync/NEA/OSTRICH/src/main/rendering/Shader.cpp",
-  "file": "/home/idra/Sync/NEA/OSTRICH/src/main/rendering/Shader.cpp"
+  "command": "/usr/bin/clang++-12   -isystem /home/idra/vcpkg/installed/x64-linux/include  -g   -o CMakeFiles/OSTRICH.dir/rendering/camera.cpp.o -c /home/idra/Sync/NEA/OSTRICH/src/main/rendering/camera.cpp",
+  "file": "/home/idra/Sync/NEA/OSTRICH/src/main/rendering/camera.cpp"
+},
+{
+  "directory": "/home/idra/Sync/NEA/OSTRICH/build/main",
+  "command": "/usr/bin/clang++-12   -isystem /home/idra/vcpkg/installed/x64-linux/include  -g   -o CMakeFiles/OSTRICH.dir/rendering/geometry.cpp.o -c /home/idra/Sync/NEA/OSTRICH/src/main/rendering/geometry.cpp",
+  "file": "/home/idra/Sync/NEA/OSTRICH/src/main/rendering/geometry.cpp"
 },
 {
   "directory": "/home/idra/Sync/NEA/OSTRICH/build/main",
@@ -41,12 +46,12 @@
 },
 {
   "directory": "/home/idra/Sync/NEA/OSTRICH/build/main",
-  "command": "/usr/bin/clang++-12   -isystem /home/idra/vcpkg/installed/x64-linux/include  -g   -o CMakeFiles/OSTRICH.dir/rendering/VAO.cpp.o -c /home/idra/Sync/NEA/OSTRICH/src/main/rendering/VAO.cpp",
-  "file": "/home/idra/Sync/NEA/OSTRICH/src/main/rendering/VAO.cpp"
+  "command": "/usr/bin/clang++-12   -isystem /home/idra/vcpkg/installed/x64-linux/include  -g   -o CMakeFiles/OSTRICH.dir/rendering/Shader.cpp.o -c /home/idra/Sync/NEA/OSTRICH/src/main/rendering/Shader.cpp",
+  "file": "/home/idra/Sync/NEA/OSTRICH/src/main/rendering/Shader.cpp"
 },
 {
   "directory": "/home/idra/Sync/NEA/OSTRICH/build/main",
-  "command": "/usr/bin/clang++-12   -isystem /home/idra/vcpkg/installed/x64-linux/include  -g   -o CMakeFiles/OSTRICH.dir/rendering/camera.cpp.o -c /home/idra/Sync/NEA/OSTRICH/src/main/rendering/camera.cpp",
-  "file": "/home/idra/Sync/NEA/OSTRICH/src/main/rendering/camera.cpp"
+  "command": "/usr/bin/clang++-12   -isystem /home/idra/vcpkg/installed/x64-linux/include  -g   -o CMakeFiles/OSTRICH.dir/rendering/VAO.cpp.o -c /home/idra/Sync/NEA/OSTRICH/src/main/rendering/VAO.cpp",
+  "file": "/home/idra/Sync/NEA/OSTRICH/src/main/rendering/VAO.cpp"
 }
 ]
