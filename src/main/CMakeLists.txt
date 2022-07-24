@@ -3,6 +3,12 @@ project("OSTRICH")
 set(FILES
     "main.cpp"
 
+    "bodies/Body.h"
+    "bodies/Body.cpp"
+    
+    "bodies/Massive.h"
+    "bodies/Massive.cpp"
+
     "control/control.h"
     "control/control.cpp"
 
@@ -47,8 +53,10 @@ include("~/vcpkg/scripts/buildsystems/vcpkg.cmake")
 find_package(glad CONFIG REQUIRED)
 find_package(glfw3 CONFIG REQUIRED)
 find_package(glm CONFIG REQUIRED)
+find_package(Boost REQUIRED)
 
 add_executable(${PROJECT_NAME} ${FILES})
 
 target_link_libraries (${PROJECT_NAME} PRIVATE glad::glad)
 target_link_libraries (${PROJECT_NAME} PRIVATE glfw)
+target_link_libraries (${PROJECT_NAME} PRIVATE Boost::boost)

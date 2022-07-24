@@ -125,6 +125,60 @@ OSTRICH/fast:
 	cd /home/idra/Sync/NEA/OSTRICH/build && $(MAKE) -f main/CMakeFiles/OSTRICH.dir/build.make main/CMakeFiles/OSTRICH.dir/build
 .PHONY : OSTRICH/fast
 
+bodies/Body.o: bodies/Body.cpp.o
+
+.PHONY : bodies/Body.o
+
+# target to build an object file
+bodies/Body.cpp.o:
+	cd /home/idra/Sync/NEA/OSTRICH/build && $(MAKE) -f main/CMakeFiles/OSTRICH.dir/build.make main/CMakeFiles/OSTRICH.dir/bodies/Body.cpp.o
+.PHONY : bodies/Body.cpp.o
+
+bodies/Body.i: bodies/Body.cpp.i
+
+.PHONY : bodies/Body.i
+
+# target to preprocess a source file
+bodies/Body.cpp.i:
+	cd /home/idra/Sync/NEA/OSTRICH/build && $(MAKE) -f main/CMakeFiles/OSTRICH.dir/build.make main/CMakeFiles/OSTRICH.dir/bodies/Body.cpp.i
+.PHONY : bodies/Body.cpp.i
+
+bodies/Body.s: bodies/Body.cpp.s
+
+.PHONY : bodies/Body.s
+
+# target to generate assembly for a file
+bodies/Body.cpp.s:
+	cd /home/idra/Sync/NEA/OSTRICH/build && $(MAKE) -f main/CMakeFiles/OSTRICH.dir/build.make main/CMakeFiles/OSTRICH.dir/bodies/Body.cpp.s
+.PHONY : bodies/Body.cpp.s
+
+bodies/Massive.o: bodies/Massive.cpp.o
+
+.PHONY : bodies/Massive.o
+
+# target to build an object file
+bodies/Massive.cpp.o:
+	cd /home/idra/Sync/NEA/OSTRICH/build && $(MAKE) -f main/CMakeFiles/OSTRICH.dir/build.make main/CMakeFiles/OSTRICH.dir/bodies/Massive.cpp.o
+.PHONY : bodies/Massive.cpp.o
+
+bodies/Massive.i: bodies/Massive.cpp.i
+
+.PHONY : bodies/Massive.i
+
+# target to preprocess a source file
+bodies/Massive.cpp.i:
+	cd /home/idra/Sync/NEA/OSTRICH/build && $(MAKE) -f main/CMakeFiles/OSTRICH.dir/build.make main/CMakeFiles/OSTRICH.dir/bodies/Massive.cpp.i
+.PHONY : bodies/Massive.cpp.i
+
+bodies/Massive.s: bodies/Massive.cpp.s
+
+.PHONY : bodies/Massive.s
+
+# target to generate assembly for a file
+bodies/Massive.cpp.s:
+	cd /home/idra/Sync/NEA/OSTRICH/build && $(MAKE) -f main/CMakeFiles/OSTRICH.dir/build.make main/CMakeFiles/OSTRICH.dir/bodies/Massive.cpp.s
+.PHONY : bodies/Massive.cpp.s
+
 control/control.o: control/control.cpp.o
 
 .PHONY : control/control.o
@@ -431,6 +485,12 @@ help:
 	@echo "... rebuild_cache"
 	@echo "... edit_cache"
 	@echo "... OSTRICH"
+	@echo "... bodies/Body.o"
+	@echo "... bodies/Body.i"
+	@echo "... bodies/Body.s"
+	@echo "... bodies/Massive.o"
+	@echo "... bodies/Massive.i"
+	@echo "... bodies/Massive.s"
 	@echo "... control/control.o"
 	@echo "... control/control.i"
 	@echo "... control/control.s"

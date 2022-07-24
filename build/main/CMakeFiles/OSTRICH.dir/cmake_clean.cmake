@@ -1,4 +1,6 @@
 file(REMOVE_RECURSE
+  "CMakeFiles/OSTRICH.dir/bodies/Body.cpp.o"
+  "CMakeFiles/OSTRICH.dir/bodies/Massive.cpp.o"
   "CMakeFiles/OSTRICH.dir/control/control.cpp.o"
   "CMakeFiles/OSTRICH.dir/input/keys.cpp.o"
   "CMakeFiles/OSTRICH.dir/input/mouse.cpp.o"

@@ -83,3 +83,17 @@
 1	774	1657489487417263698	main/CMakeFiles/OSTRICH.dir/rendering/camera.cpp.o	4c2ef3eaff55bbf1
 1	780	1657489487421263681	main/CMakeFiles/OSTRICH.dir/input/keys.cpp.o	40f40378da99e499
 780	869	1657489487513263284	main/OSTRICH	cebbaf8a77bd063a
+0	728	1657976053185755390	main/CMakeFiles/OSTRICH.dir/bodies/Body.cpp.o	f1c446ef0f463bc3
+1	738	1657976053193755304	main/CMakeFiles/OSTRICH.dir/control/control.cpp.o	d647c91b6ba933d1
+0	749	1657976053201755217	main/CMakeFiles/OSTRICH.dir/bodies/Massive.cpp.o	feeaaa6fd33eaa8c
+1	755	1657976053209755130	main/CMakeFiles/OSTRICH.dir/util/logging.cpp.o	7f45215de84b7210
+1	758	1657976053213755087	main/CMakeFiles/OSTRICH.dir/window/window.cpp.o	209afb5a5a469dbe
+2	761	1657976053217755045	main/CMakeFiles/OSTRICH.dir/rendering/Program.cpp.o	d0fb870011b88832
+2	765	1657976053221755000	main/CMakeFiles/OSTRICH.dir/rendering/Shader.cpp.o	2cd7cae36e7f3e56
+0	769	1657976053225754957	main/CMakeFiles/OSTRICH.dir/main.cpp.o	228bcab7ef86ab01
+1	770	1657976053225754957	main/CMakeFiles/OSTRICH.dir/input/mouse.cpp.o	b8bbfeaf0adb4c67
+2	850	1657976053305754092	main/CMakeFiles/OSTRICH.dir/rendering/VAO.cpp.o	d09902e29b6cbde8
+1	871	1657976053329753832	main/CMakeFiles/OSTRICH.dir/rendering/geometry.cpp.o	151ae54c3becbdb
+1	881	1657976053337753745	main/CMakeFiles/OSTRICH.dir/rendering/camera.cpp.o	4c2ef3eaff55bbf1
+1	964	1657976053421752835	main/CMakeFiles/OSTRICH.dir/input/keys.cpp.o	40f40378da99e499
+964	1082	1657976053537751580	main/OSTRICH	d66227135b6ea9b0

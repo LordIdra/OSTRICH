@@ -1,3 +1,4 @@
+#include "bodies/Massive.h"
 #include "control/control.h"
 
 #include "input/keys.h"
@@ -12,10 +13,27 @@
 #include "util/logging.h"
 #include "window/window.h"
 
-
 #include <GLFW/glfw3.h>
 
 
+
+Massive earth(
+    bvec3(0, 0, 0),
+    bvec3(0, 0, 0),
+    "Earth",
+    bfloat(5.9722e24),
+    bfloat(6.37814e9),
+    vec3(0.0, 0.5, 0.8)
+);
+
+Massive moon(
+    bvec3(bfloat(0.4055e9), bfloat(0), bfloat(0)),
+    bvec3(bfloat(0), bfloat(0), bfloat(0.970e3)),
+    "The Moon",
+    bfloat(0.07346e24),
+    bfloat(1738.1e3),
+    vec3(0.3, 0.3, 0.3)
+);
 
 const Material material {
     .ambient = vec3(0.02, 0.05, 0.07),
@@ -55,12 +73,10 @@ auto InitialiseVAO() -> void {
         .stride = 6 * sizeof(float),
         .offset = (void*)(3 * sizeof(float))});
 
-    vector<VERTEX_DATA_TYPE> data1 = geometry::Sphere(vec3(0.0, 0.0, 0.0), 1.0, PI/96);
-    vector<VERTEX_DATA_TYPE> data2 = geometry::Sphere(vec3(6.0, 0.0, 2.0), 0.5, PI/96);
-    vector<VERTEX_DATA_TYPE> data3 = geometry::Sphere(vec3(4.0, 0.0, -3.0), 0.7, PI/96);
+    vector<VERTEX_DATA_TYPE> data1 = earth.GetSphereVertices();
+    vector<VERTEX_DATA_TYPE> data2 = moon.GetSphereVertices();
 
     data1.insert(data1.end(), data2.begin(), data2.end());
-    data1.insert(data1.end(), data3.begin(), data3.end());
 
     unsigned int vertexCount = data1.size() / 6;
     vao.Data(data1, vertexCount,  GL_STATIC_DRAW);

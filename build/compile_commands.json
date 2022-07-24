@@ -6,6 +6,16 @@
 },
 {
   "directory": "/home/idra/Sync/NEA/OSTRICH/build/main",
+  "command": "/usr/bin/clang++-12   -isystem /home/idra/vcpkg/installed/x64-linux/include  -g   -o CMakeFiles/OSTRICH.dir/bodies/Body.cpp.o -c /home/idra/Sync/NEA/OSTRICH/src/main/bodies/Body.cpp",
+  "file": "/home/idra/Sync/NEA/OSTRICH/src/main/bodies/Body.cpp"
+},
+{
+  "directory": "/home/idra/Sync/NEA/OSTRICH/build/main",
+  "command": "/usr/bin/clang++-12   -isystem /home/idra/vcpkg/installed/x64-linux/include  -g   -o CMakeFiles/OSTRICH.dir/bodies/Massive.cpp.o -c /home/idra/Sync/NEA/OSTRICH/src/main/bodies/Massive.cpp",
+  "file": "/home/idra/Sync/NEA/OSTRICH/src/main/bodies/Massive.cpp"
+},
+{
+  "directory": "/home/idra/Sync/NEA/OSTRICH/build/main",
   "command": "/usr/bin/clang++-12   -isystem /home/idra/vcpkg/installed/x64-linux/include  -g   -o CMakeFiles/OSTRICH.dir/control/control.cpp.o -c /home/idra/Sync/NEA/OSTRICH/src/main/control/control.cpp",
   "file": "/home/idra/Sync/NEA/OSTRICH/src/main/control/control.cpp"
 },

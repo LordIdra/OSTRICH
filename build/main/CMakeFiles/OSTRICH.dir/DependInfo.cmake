@@ -4,6 +4,8 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
+  "/home/idra/Sync/NEA/OSTRICH/src/main/bodies/Body.cpp" "/home/idra/Sync/NEA/OSTRICH/build/main/CMakeFiles/OSTRICH.dir/bodies/Body.cpp.o"
+  "/home/idra/Sync/NEA/OSTRICH/src/main/bodies/Massive.cpp" "/home/idra/Sync/NEA/OSTRICH/build/main/CMakeFiles/OSTRICH.dir/bodies/Massive.cpp.o"
   "/home/idra/Sync/NEA/OSTRICH/src/main/control/control.cpp" "/home/idra/Sync/NEA/OSTRICH/build/main/CMakeFiles/OSTRICH.dir/control/control.cpp.o"
   "/home/idra/Sync/NEA/OSTRICH/src/main/input/keys.cpp" "/home/idra/Sync/NEA/OSTRICH/build/main/CMakeFiles/OSTRICH.dir/input/keys.cpp.o"
   "/home/idra/Sync/NEA/OSTRICH/src/main/input/mouse.cpp" "/home/idra/Sync/NEA/OSTRICH/build/main/CMakeFiles/OSTRICH.dir/input/mouse.cpp.o"
