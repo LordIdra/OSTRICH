@@ -22,8 +22,13 @@ set(FILES
     "window/window.cpp"
 
     "util/Constants.h"
+
     "util/logging.h"
     "util/logging.cpp"
+
+    "util/rays.h"
+    "util/rays.cpp"
+
     "util/Types.h"
 
     "rendering/camera.h"

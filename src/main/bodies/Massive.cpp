@@ -6,8 +6,8 @@
 
 
 
-Massive::Massive(bvec3 position, bvec3 velocity, string name, bfloat mass, bfloat radius, vec3 color)
-    : Body(position, velocity, name), mass(mass), radius(radius), color(color) {}
+Massive::Massive(bvec3 position, bvec3 velocity, string name, bfloat mass, bfloat radius)
+    : Body(position, velocity, name), mass(mass), radius(radius) {}
 
 float Massive::ScaledRadius() {
     return float(radius / SCALE_FACTOR);

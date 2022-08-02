@@ -12,19 +12,19 @@
 
 namespace camera {
     namespace {
-        const float MIN_ZOOM = 2.0;
+        const float MIN_ZOOM = 0.002;
         const float MAX_ZOOM = 95.0;
 
         const float MAX_ANGLE = PI * 0.45;
 
         const float MAX_ANGLE_SPEED = 0.01;
-        const float MAX_ZOOM_SPEED = 0.05;
+        const float MAX_ZOOM_SPEED = 0.1;
 
         const float ANGLE_SENSITIVITY = 20.0;
-        const float ZOOM_SENSITIVITY = 0.04;
+        const float ZOOM_SENSITIVITY = 0.03;
         
         const float ANGLE_DAMPING = 0.001;
-        const float ZOOM_DAMPING = 0.003;
+        const float ZOOM_DAMPING = 0.01;
 
         vec3 position(0, 0, 0);
         vec3 target(0, 0, 0);
@@ -32,7 +32,7 @@ namespace camera {
         vec2 angle(0, 0); // (horizontal, vertical)
         vec2 angleDelta(0, 0);
 
-        float zoom = 10;
+        float zoom = 0.05;
         float zoomDelta = 0;
 
         auto ApplyDamping(float &x, float damping) -> void {
@@ -66,21 +66,26 @@ namespace camera {
         }
     }
 
-    auto GetMatrix() -> mat4 {
+    auto GetView() -> mat4 {
         // angle.x means the horizontal plane, while angle.y means the vertical plane
         position.y = target.y + (zoom * sinf(angle.y));
         position.x = target.x + (zoom * cosf(angle.x) * cosf(angle.y));
         position.z = target.z + (zoom * sinf(angle.x) * cosf(angle.y));
 
+        return glm::lookAt(position, target, VERTICAL);
+    }
+
+    auto GetProjection() -> mat4 {
         const float aspectRatio = ((float)window::GetWidth()) / ((float)window::GetHeight());
-        const mat4 projection = glm::perspective(
+        return glm::perspective(
             (float)glm::radians(45.0f),
             aspectRatio, 
-            0.1f,
+            0.0001f,
             100.0f);
-        const mat4 view = glm::lookAt(position, target, VERTICAL);
-        
-        return projection * view;
+    }
+
+    auto GetMatrix() -> mat4 {        
+        return GetProjection() * GetView();
     }
 
     auto GetPosition() -> vec3 {

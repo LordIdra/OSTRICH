@@ -11,6 +11,7 @@ file(REMOVE_RECURSE
   "CMakeFiles/OSTRICH.dir/rendering/camera.cpp.o"
   "CMakeFiles/OSTRICH.dir/rendering/geometry.cpp.o"
   "CMakeFiles/OSTRICH.dir/util/logging.cpp.o"
+  "CMakeFiles/OSTRICH.dir/util/rays.cpp.o"
   "CMakeFiles/OSTRICH.dir/window/window.cpp.o"
   "OSTRICH"
   "OSTRICH.pdb"

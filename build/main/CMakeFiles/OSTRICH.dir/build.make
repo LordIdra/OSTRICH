@@ -161,9 +161,22 @@ main/CMakeFiles/OSTRICH.dir/util/logging.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/OSTRICH.dir/util/logging.cpp.s"
 	cd /home/idra/Sync/NEA/OSTRICH/build/main && /usr/bin/clang++-12 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/idra/Sync/NEA/OSTRICH/src/main/util/logging.cpp -o CMakeFiles/OSTRICH.dir/util/logging.cpp.s
 
+main/CMakeFiles/OSTRICH.dir/util/rays.cpp.o: main/CMakeFiles/OSTRICH.dir/flags.make
+main/CMakeFiles/OSTRICH.dir/util/rays.cpp.o: /home/idra/Sync/NEA/OSTRICH/src/main/util/rays.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/idra/Sync/NEA/OSTRICH/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Building CXX object main/CMakeFiles/OSTRICH.dir/util/rays.cpp.o"
+	cd /home/idra/Sync/NEA/OSTRICH/build/main && /usr/bin/clang++-12  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/OSTRICH.dir/util/rays.cpp.o -c /home/idra/Sync/NEA/OSTRICH/src/main/util/rays.cpp
+
+main/CMakeFiles/OSTRICH.dir/util/rays.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/OSTRICH.dir/util/rays.cpp.i"
+	cd /home/idra/Sync/NEA/OSTRICH/build/main && /usr/bin/clang++-12 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/idra/Sync/NEA/OSTRICH/src/main/util/rays.cpp > CMakeFiles/OSTRICH.dir/util/rays.cpp.i
+
+main/CMakeFiles/OSTRICH.dir/util/rays.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/OSTRICH.dir/util/rays.cpp.s"
+	cd /home/idra/Sync/NEA/OSTRICH/build/main && /usr/bin/clang++-12 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/idra/Sync/NEA/OSTRICH/src/main/util/rays.cpp -o CMakeFiles/OSTRICH.dir/util/rays.cpp.s
+
 main/CMakeFiles/OSTRICH.dir/rendering/camera.cpp.o: main/CMakeFiles/OSTRICH.dir/flags.make
 main/CMakeFiles/OSTRICH.dir/rendering/camera.cpp.o: /home/idra/Sync/NEA/OSTRICH/src/main/rendering/camera.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/idra/Sync/NEA/OSTRICH/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Building CXX object main/CMakeFiles/OSTRICH.dir/rendering/camera.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/idra/Sync/NEA/OSTRICH/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Building CXX object main/CMakeFiles/OSTRICH.dir/rendering/camera.cpp.o"
 	cd /home/idra/Sync/NEA/OSTRICH/build/main && /usr/bin/clang++-12  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/OSTRICH.dir/rendering/camera.cpp.o -c /home/idra/Sync/NEA/OSTRICH/src/main/rendering/camera.cpp
 
 main/CMakeFiles/OSTRICH.dir/rendering/camera.cpp.i: cmake_force
@@ -176,7 +189,7 @@ main/CMakeFiles/OSTRICH.dir/rendering/camera.cpp.s: cmake_force
 
 main/CMakeFiles/OSTRICH.dir/rendering/geometry.cpp.o: main/CMakeFiles/OSTRICH.dir/flags.make
 main/CMakeFiles/OSTRICH.dir/rendering/geometry.cpp.o: /home/idra/Sync/NEA/OSTRICH/src/main/rendering/geometry.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/idra/Sync/NEA/OSTRICH/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Building CXX object main/CMakeFiles/OSTRICH.dir/rendering/geometry.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/idra/Sync/NEA/OSTRICH/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_11) "Building CXX object main/CMakeFiles/OSTRICH.dir/rendering/geometry.cpp.o"
 	cd /home/idra/Sync/NEA/OSTRICH/build/main && /usr/bin/clang++-12  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/OSTRICH.dir/rendering/geometry.cpp.o -c /home/idra/Sync/NEA/OSTRICH/src/main/rendering/geometry.cpp
 
 main/CMakeFiles/OSTRICH.dir/rendering/geometry.cpp.i: cmake_force
@@ -189,7 +202,7 @@ main/CMakeFiles/OSTRICH.dir/rendering/geometry.cpp.s: cmake_force
 
 main/CMakeFiles/OSTRICH.dir/rendering/Program.cpp.o: main/CMakeFiles/OSTRICH.dir/flags.make
 main/CMakeFiles/OSTRICH.dir/rendering/Program.cpp.o: /home/idra/Sync/NEA/OSTRICH/src/main/rendering/Program.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/idra/Sync/NEA/OSTRICH/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_11) "Building CXX object main/CMakeFiles/OSTRICH.dir/rendering/Program.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/idra/Sync/NEA/OSTRICH/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_12) "Building CXX object main/CMakeFiles/OSTRICH.dir/rendering/Program.cpp.o"
 	cd /home/idra/Sync/NEA/OSTRICH/build/main && /usr/bin/clang++-12  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/OSTRICH.dir/rendering/Program.cpp.o -c /home/idra/Sync/NEA/OSTRICH/src/main/rendering/Program.cpp
 
 main/CMakeFiles/OSTRICH.dir/rendering/Program.cpp.i: cmake_force
@@ -202,7 +215,7 @@ main/CMakeFiles/OSTRICH.dir/rendering/Program.cpp.s: cmake_force
 
 main/CMakeFiles/OSTRICH.dir/rendering/Shader.cpp.o: main/CMakeFiles/OSTRICH.dir/flags.make
 main/CMakeFiles/OSTRICH.dir/rendering/Shader.cpp.o: /home/idra/Sync/NEA/OSTRICH/src/main/rendering/Shader.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/idra/Sync/NEA/OSTRICH/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_12) "Building CXX object main/CMakeFiles/OSTRICH.dir/rendering/Shader.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/idra/Sync/NEA/OSTRICH/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_13) "Building CXX object main/CMakeFiles/OSTRICH.dir/rendering/Shader.cpp.o"
 	cd /home/idra/Sync/NEA/OSTRICH/build/main && /usr/bin/clang++-12  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/OSTRICH.dir/rendering/Shader.cpp.o -c /home/idra/Sync/NEA/OSTRICH/src/main/rendering/Shader.cpp
 
 main/CMakeFiles/OSTRICH.dir/rendering/Shader.cpp.i: cmake_force
@@ -215,7 +228,7 @@ main/CMakeFiles/OSTRICH.dir/rendering/Shader.cpp.s: cmake_force
 
 main/CMakeFiles/OSTRICH.dir/rendering/VAO.cpp.o: main/CMakeFiles/OSTRICH.dir/flags.make
 main/CMakeFiles/OSTRICH.dir/rendering/VAO.cpp.o: /home/idra/Sync/NEA/OSTRICH/src/main/rendering/VAO.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/idra/Sync/NEA/OSTRICH/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_13) "Building CXX object main/CMakeFiles/OSTRICH.dir/rendering/VAO.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/idra/Sync/NEA/OSTRICH/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_14) "Building CXX object main/CMakeFiles/OSTRICH.dir/rendering/VAO.cpp.o"
 	cd /home/idra/Sync/NEA/OSTRICH/build/main && /usr/bin/clang++-12  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/OSTRICH.dir/rendering/VAO.cpp.o -c /home/idra/Sync/NEA/OSTRICH/src/main/rendering/VAO.cpp
 
 main/CMakeFiles/OSTRICH.dir/rendering/VAO.cpp.i: cmake_force
@@ -236,6 +249,7 @@ OSTRICH_OBJECTS = \
 "CMakeFiles/OSTRICH.dir/input/mouse.cpp.o" \
 "CMakeFiles/OSTRICH.dir/window/window.cpp.o" \
 "CMakeFiles/OSTRICH.dir/util/logging.cpp.o" \
+"CMakeFiles/OSTRICH.dir/util/rays.cpp.o" \
 "CMakeFiles/OSTRICH.dir/rendering/camera.cpp.o" \
 "CMakeFiles/OSTRICH.dir/rendering/geometry.cpp.o" \
 "CMakeFiles/OSTRICH.dir/rendering/Program.cpp.o" \
@@ -253,6 +267,7 @@ main/OSTRICH: main/CMakeFiles/OSTRICH.dir/input/keys.cpp.o
 main/OSTRICH: main/CMakeFiles/OSTRICH.dir/input/mouse.cpp.o
 main/OSTRICH: main/CMakeFiles/OSTRICH.dir/window/window.cpp.o
 main/OSTRICH: main/CMakeFiles/OSTRICH.dir/util/logging.cpp.o
+main/OSTRICH: main/CMakeFiles/OSTRICH.dir/util/rays.cpp.o
 main/OSTRICH: main/CMakeFiles/OSTRICH.dir/rendering/camera.cpp.o
 main/OSTRICH: main/CMakeFiles/OSTRICH.dir/rendering/geometry.cpp.o
 main/OSTRICH: main/CMakeFiles/OSTRICH.dir/rendering/Program.cpp.o
@@ -265,7 +280,7 @@ main/OSTRICH: /usr/lib/x86_64-linux-gnu/librt.so
 main/OSTRICH: /usr/lib/x86_64-linux-gnu/libm.so
 main/OSTRICH: /usr/lib/x86_64-linux-gnu/libX11.so
 main/OSTRICH: main/CMakeFiles/OSTRICH.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/idra/Sync/NEA/OSTRICH/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_14) "Linking CXX executable OSTRICH"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/idra/Sync/NEA/OSTRICH/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_15) "Linking CXX executable OSTRICH"
 	cd /home/idra/Sync/NEA/OSTRICH/build/main && $(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/OSTRICH.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.

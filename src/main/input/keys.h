@@ -4,7 +4,9 @@
 
 namespace keys {
     auto Init() -> void;
-    auto BindFunctionToKeyPress(int key, void (*function)()) -> void;
-    auto BindFunctionToKeyRelease(int key, void (*function)()) -> void;
+    auto Update() -> void;
+    auto BindFunctionToKeyPress(const int key, void (*function)()) -> void;
+    auto BindFunctionToKeyRelease(const int key, void (*function)()) -> void;
+    auto BindFunctionToKeyHold(const int key, void (*function)()) -> void;
     auto KeyHeldDown(int key) -> bool;
 }

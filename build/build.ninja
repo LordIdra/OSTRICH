@@ -161,6 +161,15 @@ build main/CMakeFiles/OSTRICH.dir/util/logging.cpp.o: CXX_COMPILER__OSTRICH /hom
   TARGET_COMPILE_PDB = main/CMakeFiles/OSTRICH.dir/
   TARGET_PDB = main/OSTRICH.pdb
 
+build main/CMakeFiles/OSTRICH.dir/util/rays.cpp.o: CXX_COMPILER__OSTRICH /home/idra/Sync/NEA/OSTRICH/src/main/util/rays.cpp || cmake_object_order_depends_target_OSTRICH
+  DEP_FILE = main/CMakeFiles/OSTRICH.dir/util/rays.cpp.o.d
+  FLAGS = -g
+  INCLUDES = -isystem /home/idra/vcpkg/installed/x64-linux/include
+  OBJECT_DIR = main/CMakeFiles/OSTRICH.dir
+  OBJECT_FILE_DIR = main/CMakeFiles/OSTRICH.dir/util
+  TARGET_COMPILE_PDB = main/CMakeFiles/OSTRICH.dir/
+  TARGET_PDB = main/OSTRICH.pdb
+
 build main/CMakeFiles/OSTRICH.dir/rendering/camera.cpp.o: CXX_COMPILER__OSTRICH /home/idra/Sync/NEA/OSTRICH/src/main/rendering/camera.cpp || cmake_object_order_depends_target_OSTRICH
   DEP_FILE = main/CMakeFiles/OSTRICH.dir/rendering/camera.cpp.o.d
   FLAGS = -g
@@ -214,7 +223,7 @@ build main/CMakeFiles/OSTRICH.dir/rendering/VAO.cpp.o: CXX_COMPILER__OSTRICH /ho
 #############################################
 # Link the executable main/OSTRICH
 
-build main/OSTRICH: CXX_EXECUTABLE_LINKER__OSTRICH main/CMakeFiles/OSTRICH.dir/main.cpp.o main/CMakeFiles/OSTRICH.dir/bodies/Body.cpp.o main/CMakeFiles/OSTRICH.dir/bodies/Massive.cpp.o main/CMakeFiles/OSTRICH.dir/control/control.cpp.o main/CMakeFiles/OSTRICH.dir/input/keys.cpp.o main/CMakeFiles/OSTRICH.dir/input/mouse.cpp.o main/CMakeFiles/OSTRICH.dir/window/window.cpp.o main/CMakeFiles/OSTRICH.dir/util/logging.cpp.o main/CMakeFiles/OSTRICH.dir/rendering/camera.cpp.o main/CMakeFiles/OSTRICH.dir/rendering/geometry.cpp.o main/CMakeFiles/OSTRICH.dir/rendering/Program.cpp.o main/CMakeFiles/OSTRICH.dir/rendering/Shader.cpp.o main/CMakeFiles/OSTRICH.dir/rendering/VAO.cpp.o | /home/idra/vcpkg/installed/x64-linux/debug/lib/libglad.a /home/idra/vcpkg/installed/x64-linux/debug/lib/libglfw3.a /usr/lib/x86_64-linux-gnu/librt.so /usr/lib/x86_64-linux-gnu/libm.so /usr/lib/x86_64-linux-gnu/libX11.so
+build main/OSTRICH: CXX_EXECUTABLE_LINKER__OSTRICH main/CMakeFiles/OSTRICH.dir/main.cpp.o main/CMakeFiles/OSTRICH.dir/bodies/Body.cpp.o main/CMakeFiles/OSTRICH.dir/bodies/Massive.cpp.o main/CMakeFiles/OSTRICH.dir/control/control.cpp.o main/CMakeFiles/OSTRICH.dir/input/keys.cpp.o main/CMakeFiles/OSTRICH.dir/input/mouse.cpp.o main/CMakeFiles/OSTRICH.dir/window/window.cpp.o main/CMakeFiles/OSTRICH.dir/util/logging.cpp.o main/CMakeFiles/OSTRICH.dir/util/rays.cpp.o main/CMakeFiles/OSTRICH.dir/rendering/camera.cpp.o main/CMakeFiles/OSTRICH.dir/rendering/geometry.cpp.o main/CMakeFiles/OSTRICH.dir/rendering/Program.cpp.o main/CMakeFiles/OSTRICH.dir/rendering/Shader.cpp.o main/CMakeFiles/OSTRICH.dir/rendering/VAO.cpp.o | /home/idra/vcpkg/installed/x64-linux/debug/lib/libglad.a /home/idra/vcpkg/installed/x64-linux/debug/lib/libglfw3.a /usr/lib/x86_64-linux-gnu/librt.so /usr/lib/x86_64-linux-gnu/libm.so /usr/lib/x86_64-linux-gnu/libX11.so
   FLAGS = -g
   LINK_LIBRARIES = /home/idra/vcpkg/installed/x64-linux/debug/lib/libglad.a  /home/idra/vcpkg/installed/x64-linux/debug/lib/libglfw3.a  /usr/lib/x86_64-linux-gnu/librt.so  -lm  -ldl  /usr/lib/x86_64-linux-gnu/libX11.so  -lpthread
   OBJECT_DIR = main/CMakeFiles/OSTRICH.dir

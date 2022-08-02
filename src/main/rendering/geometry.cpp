@@ -56,14 +56,15 @@ namespace geometry {
                 radius * cosf(phi));
         }
 
-        auto AddVertex(vector<VERTEX_DATA_TYPE> &sphere, const vec3 vertex) -> void{
+        auto AddVertex(vector<VERTEX_DATA_TYPE> &sphere, const vec3 displacement, const vec3 vertex) -> void{
             // here we use the elegant fact that the normal to a vertex on a sphere is
             // simply the unit vector from the centre of the sphere to the vertex
+            vec3 displacedVertex = vertex + displacement;
             vec3 normal = glm::normalize(vertex);
 
-            sphere.push_back(vertex.x);
-            sphere.push_back(vertex.y);
-            sphere.push_back(vertex.z);
+            sphere.push_back(displacedVertex.x);
+            sphere.push_back(displacedVertex.y);
+            sphere.push_back(displacedVertex.z);
 
             sphere.push_back(normal.x);
             sphere.push_back(normal.y);
@@ -71,13 +72,13 @@ namespace geometry {
         }
 
         auto GenerateTriangles(vector<VERTEX_DATA_TYPE> &sphere, vec3 position, float radius, float step, float phi, float theta1, float theta2) -> void {
-            AddVertex(sphere, position + PolarToCartesian(radius, phi, theta1));
-            AddVertex(sphere, position + PolarToCartesian(radius, phi + step, theta2));
-            AddVertex(sphere, position + PolarToCartesian(radius, phi, theta1 + step));
+            AddVertex(sphere, position, PolarToCartesian(radius, phi, theta1));
+            AddVertex(sphere, position, PolarToCartesian(radius, phi + step, theta2));
+            AddVertex(sphere, position, PolarToCartesian(radius, phi, theta1 + step));
 
-            AddVertex(sphere, position + PolarToCartesian(radius, phi, theta1 + step));
-            AddVertex(sphere, position + PolarToCartesian(radius, phi + step, theta2));
-            AddVertex(sphere, position + PolarToCartesian(radius, phi + step, theta2 + step));
+            AddVertex(sphere, position, PolarToCartesian(radius, phi, theta1 + step));
+            AddVertex(sphere, position, PolarToCartesian(radius, phi + step, theta2));
+            AddVertex(sphere, position, PolarToCartesian(radius, phi + step, theta2 + step));
         }
 
     }

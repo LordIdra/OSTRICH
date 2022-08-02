@@ -52,6 +52,7 @@ namespace control {
 
     auto Update() -> void {
         mouse::Update();
+        keys::Update();
         glfwPollEvents();
         window::Update();
         camera::Update();

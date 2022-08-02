@@ -449,6 +449,33 @@ util/logging.cpp.s:
 	cd /home/idra/Sync/NEA/OSTRICH/build && $(MAKE) -f main/CMakeFiles/OSTRICH.dir/build.make main/CMakeFiles/OSTRICH.dir/util/logging.cpp.s
 .PHONY : util/logging.cpp.s
 
+util/rays.o: util/rays.cpp.o
+
+.PHONY : util/rays.o
+
+# target to build an object file
+util/rays.cpp.o:
+	cd /home/idra/Sync/NEA/OSTRICH/build && $(MAKE) -f main/CMakeFiles/OSTRICH.dir/build.make main/CMakeFiles/OSTRICH.dir/util/rays.cpp.o
+.PHONY : util/rays.cpp.o
+
+util/rays.i: util/rays.cpp.i
+
+.PHONY : util/rays.i
+
+# target to preprocess a source file
+util/rays.cpp.i:
+	cd /home/idra/Sync/NEA/OSTRICH/build && $(MAKE) -f main/CMakeFiles/OSTRICH.dir/build.make main/CMakeFiles/OSTRICH.dir/util/rays.cpp.i
+.PHONY : util/rays.cpp.i
+
+util/rays.s: util/rays.cpp.s
+
+.PHONY : util/rays.s
+
+# target to generate assembly for a file
+util/rays.cpp.s:
+	cd /home/idra/Sync/NEA/OSTRICH/build && $(MAKE) -f main/CMakeFiles/OSTRICH.dir/build.make main/CMakeFiles/OSTRICH.dir/util/rays.cpp.s
+.PHONY : util/rays.cpp.s
+
 window/window.o: window/window.cpp.o
 
 .PHONY : window/window.o
@@ -521,6 +548,9 @@ help:
 	@echo "... util/logging.o"
 	@echo "... util/logging.i"
 	@echo "... util/logging.s"
+	@echo "... util/rays.o"
+	@echo "... util/rays.i"
+	@echo "... util/rays.s"
 	@echo "... window/window.o"
 	@echo "... window/window.i"
 	@echo "... window/window.s"
