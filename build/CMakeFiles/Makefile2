@@ -53,64 +53,46 @@ CMAKE_BINARY_DIR = /home/idra/Sync/NEA/OSTRICH/build
 # Directory level rules for the build root directory
 
 # The main recursive "all" target.
-all: main/all
+all: CMakeFiles/OSTRICH.dir/all
 
 .PHONY : all
 
 # The main recursive "preinstall" target.
-preinstall: main/preinstall
+preinstall:
 
 .PHONY : preinstall
 
 # The main recursive "clean" target.
-clean: main/clean
+clean: CMakeFiles/OSTRICH.dir/clean
 
 .PHONY : clean
 
 #=============================================================================
-# Directory level rules for directory main
-
-# Recursive "all" directory target.
-main/all: main/CMakeFiles/OSTRICH.dir/all
-
-.PHONY : main/all
-
-# Recursive "preinstall" directory target.
-main/preinstall:
-
-.PHONY : main/preinstall
-
-# Recursive "clean" directory target.
-main/clean: main/CMakeFiles/OSTRICH.dir/clean
-
-.PHONY : main/clean
-
-#=============================================================================
-# Target rules for target main/CMakeFiles/OSTRICH.dir
+# Target rules for target CMakeFiles/OSTRICH.dir
 
 # All Build rule for target.
-main/CMakeFiles/OSTRICH.dir/all:
-	$(MAKE) -f main/CMakeFiles/OSTRICH.dir/build.make main/CMakeFiles/OSTRICH.dir/depend
-	$(MAKE) -f main/CMakeFiles/OSTRICH.dir/build.make main/CMakeFiles/OSTRICH.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/idra/Sync/NEA/OSTRICH/build/CMakeFiles --progress-num=1,2,3,4,5,6,7,8,9,10,11,12,13,14,15 "Built target OSTRICH"
-.PHONY : main/CMakeFiles/OSTRICH.dir/all
+CMakeFiles/OSTRICH.dir/all:
+	$(MAKE) -f CMakeFiles/OSTRICH.dir/build.make CMakeFiles/OSTRICH.dir/depend
+	$(MAKE) -f CMakeFiles/OSTRICH.dir/build.make CMakeFiles/OSTRICH.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/idra/Sync/NEA/OSTRICH/build/CMakeFiles --progress-num=1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16 "Built target OSTRICH"
+.PHONY : CMakeFiles/OSTRICH.dir/all
 
 # Build rule for subdir invocation for target.
-main/CMakeFiles/OSTRICH.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/idra/Sync/NEA/OSTRICH/build/CMakeFiles 15
-	$(MAKE) -f CMakeFiles/Makefile2 main/CMakeFiles/OSTRICH.dir/all
+CMakeFiles/OSTRICH.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/idra/Sync/NEA/OSTRICH/build/CMakeFiles 16
+	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/OSTRICH.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/idra/Sync/NEA/OSTRICH/build/CMakeFiles 0
-.PHONY : main/CMakeFiles/OSTRICH.dir/rule
+.PHONY : CMakeFiles/OSTRICH.dir/rule
 
 # Convenience name for target.
-OSTRICH: main/CMakeFiles/OSTRICH.dir/rule
+OSTRICH: CMakeFiles/OSTRICH.dir/rule
 
 .PHONY : OSTRICH
 
 # clean rule for target.
-main/CMakeFiles/OSTRICH.dir/clean:
-	$(MAKE) -f main/CMakeFiles/OSTRICH.dir/build.make main/CMakeFiles/OSTRICH.dir/clean
-.PHONY : main/CMakeFiles/OSTRICH.dir/clean
+CMakeFiles/OSTRICH.dir/clean:
+	$(MAKE) -f CMakeFiles/OSTRICH.dir/build.make CMakeFiles/OSTRICH.dir/clean
+.PHONY : CMakeFiles/OSTRICH.dir/clean
 
 #=============================================================================
 # Special targets to cleanup operation of make.
