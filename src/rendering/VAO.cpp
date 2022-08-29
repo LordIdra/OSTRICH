@@ -1,6 +1,7 @@
 #include "VAO.h"
 
-#include "../util/logging.h"
+#include "../util/Log.h"
+
 #include "glad/glad.h"
 
 
@@ -17,7 +18,7 @@ auto VAO::Init() -> void {
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
 
     Unbind();
-    logging::Info("Created VAO " + std::to_string(id));
+    Log::Info("Created VAO " + std::to_string(id));
 }
 
 auto VAO::Bind() const -> void {
@@ -34,7 +35,7 @@ auto VAO::AddVertexAttribute(const VertexAttribute &a) const -> void {
     glEnableVertexAttribArray(a.index);
     Unbind();
     
-    logging::Info("Added vertex attribute " + std::to_string(a.index) + " to VAO " + std::to_string(id));
+    Log::Info("Added vertex attribute " + std::to_string(a.index) + " to VAO " + std::to_string(id));
 }
 
 auto VAO::Data(const vector<VERTEX_DATA_TYPE> &data, unsigned int vertexCount, unsigned int mode) -> void {

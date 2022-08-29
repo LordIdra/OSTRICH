@@ -10,35 +10,36 @@ set(FILES
     "bodies/Massive.h"
     "bodies/Massive.cpp"
 
-    "control/control.h"
-    "control/control.cpp"
+    "control/Control.h"
+    "control/Control.cpp"
 
-    "input/keys.h"
-    "input/keys.cpp"
+    "input/Keys.h"
+    "input/Keys.cpp"
 
-    "input/mouse.h"
-    "input/mouse.cpp"
+    "input/Mouse.h"
+    "input/Mouse.cpp"
 
-    "window/window.h"
-    "window/window.cpp"
+    "window/Window.h"
+    "window/Window.cpp"
 
     "util/Constants.h"
 
-    "util/logging.h"
-    "util/logging.cpp"
+    "util/Log.h"
+    "util/Log.cpp"
 
-    "util/rays.h"
-    "util/rays.cpp"
+    "util/Rays.h"
+    "util/Rays.cpp"
 
-    "util/transition.cpp"
+    "util/Transition.h"
+    "util/Transition.cpp"
 
     "util/Types.h"
 
-    "rendering/camera.h"
-    "rendering/camera.cpp"
+    "rendering/Camera.h"
+    "rendering/Camera.cpp"
 
-    "rendering/geometry.cpp"
-    "rendering/geometry.h"
+    "rendering/Geometry.cpp"
+    "rendering/Geometry.h"
 
     "rendering/Material.h"
 
@@ -52,7 +53,6 @@ set(FILES
     "rendering/VAO.cpp"
 
     "rendering/VertexAttribute.h"
-
 )
 
 set(CMAKE_TOOLCHAIN_FILE "~/vcpkg/scripts/buildsystems/vcpkg.cmake")

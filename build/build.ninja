@@ -53,139 +53,118 @@ build CMakeFiles/edit_cache.util: CUSTOM_COMMAND
 build edit_cache: phony CMakeFiles/edit_cache.util
 
 # =============================================================================
-# Write statements declared in CMakeLists.txt:
-# /home/idra/Sync/NEA/OSTRICH/src/CMakeLists.txt
-# =============================================================================
-
-
-#############################################
-# Utility command for rebuild_cache
-
-build main/CMakeFiles/rebuild_cache.util: CUSTOM_COMMAND
-  COMMAND = cd /home/idra/Sync/NEA/OSTRICH/build/main && /usr/bin/cmake -S/home/idra/Sync/NEA/OSTRICH/src -B/home/idra/Sync/NEA/OSTRICH/build
-  DESC = Running CMake to regenerate build system...
-  pool = console
-  restat = 1
-
-build main/rebuild_cache: phony main/CMakeFiles/rebuild_cache.util
-
-
-#############################################
-# Utility command for edit_cache
-
-build main/CMakeFiles/edit_cache.util: CUSTOM_COMMAND
-  COMMAND = cd /home/idra/Sync/NEA/OSTRICH/build/main && /usr/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
-  DESC = No interactive CMake dialog available...
-  restat = 1
-
-build main/edit_cache: phony main/CMakeFiles/edit_cache.util
-
-# =============================================================================
 # Object build statements for EXECUTABLE target OSTRICH
 
 
 #############################################
 # Order-only phony target for OSTRICH
 
-build cmake_object_order_depends_target_OSTRICH: phony || main/CMakeFiles/OSTRICH.dir
+build cmake_object_order_depends_target_OSTRICH: phony || CMakeFiles/OSTRICH.dir
 
-build main/CMakeFiles/OSTRICH.dir/main.cpp.o: CXX_COMPILER__OSTRICH /home/idra/Sync/NEA/OSTRICH/src/main/main.cpp || cmake_object_order_depends_target_OSTRICH
-  DEP_FILE = main/CMakeFiles/OSTRICH.dir/main.cpp.o.d
+build CMakeFiles/OSTRICH.dir/main.cpp.o: CXX_COMPILER__OSTRICH /home/idra/Sync/NEA/OSTRICH/src/main.cpp || cmake_object_order_depends_target_OSTRICH
+  DEP_FILE = CMakeFiles/OSTRICH.dir/main.cpp.o.d
   FLAGS = -g
   INCLUDES = -isystem /home/idra/vcpkg/installed/x64-linux/include
-  OBJECT_DIR = main/CMakeFiles/OSTRICH.dir
-  OBJECT_FILE_DIR = main/CMakeFiles/OSTRICH.dir
+  OBJECT_DIR = CMakeFiles/OSTRICH.dir
+  OBJECT_FILE_DIR = CMakeFiles/OSTRICH.dir
 
-build main/CMakeFiles/OSTRICH.dir/bodies/Body.cpp.o: CXX_COMPILER__OSTRICH /home/idra/Sync/NEA/OSTRICH/src/main/bodies/Body.cpp || cmake_object_order_depends_target_OSTRICH
-  DEP_FILE = main/CMakeFiles/OSTRICH.dir/bodies/Body.cpp.o.d
+build CMakeFiles/OSTRICH.dir/bodies/Body.cpp.o: CXX_COMPILER__OSTRICH /home/idra/Sync/NEA/OSTRICH/src/bodies/Body.cpp || cmake_object_order_depends_target_OSTRICH
+  DEP_FILE = CMakeFiles/OSTRICH.dir/bodies/Body.cpp.o.d
   FLAGS = -g
   INCLUDES = -isystem /home/idra/vcpkg/installed/x64-linux/include
-  OBJECT_DIR = main/CMakeFiles/OSTRICH.dir
-  OBJECT_FILE_DIR = main/CMakeFiles/OSTRICH.dir/bodies
+  OBJECT_DIR = CMakeFiles/OSTRICH.dir
+  OBJECT_FILE_DIR = CMakeFiles/OSTRICH.dir/bodies
 
-build main/CMakeFiles/OSTRICH.dir/bodies/Massive.cpp.o: CXX_COMPILER__OSTRICH /home/idra/Sync/NEA/OSTRICH/src/main/bodies/Massive.cpp || cmake_object_order_depends_target_OSTRICH
-  DEP_FILE = main/CMakeFiles/OSTRICH.dir/bodies/Massive.cpp.o.d
+build CMakeFiles/OSTRICH.dir/bodies/Massive.cpp.o: CXX_COMPILER__OSTRICH /home/idra/Sync/NEA/OSTRICH/src/bodies/Massive.cpp || cmake_object_order_depends_target_OSTRICH
+  DEP_FILE = CMakeFiles/OSTRICH.dir/bodies/Massive.cpp.o.d
   FLAGS = -g
   INCLUDES = -isystem /home/idra/vcpkg/installed/x64-linux/include
-  OBJECT_DIR = main/CMakeFiles/OSTRICH.dir
-  OBJECT_FILE_DIR = main/CMakeFiles/OSTRICH.dir/bodies
+  OBJECT_DIR = CMakeFiles/OSTRICH.dir
+  OBJECT_FILE_DIR = CMakeFiles/OSTRICH.dir/bodies
 
-build main/CMakeFiles/OSTRICH.dir/control/control.cpp.o: CXX_COMPILER__OSTRICH /home/idra/Sync/NEA/OSTRICH/src/main/control/control.cpp || cmake_object_order_depends_target_OSTRICH
-  DEP_FILE = main/CMakeFiles/OSTRICH.dir/control/control.cpp.o.d
+build CMakeFiles/OSTRICH.dir/control/Control.cpp.o: CXX_COMPILER__OSTRICH /home/idra/Sync/NEA/OSTRICH/src/control/Control.cpp || cmake_object_order_depends_target_OSTRICH
+  DEP_FILE = CMakeFiles/OSTRICH.dir/control/Control.cpp.o.d
   FLAGS = -g
   INCLUDES = -isystem /home/idra/vcpkg/installed/x64-linux/include
-  OBJECT_DIR = main/CMakeFiles/OSTRICH.dir
-  OBJECT_FILE_DIR = main/CMakeFiles/OSTRICH.dir/control
+  OBJECT_DIR = CMakeFiles/OSTRICH.dir
+  OBJECT_FILE_DIR = CMakeFiles/OSTRICH.dir/control
 
-build main/CMakeFiles/OSTRICH.dir/input/keys.cpp.o: CXX_COMPILER__OSTRICH /home/idra/Sync/NEA/OSTRICH/src/main/input/keys.cpp || cmake_object_order_depends_target_OSTRICH
-  DEP_FILE = main/CMakeFiles/OSTRICH.dir/input/keys.cpp.o.d
+build CMakeFiles/OSTRICH.dir/input/Keys.cpp.o: CXX_COMPILER__OSTRICH /home/idra/Sync/NEA/OSTRICH/src/input/Keys.cpp || cmake_object_order_depends_target_OSTRICH
+  DEP_FILE = CMakeFiles/OSTRICH.dir/input/Keys.cpp.o.d
   FLAGS = -g
   INCLUDES = -isystem /home/idra/vcpkg/installed/x64-linux/include
-  OBJECT_DIR = main/CMakeFiles/OSTRICH.dir
-  OBJECT_FILE_DIR = main/CMakeFiles/OSTRICH.dir/input
+  OBJECT_DIR = CMakeFiles/OSTRICH.dir
+  OBJECT_FILE_DIR = CMakeFiles/OSTRICH.dir/input
 
-build main/CMakeFiles/OSTRICH.dir/input/mouse.cpp.o: CXX_COMPILER__OSTRICH /home/idra/Sync/NEA/OSTRICH/src/main/input/mouse.cpp || cmake_object_order_depends_target_OSTRICH
-  DEP_FILE = main/CMakeFiles/OSTRICH.dir/input/mouse.cpp.o.d
+build CMakeFiles/OSTRICH.dir/input/Mouse.cpp.o: CXX_COMPILER__OSTRICH /home/idra/Sync/NEA/OSTRICH/src/input/Mouse.cpp || cmake_object_order_depends_target_OSTRICH
+  DEP_FILE = CMakeFiles/OSTRICH.dir/input/Mouse.cpp.o.d
   FLAGS = -g
   INCLUDES = -isystem /home/idra/vcpkg/installed/x64-linux/include
-  OBJECT_DIR = main/CMakeFiles/OSTRICH.dir
-  OBJECT_FILE_DIR = main/CMakeFiles/OSTRICH.dir/input
+  OBJECT_DIR = CMakeFiles/OSTRICH.dir
+  OBJECT_FILE_DIR = CMakeFiles/OSTRICH.dir/input
 
-build main/CMakeFiles/OSTRICH.dir/window/window.cpp.o: CXX_COMPILER__OSTRICH /home/idra/Sync/NEA/OSTRICH/src/main/window/window.cpp || cmake_object_order_depends_target_OSTRICH
-  DEP_FILE = main/CMakeFiles/OSTRICH.dir/window/window.cpp.o.d
+build CMakeFiles/OSTRICH.dir/window/Window.cpp.o: CXX_COMPILER__OSTRICH /home/idra/Sync/NEA/OSTRICH/src/window/Window.cpp || cmake_object_order_depends_target_OSTRICH
+  DEP_FILE = CMakeFiles/OSTRICH.dir/window/Window.cpp.o.d
   FLAGS = -g
   INCLUDES = -isystem /home/idra/vcpkg/installed/x64-linux/include
-  OBJECT_DIR = main/CMakeFiles/OSTRICH.dir
-  OBJECT_FILE_DIR = main/CMakeFiles/OSTRICH.dir/window
+  OBJECT_DIR = CMakeFiles/OSTRICH.dir
+  OBJECT_FILE_DIR = CMakeFiles/OSTRICH.dir/window
 
-build main/CMakeFiles/OSTRICH.dir/util/logging.cpp.o: CXX_COMPILER__OSTRICH /home/idra/Sync/NEA/OSTRICH/src/main/util/logging.cpp || cmake_object_order_depends_target_OSTRICH
-  DEP_FILE = main/CMakeFiles/OSTRICH.dir/util/logging.cpp.o.d
+build CMakeFiles/OSTRICH.dir/util/Log.cpp.o: CXX_COMPILER__OSTRICH /home/idra/Sync/NEA/OSTRICH/src/util/Log.cpp || cmake_object_order_depends_target_OSTRICH
+  DEP_FILE = CMakeFiles/OSTRICH.dir/util/Log.cpp.o.d
   FLAGS = -g
   INCLUDES = -isystem /home/idra/vcpkg/installed/x64-linux/include
-  OBJECT_DIR = main/CMakeFiles/OSTRICH.dir
-  OBJECT_FILE_DIR = main/CMakeFiles/OSTRICH.dir/util
+  OBJECT_DIR = CMakeFiles/OSTRICH.dir
+  OBJECT_FILE_DIR = CMakeFiles/OSTRICH.dir/util
 
-build main/CMakeFiles/OSTRICH.dir/util/rays.cpp.o: CXX_COMPILER__OSTRICH /home/idra/Sync/NEA/OSTRICH/src/main/util/rays.cpp || cmake_object_order_depends_target_OSTRICH
-  DEP_FILE = main/CMakeFiles/OSTRICH.dir/util/rays.cpp.o.d
+build CMakeFiles/OSTRICH.dir/util/Rays.cpp.o: CXX_COMPILER__OSTRICH /home/idra/Sync/NEA/OSTRICH/src/util/Rays.cpp || cmake_object_order_depends_target_OSTRICH
+  DEP_FILE = CMakeFiles/OSTRICH.dir/util/Rays.cpp.o.d
   FLAGS = -g
   INCLUDES = -isystem /home/idra/vcpkg/installed/x64-linux/include
-  OBJECT_DIR = main/CMakeFiles/OSTRICH.dir
-  OBJECT_FILE_DIR = main/CMakeFiles/OSTRICH.dir/util
+  OBJECT_DIR = CMakeFiles/OSTRICH.dir
+  OBJECT_FILE_DIR = CMakeFiles/OSTRICH.dir/util
 
-build main/CMakeFiles/OSTRICH.dir/rendering/camera.cpp.o: CXX_COMPILER__OSTRICH /home/idra/Sync/NEA/OSTRICH/src/main/rendering/camera.cpp || cmake_object_order_depends_target_OSTRICH
-  DEP_FILE = main/CMakeFiles/OSTRICH.dir/rendering/camera.cpp.o.d
+build CMakeFiles/OSTRICH.dir/util/Transition.cpp.o: CXX_COMPILER__OSTRICH /home/idra/Sync/NEA/OSTRICH/src/util/Transition.cpp || cmake_object_order_depends_target_OSTRICH
+  DEP_FILE = CMakeFiles/OSTRICH.dir/util/Transition.cpp.o.d
   FLAGS = -g
   INCLUDES = -isystem /home/idra/vcpkg/installed/x64-linux/include
-  OBJECT_DIR = main/CMakeFiles/OSTRICH.dir
-  OBJECT_FILE_DIR = main/CMakeFiles/OSTRICH.dir/rendering
+  OBJECT_DIR = CMakeFiles/OSTRICH.dir
+  OBJECT_FILE_DIR = CMakeFiles/OSTRICH.dir/util
 
-build main/CMakeFiles/OSTRICH.dir/rendering/geometry.cpp.o: CXX_COMPILER__OSTRICH /home/idra/Sync/NEA/OSTRICH/src/main/rendering/geometry.cpp || cmake_object_order_depends_target_OSTRICH
-  DEP_FILE = main/CMakeFiles/OSTRICH.dir/rendering/geometry.cpp.o.d
+build CMakeFiles/OSTRICH.dir/rendering/Camera.cpp.o: CXX_COMPILER__OSTRICH /home/idra/Sync/NEA/OSTRICH/src/rendering/Camera.cpp || cmake_object_order_depends_target_OSTRICH
+  DEP_FILE = CMakeFiles/OSTRICH.dir/rendering/Camera.cpp.o.d
   FLAGS = -g
   INCLUDES = -isystem /home/idra/vcpkg/installed/x64-linux/include
-  OBJECT_DIR = main/CMakeFiles/OSTRICH.dir
-  OBJECT_FILE_DIR = main/CMakeFiles/OSTRICH.dir/rendering
+  OBJECT_DIR = CMakeFiles/OSTRICH.dir
+  OBJECT_FILE_DIR = CMakeFiles/OSTRICH.dir/rendering
 
-build main/CMakeFiles/OSTRICH.dir/rendering/Program.cpp.o: CXX_COMPILER__OSTRICH /home/idra/Sync/NEA/OSTRICH/src/main/rendering/Program.cpp || cmake_object_order_depends_target_OSTRICH
-  DEP_FILE = main/CMakeFiles/OSTRICH.dir/rendering/Program.cpp.o.d
+build CMakeFiles/OSTRICH.dir/rendering/Geometry.cpp.o: CXX_COMPILER__OSTRICH /home/idra/Sync/NEA/OSTRICH/src/rendering/Geometry.cpp || cmake_object_order_depends_target_OSTRICH
+  DEP_FILE = CMakeFiles/OSTRICH.dir/rendering/Geometry.cpp.o.d
   FLAGS = -g
   INCLUDES = -isystem /home/idra/vcpkg/installed/x64-linux/include
-  OBJECT_DIR = main/CMakeFiles/OSTRICH.dir
-  OBJECT_FILE_DIR = main/CMakeFiles/OSTRICH.dir/rendering
+  OBJECT_DIR = CMakeFiles/OSTRICH.dir
+  OBJECT_FILE_DIR = CMakeFiles/OSTRICH.dir/rendering
 
-build main/CMakeFiles/OSTRICH.dir/rendering/Shader.cpp.o: CXX_COMPILER__OSTRICH /home/idra/Sync/NEA/OSTRICH/src/main/rendering/Shader.cpp || cmake_object_order_depends_target_OSTRICH
-  DEP_FILE = main/CMakeFiles/OSTRICH.dir/rendering/Shader.cpp.o.d
+build CMakeFiles/OSTRICH.dir/rendering/Program.cpp.o: CXX_COMPILER__OSTRICH /home/idra/Sync/NEA/OSTRICH/src/rendering/Program.cpp || cmake_object_order_depends_target_OSTRICH
+  DEP_FILE = CMakeFiles/OSTRICH.dir/rendering/Program.cpp.o.d
   FLAGS = -g
   INCLUDES = -isystem /home/idra/vcpkg/installed/x64-linux/include
-  OBJECT_DIR = main/CMakeFiles/OSTRICH.dir
-  OBJECT_FILE_DIR = main/CMakeFiles/OSTRICH.dir/rendering
+  OBJECT_DIR = CMakeFiles/OSTRICH.dir
+  OBJECT_FILE_DIR = CMakeFiles/OSTRICH.dir/rendering
 
-build main/CMakeFiles/OSTRICH.dir/rendering/VAO.cpp.o: CXX_COMPILER__OSTRICH /home/idra/Sync/NEA/OSTRICH/src/main/rendering/VAO.cpp || cmake_object_order_depends_target_OSTRICH
-  DEP_FILE = main/CMakeFiles/OSTRICH.dir/rendering/VAO.cpp.o.d
+build CMakeFiles/OSTRICH.dir/rendering/Shader.cpp.o: CXX_COMPILER__OSTRICH /home/idra/Sync/NEA/OSTRICH/src/rendering/Shader.cpp || cmake_object_order_depends_target_OSTRICH
+  DEP_FILE = CMakeFiles/OSTRICH.dir/rendering/Shader.cpp.o.d
   FLAGS = -g
   INCLUDES = -isystem /home/idra/vcpkg/installed/x64-linux/include
-  OBJECT_DIR = main/CMakeFiles/OSTRICH.dir
-  OBJECT_FILE_DIR = main/CMakeFiles/OSTRICH.dir/rendering
+  OBJECT_DIR = CMakeFiles/OSTRICH.dir
+  OBJECT_FILE_DIR = CMakeFiles/OSTRICH.dir/rendering
+
+build CMakeFiles/OSTRICH.dir/rendering/VAO.cpp.o: CXX_COMPILER__OSTRICH /home/idra/Sync/NEA/OSTRICH/src/rendering/VAO.cpp || cmake_object_order_depends_target_OSTRICH
+  DEP_FILE = CMakeFiles/OSTRICH.dir/rendering/VAO.cpp.o.d
+  FLAGS = -g
+  INCLUDES = -isystem /home/idra/vcpkg/installed/x64-linux/include
+  OBJECT_DIR = CMakeFiles/OSTRICH.dir
+  OBJECT_FILE_DIR = CMakeFiles/OSTRICH.dir/rendering
 
 
 # =============================================================================
@@ -193,21 +172,19 @@ build main/CMakeFiles/OSTRICH.dir/rendering/VAO.cpp.o: CXX_COMPILER__OSTRICH /ho
 
 
 #############################################
-# Link the executable main/OSTRICH
+# Link the executable OSTRICH
 
-build main/OSTRICH: CXX_EXECUTABLE_LINKER__OSTRICH main/CMakeFiles/OSTRICH.dir/main.cpp.o main/CMakeFiles/OSTRICH.dir/bodies/Body.cpp.o main/CMakeFiles/OSTRICH.dir/bodies/Massive.cpp.o main/CMakeFiles/OSTRICH.dir/control/control.cpp.o main/CMakeFiles/OSTRICH.dir/input/keys.cpp.o main/CMakeFiles/OSTRICH.dir/input/mouse.cpp.o main/CMakeFiles/OSTRICH.dir/window/window.cpp.o main/CMakeFiles/OSTRICH.dir/util/logging.cpp.o main/CMakeFiles/OSTRICH.dir/util/rays.cpp.o main/CMakeFiles/OSTRICH.dir/rendering/camera.cpp.o main/CMakeFiles/OSTRICH.dir/rendering/geometry.cpp.o main/CMakeFiles/OSTRICH.dir/rendering/Program.cpp.o main/CMakeFiles/OSTRICH.dir/rendering/Shader.cpp.o main/CMakeFiles/OSTRICH.dir/rendering/VAO.cpp.o | /home/idra/vcpkg/installed/x64-linux/debug/lib/libglad.a /home/idra/vcpkg/installed/x64-linux/debug/lib/libglfw3.a /usr/lib/x86_64-linux-gnu/librt.so /usr/lib/x86_64-linux-gnu/libm.so /usr/lib/x86_64-linux-gnu/libX11.so
+build OSTRICH: CXX_EXECUTABLE_LINKER__OSTRICH CMakeFiles/OSTRICH.dir/main.cpp.o CMakeFiles/OSTRICH.dir/bodies/Body.cpp.o CMakeFiles/OSTRICH.dir/bodies/Massive.cpp.o CMakeFiles/OSTRICH.dir/control/Control.cpp.o CMakeFiles/OSTRICH.dir/input/Keys.cpp.o CMakeFiles/OSTRICH.dir/input/Mouse.cpp.o CMakeFiles/OSTRICH.dir/window/Window.cpp.o CMakeFiles/OSTRICH.dir/util/Log.cpp.o CMakeFiles/OSTRICH.dir/util/Rays.cpp.o CMakeFiles/OSTRICH.dir/util/Transition.cpp.o CMakeFiles/OSTRICH.dir/rendering/Camera.cpp.o CMakeFiles/OSTRICH.dir/rendering/Geometry.cpp.o CMakeFiles/OSTRICH.dir/rendering/Program.cpp.o CMakeFiles/OSTRICH.dir/rendering/Shader.cpp.o CMakeFiles/OSTRICH.dir/rendering/VAO.cpp.o | /home/idra/vcpkg/installed/x64-linux/debug/lib/libglad.a /home/idra/vcpkg/installed/x64-linux/debug/lib/libglfw3.a /usr/lib/x86_64-linux-gnu/librt.so /usr/lib/x86_64-linux-gnu/libm.so /usr/lib/x86_64-linux-gnu/libX11.so
   FLAGS = -g
   LINK_LIBRARIES = /home/idra/vcpkg/installed/x64-linux/debug/lib/libglad.a  /home/idra/vcpkg/installed/x64-linux/debug/lib/libglfw3.a  /usr/lib/x86_64-linux-gnu/librt.so  -lm  -ldl  /usr/lib/x86_64-linux-gnu/libX11.so  -lpthread
-  OBJECT_DIR = main/CMakeFiles/OSTRICH.dir
+  OBJECT_DIR = CMakeFiles/OSTRICH.dir
   POST_BUILD = :
   PRE_LINK = :
-  TARGET_FILE = main/OSTRICH
+  TARGET_FILE = OSTRICH
   TARGET_PDB = OSTRICH.dbg
 
 # =============================================================================
 # Target aliases.
-
-build OSTRICH: phony main/OSTRICH
 
 # =============================================================================
 # Folder targets.
@@ -217,14 +194,7 @@ build OSTRICH: phony main/OSTRICH
 #############################################
 # Folder: /home/idra/Sync/NEA/OSTRICH/build
 
-build all: phony main/all
-
-# =============================================================================
-
-#############################################
-# Folder: /home/idra/Sync/NEA/OSTRICH/build/main
-
-build main/all: phony main/OSTRICH
+build all: phony OSTRICH
 
 # =============================================================================
 # Built-in targets
@@ -238,14 +208,14 @@ default all
 #############################################
 # Re-run CMake if any of its inputs changed.
 
-build build.ninja: RERUN_CMAKE | /home/idra/Sync/NEA/OSTRICH/src/CMakeLists.txt /home/idra/Sync/NEA/OSTRICH/src/main/CMakeLists.txt /home/idra/vcpkg/installed/x64-linux/share/boost/vcpkg-cmake-wrapper.cmake /home/idra/vcpkg/installed/x64-linux/share/glad/gladConfig.cmake /home/idra/vcpkg/installed/x64-linux/share/glad/gladConfigVersion.cmake /home/idra/vcpkg/installed/x64-linux/share/glad/gladTargets-debug.cmake /home/idra/vcpkg/installed/x64-linux/share/glad/gladTargets-release.cmake /home/idra/vcpkg/installed/x64-linux/share/glad/gladTargets.cmake /home/idra/vcpkg/installed/x64-linux/share/glfw3/glfw3Config.cmake /home/idra/vcpkg/installed/x64-linux/share/glfw3/glfw3ConfigVersion.cmake /home/idra/vcpkg/installed/x64-linux/share/glfw3/glfw3Targets-debug.cmake /home/idra/vcpkg/installed/x64-linux/share/glfw3/glfw3Targets-release.cmake /home/idra/vcpkg/installed/x64-linux/share/glfw3/glfw3Targets.cmake /home/idra/vcpkg/installed/x64-linux/share/glm/glm-config.cmake /home/idra/vcpkg/scripts/buildsystems/vcpkg.cmake /usr/share/cmake-3.16/Modules/CMakeCInformation.cmake /usr/share/cmake-3.16/Modules/CMakeCXXInformation.cmake /usr/share/cmake-3.16/Modules/CMakeCheckCompilerFlagCommonPatterns.cmake /usr/share/cmake-3.16/Modules/CMakeCommonLanguageInclude.cmake /usr/share/cmake-3.16/Modules/CMakeDependentOption.cmake /usr/share/cmake-3.16/Modules/CMakeGenericSystem.cmake /usr/share/cmake-3.16/Modules/CMakeInitializeConfigs.cmake /usr/share/cmake-3.16/Modules/CMakeLanguageInformation.cmake /usr/share/cmake-3.16/Modules/CMakeSystemSpecificInformation.cmake /usr/share/cmake-3.16/Modules/CMakeSystemSpecificInitialize.cmake /usr/share/cmake-3.16/Modules/Compiler/CMakeCommonCompilerMacros.cmake /usr/share/cmake-3.16/Modules/Compiler/Clang-C.cmake /usr/share/cmake-3.16/Modules/Compiler/Clang-CXX.cmake /usr/share/cmake-3.16/Modules/Compiler/Clang.cmake /usr/share/cmake-3.16/Modules/Compiler/GNU.cmake /usr/share/cmake-3.16/Modules/FindBoost.cmake /usr/share/cmake-3.16/Modules/FindPackageHandleStandardArgs.cmake /usr/share/cmake-3.16/Modules/FindPackageMessage.cmake /usr/share/cmake-3.16/Modules/Internal/CMakeCheckCompilerFlag.cmake /usr/share/cmake-3.16/Modules/Platform/Linux-Clang-C.cmake /usr/share/cmake-3.16/Modules/Platform/Linux-Clang-CXX.cmake /usr/share/cmake-3.16/Modules/Platform/Linux-GNU-C.cmake /usr/share/cmake-3.16/Modules/Platform/Linux-GNU-CXX.cmake /usr/share/cmake-3.16/Modules/Platform/Linux-GNU.cmake /usr/share/cmake-3.16/Modules/Platform/Linux.cmake /usr/share/cmake-3.16/Modules/Platform/UnixPaths.cmake CMakeCache.txt CMakeFiles/3.16.3/CMakeCCompiler.cmake CMakeFiles/3.16.3/CMakeCXXCompiler.cmake CMakeFiles/3.16.3/CMakeSystem.cmake
+build build.ninja: RERUN_CMAKE | /home/idra/Sync/NEA/OSTRICH/src/CMakeLists.txt /home/idra/vcpkg/installed/x64-linux/share/boost/vcpkg-cmake-wrapper.cmake /home/idra/vcpkg/installed/x64-linux/share/glad/gladConfig.cmake /home/idra/vcpkg/installed/x64-linux/share/glad/gladConfigVersion.cmake /home/idra/vcpkg/installed/x64-linux/share/glad/gladTargets-debug.cmake /home/idra/vcpkg/installed/x64-linux/share/glad/gladTargets-release.cmake /home/idra/vcpkg/installed/x64-linux/share/glad/gladTargets.cmake /home/idra/vcpkg/installed/x64-linux/share/glfw3/glfw3Config.cmake /home/idra/vcpkg/installed/x64-linux/share/glfw3/glfw3ConfigVersion.cmake /home/idra/vcpkg/installed/x64-linux/share/glfw3/glfw3Targets-debug.cmake /home/idra/vcpkg/installed/x64-linux/share/glfw3/glfw3Targets-release.cmake /home/idra/vcpkg/installed/x64-linux/share/glfw3/glfw3Targets.cmake /home/idra/vcpkg/installed/x64-linux/share/glm/glm-config.cmake /home/idra/vcpkg/scripts/buildsystems/vcpkg.cmake /usr/share/cmake-3.16/Modules/CMakeCInformation.cmake /usr/share/cmake-3.16/Modules/CMakeCXXInformation.cmake /usr/share/cmake-3.16/Modules/CMakeCheckCompilerFlagCommonPatterns.cmake /usr/share/cmake-3.16/Modules/CMakeCommonLanguageInclude.cmake /usr/share/cmake-3.16/Modules/CMakeDependentOption.cmake /usr/share/cmake-3.16/Modules/CMakeGenericSystem.cmake /usr/share/cmake-3.16/Modules/CMakeInitializeConfigs.cmake /usr/share/cmake-3.16/Modules/CMakeLanguageInformation.cmake /usr/share/cmake-3.16/Modules/CMakeSystemSpecificInformation.cmake /usr/share/cmake-3.16/Modules/CMakeSystemSpecificInitialize.cmake /usr/share/cmake-3.16/Modules/Compiler/CMakeCommonCompilerMacros.cmake /usr/share/cmake-3.16/Modules/Compiler/Clang-C.cmake /usr/share/cmake-3.16/Modules/Compiler/Clang-CXX.cmake /usr/share/cmake-3.16/Modules/Compiler/Clang.cmake /usr/share/cmake-3.16/Modules/Compiler/GNU.cmake /usr/share/cmake-3.16/Modules/FindBoost.cmake /usr/share/cmake-3.16/Modules/FindPackageHandleStandardArgs.cmake /usr/share/cmake-3.16/Modules/FindPackageMessage.cmake /usr/share/cmake-3.16/Modules/Internal/CMakeCheckCompilerFlag.cmake /usr/share/cmake-3.16/Modules/Platform/Linux-Clang-C.cmake /usr/share/cmake-3.16/Modules/Platform/Linux-Clang-CXX.cmake /usr/share/cmake-3.16/Modules/Platform/Linux-GNU-C.cmake /usr/share/cmake-3.16/Modules/Platform/Linux-GNU-CXX.cmake /usr/share/cmake-3.16/Modules/Platform/Linux-GNU.cmake /usr/share/cmake-3.16/Modules/Platform/Linux.cmake /usr/share/cmake-3.16/Modules/Platform/UnixPaths.cmake CMakeCache.txt CMakeFiles/3.16.3/CMakeCCompiler.cmake CMakeFiles/3.16.3/CMakeCXXCompiler.cmake CMakeFiles/3.16.3/CMakeSystem.cmake
   pool = console
 
 
 #############################################
 # A missing CMake input file is not an error.
 
-build /home/idra/Sync/NEA/OSTRICH/src/CMakeLists.txt /home/idra/Sync/NEA/OSTRICH/src/main/CMakeLists.txt /home/idra/vcpkg/installed/x64-linux/share/boost/vcpkg-cmake-wrapper.cmake /home/idra/vcpkg/installed/x64-linux/share/glad/gladConfig.cmake /home/idra/vcpkg/installed/x64-linux/share/glad/gladConfigVersion.cmake /home/idra/vcpkg/installed/x64-linux/share/glad/gladTargets-debug.cmake /home/idra/vcpkg/installed/x64-linux/share/glad/gladTargets-release.cmake /home/idra/vcpkg/installed/x64-linux/share/glad/gladTargets.cmake /home/idra/vcpkg/installed/x64-linux/share/glfw3/glfw3Config.cmake /home/idra/vcpkg/installed/x64-linux/share/glfw3/glfw3ConfigVersion.cmake /home/idra/vcpkg/installed/x64-linux/share/glfw3/glfw3Targets-debug.cmake /home/idra/vcpkg/installed/x64-linux/share/glfw3/glfw3Targets-release.cmake /home/idra/vcpkg/installed/x64-linux/share/glfw3/glfw3Targets.cmake /home/idra/vcpkg/installed/x64-linux/share/glm/glm-config.cmake /home/idra/vcpkg/scripts/buildsystems/vcpkg.cmake /usr/share/cmake-3.16/Modules/CMakeCInformation.cmake /usr/share/cmake-3.16/Modules/CMakeCXXInformation.cmake /usr/share/cmake-3.16/Modules/CMakeCheckCompilerFlagCommonPatterns.cmake /usr/share/cmake-3.16/Modules/CMakeCommonLanguageInclude.cmake /usr/share/cmake-3.16/Modules/CMakeDependentOption.cmake /usr/share/cmake-3.16/Modules/CMakeGenericSystem.cmake /usr/share/cmake-3.16/Modules/CMakeInitializeConfigs.cmake /usr/share/cmake-3.16/Modules/CMakeLanguageInformation.cmake /usr/share/cmake-3.16/Modules/CMakeSystemSpecificInformation.cmake /usr/share/cmake-3.16/Modules/CMakeSystemSpecificInitialize.cmake /usr/share/cmake-3.16/Modules/Compiler/CMakeCommonCompilerMacros.cmake /usr/share/cmake-3.16/Modules/Compiler/Clang-C.cmake /usr/share/cmake-3.16/Modules/Compiler/Clang-CXX.cmake /usr/share/cmake-3.16/Modules/Compiler/Clang.cmake /usr/share/cmake-3.16/Modules/Compiler/GNU.cmake /usr/share/cmake-3.16/Modules/FindBoost.cmake /usr/share/cmake-3.16/Modules/FindPackageHandleStandardArgs.cmake /usr/share/cmake-3.16/Modules/FindPackageMessage.cmake /usr/share/cmake-3.16/Modules/Internal/CMakeCheckCompilerFlag.cmake /usr/share/cmake-3.16/Modules/Platform/Linux-Clang-C.cmake /usr/share/cmake-3.16/Modules/Platform/Linux-Clang-CXX.cmake /usr/share/cmake-3.16/Modules/Platform/Linux-GNU-C.cmake /usr/share/cmake-3.16/Modules/Platform/Linux-GNU-CXX.cmake /usr/share/cmake-3.16/Modules/Platform/Linux-GNU.cmake /usr/share/cmake-3.16/Modules/Platform/Linux.cmake /usr/share/cmake-3.16/Modules/Platform/UnixPaths.cmake CMakeCache.txt CMakeFiles/3.16.3/CMakeCCompiler.cmake CMakeFiles/3.16.3/CMakeCXXCompiler.cmake CMakeFiles/3.16.3/CMakeSystem.cmake: phony
+build /home/idra/Sync/NEA/OSTRICH/src/CMakeLists.txt /home/idra/vcpkg/installed/x64-linux/share/boost/vcpkg-cmake-wrapper.cmake /home/idra/vcpkg/installed/x64-linux/share/glad/gladConfig.cmake /home/idra/vcpkg/installed/x64-linux/share/glad/gladConfigVersion.cmake /home/idra/vcpkg/installed/x64-linux/share/glad/gladTargets-debug.cmake /home/idra/vcpkg/installed/x64-linux/share/glad/gladTargets-release.cmake /home/idra/vcpkg/installed/x64-linux/share/glad/gladTargets.cmake /home/idra/vcpkg/installed/x64-linux/share/glfw3/glfw3Config.cmake /home/idra/vcpkg/installed/x64-linux/share/glfw3/glfw3ConfigVersion.cmake /home/idra/vcpkg/installed/x64-linux/share/glfw3/glfw3Targets-debug.cmake /home/idra/vcpkg/installed/x64-linux/share/glfw3/glfw3Targets-release.cmake /home/idra/vcpkg/installed/x64-linux/share/glfw3/glfw3Targets.cmake /home/idra/vcpkg/installed/x64-linux/share/glm/glm-config.cmake /home/idra/vcpkg/scripts/buildsystems/vcpkg.cmake /usr/share/cmake-3.16/Modules/CMakeCInformation.cmake /usr/share/cmake-3.16/Modules/CMakeCXXInformation.cmake /usr/share/cmake-3.16/Modules/CMakeCheckCompilerFlagCommonPatterns.cmake /usr/share/cmake-3.16/Modules/CMakeCommonLanguageInclude.cmake /usr/share/cmake-3.16/Modules/CMakeDependentOption.cmake /usr/share/cmake-3.16/Modules/CMakeGenericSystem.cmake /usr/share/cmake-3.16/Modules/CMakeInitializeConfigs.cmake /usr/share/cmake-3.16/Modules/CMakeLanguageInformation.cmake /usr/share/cmake-3.16/Modules/CMakeSystemSpecificInformation.cmake /usr/share/cmake-3.16/Modules/CMakeSystemSpecificInitialize.cmake /usr/share/cmake-3.16/Modules/Compiler/CMakeCommonCompilerMacros.cmake /usr/share/cmake-3.16/Modules/Compiler/Clang-C.cmake /usr/share/cmake-3.16/Modules/Compiler/Clang-CXX.cmake /usr/share/cmake-3.16/Modules/Compiler/Clang.cmake /usr/share/cmake-3.16/Modules/Compiler/GNU.cmake /usr/share/cmake-3.16/Modules/FindBoost.cmake /usr/share/cmake-3.16/Modules/FindPackageHandleStandardArgs.cmake /usr/share/cmake-3.16/Modules/FindPackageMessage.cmake /usr/share/cmake-3.16/Modules/Internal/CMakeCheckCompilerFlag.cmake /usr/share/cmake-3.16/Modules/Platform/Linux-Clang-C.cmake /usr/share/cmake-3.16/Modules/Platform/Linux-Clang-CXX.cmake /usr/share/cmake-3.16/Modules/Platform/Linux-GNU-C.cmake /usr/share/cmake-3.16/Modules/Platform/Linux-GNU-CXX.cmake /usr/share/cmake-3.16/Modules/Platform/Linux-GNU.cmake /usr/share/cmake-3.16/Modules/Platform/Linux.cmake /usr/share/cmake-3.16/Modules/Platform/UnixPaths.cmake CMakeCache.txt CMakeFiles/3.16.3/CMakeCCompiler.cmake CMakeFiles/3.16.3/CMakeCXXCompiler.cmake CMakeFiles/3.16.3/CMakeSystem.cmake: phony
 
 
 #############################################

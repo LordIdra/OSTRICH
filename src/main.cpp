@@ -1,20 +1,20 @@
 #include "bodies/Massive.h"
-#include "control/control.h"
+#include "control/Control.h"
 
-#include "input/keys.h"
-#include "input/mouse.h"
+#include "input/Keys.h"
+#include "input/Mouse.h"
 
 #include "rendering/Program.h"
 #include "rendering/VAO.h"
-#include "rendering/camera.h"
-#include "rendering/geometry.h"
+#include "rendering/Camera.h"
+#include "rendering/Geometry.h"
 
-#include "util/logging.h"
-#include "util/rays.h"
-#include "util/transition.h"
+#include "util/Log.h"
+#include "util/Rays.h"
+#include "util/Transition.h"
 #include "util/Types.h"
 
-#include "window/window.h"
+#include "window/Window.h"
 
 #include <GLFW/glfw3.h>
 #include <glm/gtx/string_cast.hpp>
@@ -69,11 +69,11 @@ vec3 defaultVector = vec3(0, 0, 0);
 Transition transition = Transition(defaultVector, defaultVector, 0.0);
 
 auto KeyZoomIn() -> void {
-    camera::AddZoomDelta(KEY_ZOOM_AMOUNT);
+    Camera::AddZoomDelta(KEY_ZOOM_AMOUNT);
 }
 
 auto KeyZoomOut() -> void {
-    camera::AddZoomDelta(-KEY_ZOOM_AMOUNT);
+    Camera::AddZoomDelta(-KEY_ZOOM_AMOUNT);
 }
 
 auto SetupVAO(VAO &vao) -> void {
@@ -101,24 +101,24 @@ auto AddMassiveToVAO(VAO &vao, Massive &body) -> void {
 }
 
 auto SwitchSelectedBody() -> void {
-    vec3 direction = rays::ScreenToWorld(mouse::GetPosition());
+    vec3 direction = Rays::ScreenToWorld(Mouse::GetPosition());
 
-    if (rays::IntersectsSphere(
-        camera::GetPosition(), 
+    if (Rays::IntersectsSphere(
+        Camera::GetPosition(), 
         direction, 
         earth.ScaledPosition(), 
         earth.ScaledRadius())) {
             selectedBody = &earth;
-            transition = Transition(camera::GetTarget(), earth.ScaledPosition(), 0.2);
+            transition = Transition(Camera::GetTarget(), earth.ScaledPosition(), 0.2);
     }
 
-    if (rays::IntersectsSphere(
-        camera::GetPosition(), 
+    if (Rays::IntersectsSphere(
+        Camera::GetPosition(), 
         direction, 
         moon.ScaledPosition(), 
         moon.ScaledRadius())) {
             selectedBody = &moon;
-            transition = Transition(camera::GetTarget(), moon.ScaledPosition(), 0.2);
+            transition = Transition(Camera::GetTarget(), moon.ScaledPosition(), 0.2);
     }
 }
 
@@ -142,13 +142,13 @@ auto InitialiseProgram() -> void {
 }
 
 auto InitialiseCamera() -> void {
-    camera::SetTarget(vec3(0.0f, 0.0f, 0.0f));
+    Camera::SetTarget(vec3(0.0f, 0.0f, 0.0f));
 }
 
 auto InitialiseInput() -> void {
-    keys::BindFunctionToKeyHold(GLFW_KEY_EQUAL, KeyZoomIn);
-    keys::BindFunctionToKeyHold(GLFW_KEY_MINUS, KeyZoomOut);
-    mouse::SetCallbackLeftDouble(SwitchSelectedBody);
+    Keys::BindFunctionToKeyHold(GLFW_KEY_EQUAL, KeyZoomIn);
+    Keys::BindFunctionToKeyHold(GLFW_KEY_MINUS, KeyZoomOut);
+    Mouse::SetCallbackLeftDouble(SwitchSelectedBody);
 
 }
 
@@ -161,7 +161,7 @@ auto WireFrame(bool enabled) -> void {
 }
 
 auto main() -> int {
-    control::Init("TEST!");
+    Control::Init("TEST!");
 
     InitialiseProgram();
     InitialiseVAOs();
@@ -173,23 +173,23 @@ auto main() -> int {
 
     //WireFrame(true);
 
-    while (!window::ShouldClose()) {
+    while (!Window::ShouldClose()) {
 
         deltaTime = glfwGetTime() - previousTime;
         previousTime = glfwGetTime();
 
-        window::Background(vec4(0.0, 0.0, 0.0, 1.0));
-        camera::AddZoomDelta(mouse::GetScrollDelta().y);
+        Window::Background(vec4(0.0, 0.0, 0.0, 1.0));
+        Camera::AddZoomDelta(Mouse::GetScrollDelta().y);
 
-        if (mouse::RightButtonHeld()) {
-            camera::AddAngleDelta(mouse::GetPositionDelta());
+        if (Mouse::RightButtonHeld()) {
+            Camera::AddAngleDelta(Mouse::GetPositionDelta());
         }
 
         vec3 light_position(-0.02, 0.0, 0.0);
 
         program.Use();
-        program.Set("cameraMatrix", camera::GetMatrix());
-        program.Set("cameraPosition", camera::GetPosition());
+        program.Set("cameraMatrix", Camera::GetMatrix());
+        program.Set("cameraPosition", Camera::GetPosition());
         program.Set("lightPosition", light_position);
         
         if (selectedBody->GetName() == earth.GetName()) {
@@ -207,10 +207,10 @@ auto main() -> int {
         vao2.Render();
 
         if (!transition.Finished()) {
-            camera::SetTarget(transition.Step(deltaTime));
+            Camera::SetTarget(transition.Step(deltaTime));
         }
         
-        control::Update();
+        Control::Update();
     }
 
     // 0 = successful execution

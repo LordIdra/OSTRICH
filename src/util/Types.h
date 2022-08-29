@@ -12,7 +12,7 @@
 typedef float ELEMENT_DATA_TYPE;
 typedef float VERTEX_DATA_TYPE;
 
-using std::vector;
+using std::vector; // NOLINT it's used outside of this file
 using std::string;
 
 using glm::vec2;

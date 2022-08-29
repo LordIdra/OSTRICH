@@ -1,6 +1,6 @@
 #include "Shader.h"
 
-#include "../util/logging.h"
+#include "../util/Log.h"
 
 #include <glad/glad.h>
 
@@ -19,7 +19,7 @@ auto Shader::FileExists(const string &path) const -> bool {
 
 auto Shader::ReadFile(const string &path) const -> string {
     if (!FileExists(path)) {
-        logging::Error("Failed to open file at " + path);
+        Log::Error("Failed to open file at " + path);
     }
     ifstream file(path);
     stringstream sourceBuffer;
@@ -32,17 +32,17 @@ auto Shader::PrintCompileLog() const -> void {
     const unsigned int LOG_LENGTH = 1024;
     char compileLog[LOG_LENGTH];
     glGetShaderInfoLog(id, LOG_LENGTH, nullptr, compileLog);
-    logging::Error((string) compileLog);
+    Log::Error((string) compileLog);
 }
 
 auto Shader::CheckCompileSuccess(const string &path) const -> void {
     int compileSuccessful = 0;
     glGetShaderiv(id, GL_COMPILE_STATUS, &compileSuccessful);   
     if (!compileSuccessful) {
-        logging::Error("Failed to compile shader at " + path);
+        Log::Error("Failed to compile shader at " + path);
         PrintCompileLog();
     } else {
-        logging::Info("Successfully compiled shader at " + path);
+        Log::Info("Successfully compiled shader at " + path);
     }
 }
 

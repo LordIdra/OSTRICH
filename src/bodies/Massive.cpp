@@ -1,8 +1,8 @@
 #include "Massive.h"
 
-#include "../rendering/geometry.h"
+#include "../rendering/Geometry.h"
 
-#include "../util/logging.h"
+#include "../util/Log.h"
 
 
 
@@ -16,5 +16,5 @@ float Massive::ScaledRadius() {
 vector<VERTEX_DATA_TYPE> Massive::GetSphereVertices() {
     // steps is constant for now, but it may be wise to modify this in future
     // so that the number of steps depends on the radius of the sphere
-    return geometry::Sphere(ScaledPosition(), ScaledRadius(), PI / 24);
+    return Geometry::Sphere(ScaledPosition(), ScaledRadius(), PI / 24);
 }

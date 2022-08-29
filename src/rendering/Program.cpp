@@ -1,6 +1,6 @@
 #include "Program.h"
 
-#include "../util/logging.h"
+#include "../util/Log.h"
 
 #include <glad/glad.h>
 
@@ -10,10 +10,10 @@ auto Program::CheckLinkSuccess() const -> void {
     int linkSuccessful = 0;
     glGetProgramiv(id, GL_LINK_STATUS, &linkSuccessful);
     if (!linkSuccessful) {
-        logging::Error("Failed to link program");
+        Log::Error("Failed to link program");
         PrintLinkLog();
     } else {
-        logging::Info("Successfully linked program");
+        Log::Info("Successfully linked program");
     }
 }
 
@@ -21,7 +21,7 @@ auto Program::PrintLinkLog() const -> void {
     const unsigned int LOG_LENGTH = 1024;
     char linkLog[LOG_LENGTH];
     glGetProgramInfoLog(id, LOG_LENGTH, nullptr, linkLog);
-    logging::Error((string)linkLog);
+    Log::Error((string)linkLog);
 }
 
 Program::Program() {}
