@@ -2,13 +2,13 @@
 
 
 
+
 namespace Control {
     namespace {
-        unsigned int MAJOR_VERSION = 3;
+         int MAJOR_VERSION = 3;
         unsigned int MINOR_VERSION = 3;
 
         auto SetVersionHints() -> void {
-            while (true) {}
             
             // tell OpenGL which version to use, and tell OpenGL to use the CORE profile rather than COMPATIBILITY
             glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, MAJOR_VERSION);

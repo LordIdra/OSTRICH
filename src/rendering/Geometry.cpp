@@ -2,6 +2,7 @@
 
 #include "../util/Log.h"
 
+using namespace std;
 
 
 namespace Geometry {
