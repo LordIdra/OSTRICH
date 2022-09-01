@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../window/Window.h"
+#include "../util/Types.h"
 
 
 

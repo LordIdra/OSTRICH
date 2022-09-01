@@ -2,8 +2,6 @@
 
 #include "../util/Types.h"
 
-#include <iostream>
-
 
 
 namespace Log {

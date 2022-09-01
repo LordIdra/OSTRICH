@@ -55,20 +55,22 @@ set(FILES
     "rendering/VertexAttribute.h"
 )
 
-set(CMAKE_TOOLCHAIN_FILE "~/vcpkg/scripts/buildsystems/vcpkg.cmake")
-include("~/vcpkg/scripts/buildsystems/vcpkg.cmake")
+find_program(CCACHE ccache)
 
+set(CMAKE_TOOLCHAIN_FILE "~/vcpkg/scripts/buildsystems/vcpkg.cmake")
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+set(CMAKE_C_COMPILER_LAUNCHER ${CCACHE})
+set(CMAKE_CXX_COMPILER_LAUNCHER ${CCACHE})
+set(CMAKE_CXX_CLANG_TIDY clang-tidy -checks=bugprone-*,clang-analyzer-*,concurrency-*,cppcoreguidelines-*,misc-*,modernize-*,performance-*,portability-*,readability-*,-misc-unused-using-decls,-cppcoreguidelines-pro-type-union-access)
+
+include("~/vcpkg/scripts/buildsystems/vcpkg.cmake")
 
 find_package(glad CONFIG REQUIRED)
 find_package(glfw3 CONFIG REQUIRED)
 find_package(glm CONFIG REQUIRED)
 find_package(Boost REQUIRED)
 
-set(CMAKE_CXX_CLANG_TIDY clang-tidy -checks=bugprone-*,clang-analyzer-*,concurrency-*,cppcoreguidelines-*,misc-*,modernize-*,performance-*,portability-*,readability-*)
-
 add_executable(${PROJECT_NAME} ${FILES})
-
 
 target_link_libraries (${PROJECT_NAME} PRIVATE glad::glad)
 target_link_libraries (${PROJECT_NAME} PRIVATE glfw)

@@ -2,7 +2,6 @@
 
 #include "../util/Types.h"
 #include "Material.h"
-
 #include "Shader.h"
 
 

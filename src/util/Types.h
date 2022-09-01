@@ -1,7 +1,8 @@
 #pragma once
 
-#include <vector>
 #include <string>
+#include <vector>
+#include <unordered_map>
 
 #include "glm/glm.hpp"
 
@@ -12,8 +13,9 @@
 typedef float ELEMENT_DATA_TYPE;
 typedef float VERTEX_DATA_TYPE;
 
-using std::vector; // NOLINT it's used outside of this file
 using std::string;
+using std::vector; // NOLINT(misc-unused-using-decls)
+using std::unordered_map; // NOLINT(misc-unused-using-decls)
 
 using glm::vec2;
 using glm::vec3;

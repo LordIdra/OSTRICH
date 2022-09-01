@@ -1,11 +1,17 @@
 #include "Control.h"
 
+#include "../input/Keys.h"
+#include "../input/Mouse.h"
+#include "../rendering/Camera.h"
+#include "../util/Log.h"
+#include "../window/Window.h"
+
 
 
 
 namespace Control {
     namespace {
-         int MAJOR_VERSION = 3;
+        unsigned int MAJOR_VERSION = 3;
         unsigned int MINOR_VERSION = 3;
 
         auto SetVersionHints() -> void {

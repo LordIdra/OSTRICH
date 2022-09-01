@@ -18,6 +18,18 @@
 			"value" : "/home/idra/vcpkg/installed/x64-linux/include"
 		},
 		{
+			"name" : "CCACHE",
+			"properties" : 
+			[
+				{
+					"name" : "HELPSTRING",
+					"value" : "Path to a program."
+				}
+			],
+			"type" : "FILEPATH",
+			"value" : "/usr/bin/ccache"
+		},
+		{
 			"name" : "CMAKE_ADDR2LINE",
 			"properties" : 
 			[

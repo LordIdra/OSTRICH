@@ -1,5 +1,10 @@
 #include "Keys.h"
 
+#include "../window/Window.h"
+
+#include "glad/glad.h"
+#include "GLFW/glfw3.h"
+
 
 
 namespace Keys {
@@ -14,7 +19,7 @@ namespace Keys {
             return (map.find(key) != map.end());
         }
         
-        auto KeyEventCallback(GLFWwindow* window, int key, int scancode, int action, int mods) -> void {
+        auto KeyEventCallback(GLFWwindow* window, int key, int scancode, int action, int mods) -> void { // NOLINT(misc-unused-parameters)
             // called whenever a key press event fires while the window is in focus
             // checks which type of key press event it is
             // checks the corresponding map to see if there is a function entry for the key that was pressed

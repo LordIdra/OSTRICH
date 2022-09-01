@@ -1,6 +1,8 @@
 #include "Mouse.h"
 
+#include "../window/Window.h"
 #include "../util/Log.h"
+
 #include <GLFW/glfw3.h>
 
 
@@ -31,7 +33,7 @@ namespace Mouse {
         void (*rightPress)() = DefaultCallback;
         void (*rightRelease)() = DefaultCallback;
 
-        auto ButtonCallback(GLFWwindow* window, int button, int action, int mods) -> void {
+        auto ButtonCallback(GLFWwindow* window, int button, int action, int mods) -> void { // NOLINT(misc-unused-parameters)
             // press
             if (action == GLFW_PRESS) {
                 // left

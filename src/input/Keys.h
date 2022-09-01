@@ -1,14 +1,5 @@
 #pragma once
 
-#include "../window/Window.h"
-
-#include "glad/glad.h"
-#include "GLFW/glfw3.h"
-
-#include <unordered_map>
-
-using std::unordered_map;
-
 
 
 namespace Keys {
