@@ -6,7 +6,6 @@
 
 namespace Rays {
     
-    auto ScreenToWorld(vec2 coords) -> vec3;
-
-    auto IntersectsSphere(vec3 cameraPosition, vec3 cameraDirection, vec3 spherePosition, float sphereRadius) -> bool;
+    auto ScreenToWorld(const vec2 coords) -> vec3;
+    auto IntersectsSphere(const vec3 cameraPosition, const vec3 cameraDirection, const vec3 spherePosition, const float sphereRadius) -> bool;
 }
