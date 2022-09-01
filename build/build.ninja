@@ -64,105 +64,105 @@ build cmake_object_order_depends_target_OSTRICH: phony || CMakeFiles/OSTRICH.dir
 build CMakeFiles/OSTRICH.dir/main.cpp.o: CXX_COMPILER__OSTRICH /home/idra/Sync/NEA/OSTRICH/src/main.cpp || cmake_object_order_depends_target_OSTRICH
   DEP_FILE = CMakeFiles/OSTRICH.dir/main.cpp.o.d
   FLAGS = -g
-  INCLUDES = -isystem /home/idra/vcpkg/installed/x64-linux/include
+  INCLUDES = -I/home/idra/Sync/NEA/OSTRICH/src/. -isystem /home/idra/vcpkg/installed/x64-linux/include
   OBJECT_DIR = CMakeFiles/OSTRICH.dir
   OBJECT_FILE_DIR = CMakeFiles/OSTRICH.dir
 
 build CMakeFiles/OSTRICH.dir/bodies/Body.cpp.o: CXX_COMPILER__OSTRICH /home/idra/Sync/NEA/OSTRICH/src/bodies/Body.cpp || cmake_object_order_depends_target_OSTRICH
   DEP_FILE = CMakeFiles/OSTRICH.dir/bodies/Body.cpp.o.d
   FLAGS = -g
-  INCLUDES = -isystem /home/idra/vcpkg/installed/x64-linux/include
+  INCLUDES = -I/home/idra/Sync/NEA/OSTRICH/src/. -isystem /home/idra/vcpkg/installed/x64-linux/include
   OBJECT_DIR = CMakeFiles/OSTRICH.dir
   OBJECT_FILE_DIR = CMakeFiles/OSTRICH.dir/bodies
 
 build CMakeFiles/OSTRICH.dir/bodies/Massive.cpp.o: CXX_COMPILER__OSTRICH /home/idra/Sync/NEA/OSTRICH/src/bodies/Massive.cpp || cmake_object_order_depends_target_OSTRICH
   DEP_FILE = CMakeFiles/OSTRICH.dir/bodies/Massive.cpp.o.d
   FLAGS = -g
-  INCLUDES = -isystem /home/idra/vcpkg/installed/x64-linux/include
+  INCLUDES = -I/home/idra/Sync/NEA/OSTRICH/src/. -isystem /home/idra/vcpkg/installed/x64-linux/include
   OBJECT_DIR = CMakeFiles/OSTRICH.dir
   OBJECT_FILE_DIR = CMakeFiles/OSTRICH.dir/bodies
 
 build CMakeFiles/OSTRICH.dir/control/Control.cpp.o: CXX_COMPILER__OSTRICH /home/idra/Sync/NEA/OSTRICH/src/control/Control.cpp || cmake_object_order_depends_target_OSTRICH
   DEP_FILE = CMakeFiles/OSTRICH.dir/control/Control.cpp.o.d
   FLAGS = -g
-  INCLUDES = -isystem /home/idra/vcpkg/installed/x64-linux/include
+  INCLUDES = -I/home/idra/Sync/NEA/OSTRICH/src/. -isystem /home/idra/vcpkg/installed/x64-linux/include
   OBJECT_DIR = CMakeFiles/OSTRICH.dir
   OBJECT_FILE_DIR = CMakeFiles/OSTRICH.dir/control
 
 build CMakeFiles/OSTRICH.dir/input/Keys.cpp.o: CXX_COMPILER__OSTRICH /home/idra/Sync/NEA/OSTRICH/src/input/Keys.cpp || cmake_object_order_depends_target_OSTRICH
   DEP_FILE = CMakeFiles/OSTRICH.dir/input/Keys.cpp.o.d
   FLAGS = -g
-  INCLUDES = -isystem /home/idra/vcpkg/installed/x64-linux/include
+  INCLUDES = -I/home/idra/Sync/NEA/OSTRICH/src/. -isystem /home/idra/vcpkg/installed/x64-linux/include
   OBJECT_DIR = CMakeFiles/OSTRICH.dir
   OBJECT_FILE_DIR = CMakeFiles/OSTRICH.dir/input
 
 build CMakeFiles/OSTRICH.dir/input/Mouse.cpp.o: CXX_COMPILER__OSTRICH /home/idra/Sync/NEA/OSTRICH/src/input/Mouse.cpp || cmake_object_order_depends_target_OSTRICH
   DEP_FILE = CMakeFiles/OSTRICH.dir/input/Mouse.cpp.o.d
   FLAGS = -g
-  INCLUDES = -isystem /home/idra/vcpkg/installed/x64-linux/include
+  INCLUDES = -I/home/idra/Sync/NEA/OSTRICH/src/. -isystem /home/idra/vcpkg/installed/x64-linux/include
   OBJECT_DIR = CMakeFiles/OSTRICH.dir
   OBJECT_FILE_DIR = CMakeFiles/OSTRICH.dir/input
 
 build CMakeFiles/OSTRICH.dir/window/Window.cpp.o: CXX_COMPILER__OSTRICH /home/idra/Sync/NEA/OSTRICH/src/window/Window.cpp || cmake_object_order_depends_target_OSTRICH
   DEP_FILE = CMakeFiles/OSTRICH.dir/window/Window.cpp.o.d
   FLAGS = -g
-  INCLUDES = -isystem /home/idra/vcpkg/installed/x64-linux/include
+  INCLUDES = -I/home/idra/Sync/NEA/OSTRICH/src/. -isystem /home/idra/vcpkg/installed/x64-linux/include
   OBJECT_DIR = CMakeFiles/OSTRICH.dir
   OBJECT_FILE_DIR = CMakeFiles/OSTRICH.dir/window
 
 build CMakeFiles/OSTRICH.dir/util/Log.cpp.o: CXX_COMPILER__OSTRICH /home/idra/Sync/NEA/OSTRICH/src/util/Log.cpp || cmake_object_order_depends_target_OSTRICH
   DEP_FILE = CMakeFiles/OSTRICH.dir/util/Log.cpp.o.d
   FLAGS = -g
-  INCLUDES = -isystem /home/idra/vcpkg/installed/x64-linux/include
+  INCLUDES = -I/home/idra/Sync/NEA/OSTRICH/src/. -isystem /home/idra/vcpkg/installed/x64-linux/include
   OBJECT_DIR = CMakeFiles/OSTRICH.dir
   OBJECT_FILE_DIR = CMakeFiles/OSTRICH.dir/util
 
-build CMakeFiles/OSTRICH.dir/util/Rays.cpp.o: CXX_COMPILER__OSTRICH /home/idra/Sync/NEA/OSTRICH/src/util/Rays.cpp || cmake_object_order_depends_target_OSTRICH
-  DEP_FILE = CMakeFiles/OSTRICH.dir/util/Rays.cpp.o.d
+build CMakeFiles/OSTRICH.dir/rendering/geometry/Rays.cpp.o: CXX_COMPILER__OSTRICH /home/idra/Sync/NEA/OSTRICH/src/rendering/geometry/Rays.cpp || cmake_object_order_depends_target_OSTRICH
+  DEP_FILE = CMakeFiles/OSTRICH.dir/rendering/geometry/Rays.cpp.o.d
   FLAGS = -g
-  INCLUDES = -isystem /home/idra/vcpkg/installed/x64-linux/include
+  INCLUDES = -I/home/idra/Sync/NEA/OSTRICH/src/. -isystem /home/idra/vcpkg/installed/x64-linux/include
   OBJECT_DIR = CMakeFiles/OSTRICH.dir
-  OBJECT_FILE_DIR = CMakeFiles/OSTRICH.dir/util
+  OBJECT_FILE_DIR = CMakeFiles/OSTRICH.dir/rendering/geometry
 
-build CMakeFiles/OSTRICH.dir/util/Transition.cpp.o: CXX_COMPILER__OSTRICH /home/idra/Sync/NEA/OSTRICH/src/util/Transition.cpp || cmake_object_order_depends_target_OSTRICH
-  DEP_FILE = CMakeFiles/OSTRICH.dir/util/Transition.cpp.o.d
+build CMakeFiles/OSTRICH.dir/rendering/geometry/Transition.cpp.o: CXX_COMPILER__OSTRICH /home/idra/Sync/NEA/OSTRICH/src/rendering/geometry/Transition.cpp || cmake_object_order_depends_target_OSTRICH
+  DEP_FILE = CMakeFiles/OSTRICH.dir/rendering/geometry/Transition.cpp.o.d
   FLAGS = -g
-  INCLUDES = -isystem /home/idra/vcpkg/installed/x64-linux/include
+  INCLUDES = -I/home/idra/Sync/NEA/OSTRICH/src/. -isystem /home/idra/vcpkg/installed/x64-linux/include
   OBJECT_DIR = CMakeFiles/OSTRICH.dir
-  OBJECT_FILE_DIR = CMakeFiles/OSTRICH.dir/util
+  OBJECT_FILE_DIR = CMakeFiles/OSTRICH.dir/rendering/geometry
+
+build CMakeFiles/OSTRICH.dir/rendering/shaders/Shader.cpp.o: CXX_COMPILER__OSTRICH /home/idra/Sync/NEA/OSTRICH/src/rendering/shaders/Shader.cpp || cmake_object_order_depends_target_OSTRICH
+  DEP_FILE = CMakeFiles/OSTRICH.dir/rendering/shaders/Shader.cpp.o.d
+  FLAGS = -g
+  INCLUDES = -I/home/idra/Sync/NEA/OSTRICH/src/. -isystem /home/idra/vcpkg/installed/x64-linux/include
+  OBJECT_DIR = CMakeFiles/OSTRICH.dir
+  OBJECT_FILE_DIR = CMakeFiles/OSTRICH.dir/rendering/shaders
+
+build CMakeFiles/OSTRICH.dir/rendering/shaders/Program.cpp.o: CXX_COMPILER__OSTRICH /home/idra/Sync/NEA/OSTRICH/src/rendering/shaders/Program.cpp || cmake_object_order_depends_target_OSTRICH
+  DEP_FILE = CMakeFiles/OSTRICH.dir/rendering/shaders/Program.cpp.o.d
+  FLAGS = -g
+  INCLUDES = -I/home/idra/Sync/NEA/OSTRICH/src/. -isystem /home/idra/vcpkg/installed/x64-linux/include
+  OBJECT_DIR = CMakeFiles/OSTRICH.dir
+  OBJECT_FILE_DIR = CMakeFiles/OSTRICH.dir/rendering/shaders
 
 build CMakeFiles/OSTRICH.dir/rendering/Camera.cpp.o: CXX_COMPILER__OSTRICH /home/idra/Sync/NEA/OSTRICH/src/rendering/Camera.cpp || cmake_object_order_depends_target_OSTRICH
   DEP_FILE = CMakeFiles/OSTRICH.dir/rendering/Camera.cpp.o.d
   FLAGS = -g
-  INCLUDES = -isystem /home/idra/vcpkg/installed/x64-linux/include
+  INCLUDES = -I/home/idra/Sync/NEA/OSTRICH/src/. -isystem /home/idra/vcpkg/installed/x64-linux/include
   OBJECT_DIR = CMakeFiles/OSTRICH.dir
   OBJECT_FILE_DIR = CMakeFiles/OSTRICH.dir/rendering
 
 build CMakeFiles/OSTRICH.dir/rendering/Geometry.cpp.o: CXX_COMPILER__OSTRICH /home/idra/Sync/NEA/OSTRICH/src/rendering/Geometry.cpp || cmake_object_order_depends_target_OSTRICH
   DEP_FILE = CMakeFiles/OSTRICH.dir/rendering/Geometry.cpp.o.d
   FLAGS = -g
-  INCLUDES = -isystem /home/idra/vcpkg/installed/x64-linux/include
-  OBJECT_DIR = CMakeFiles/OSTRICH.dir
-  OBJECT_FILE_DIR = CMakeFiles/OSTRICH.dir/rendering
-
-build CMakeFiles/OSTRICH.dir/rendering/Program.cpp.o: CXX_COMPILER__OSTRICH /home/idra/Sync/NEA/OSTRICH/src/rendering/Program.cpp || cmake_object_order_depends_target_OSTRICH
-  DEP_FILE = CMakeFiles/OSTRICH.dir/rendering/Program.cpp.o.d
-  FLAGS = -g
-  INCLUDES = -isystem /home/idra/vcpkg/installed/x64-linux/include
-  OBJECT_DIR = CMakeFiles/OSTRICH.dir
-  OBJECT_FILE_DIR = CMakeFiles/OSTRICH.dir/rendering
-
-build CMakeFiles/OSTRICH.dir/rendering/Shader.cpp.o: CXX_COMPILER__OSTRICH /home/idra/Sync/NEA/OSTRICH/src/rendering/Shader.cpp || cmake_object_order_depends_target_OSTRICH
-  DEP_FILE = CMakeFiles/OSTRICH.dir/rendering/Shader.cpp.o.d
-  FLAGS = -g
-  INCLUDES = -isystem /home/idra/vcpkg/installed/x64-linux/include
+  INCLUDES = -I/home/idra/Sync/NEA/OSTRICH/src/. -isystem /home/idra/vcpkg/installed/x64-linux/include
   OBJECT_DIR = CMakeFiles/OSTRICH.dir
   OBJECT_FILE_DIR = CMakeFiles/OSTRICH.dir/rendering
 
 build CMakeFiles/OSTRICH.dir/rendering/VAO.cpp.o: CXX_COMPILER__OSTRICH /home/idra/Sync/NEA/OSTRICH/src/rendering/VAO.cpp || cmake_object_order_depends_target_OSTRICH
   DEP_FILE = CMakeFiles/OSTRICH.dir/rendering/VAO.cpp.o.d
   FLAGS = -g
-  INCLUDES = -isystem /home/idra/vcpkg/installed/x64-linux/include
+  INCLUDES = -I/home/idra/Sync/NEA/OSTRICH/src/. -isystem /home/idra/vcpkg/installed/x64-linux/include
   OBJECT_DIR = CMakeFiles/OSTRICH.dir
   OBJECT_FILE_DIR = CMakeFiles/OSTRICH.dir/rendering
 
@@ -174,7 +174,7 @@ build CMakeFiles/OSTRICH.dir/rendering/VAO.cpp.o: CXX_COMPILER__OSTRICH /home/id
 #############################################
 # Link the executable OSTRICH
 
-build OSTRICH: CXX_EXECUTABLE_LINKER__OSTRICH CMakeFiles/OSTRICH.dir/main.cpp.o CMakeFiles/OSTRICH.dir/bodies/Body.cpp.o CMakeFiles/OSTRICH.dir/bodies/Massive.cpp.o CMakeFiles/OSTRICH.dir/control/Control.cpp.o CMakeFiles/OSTRICH.dir/input/Keys.cpp.o CMakeFiles/OSTRICH.dir/input/Mouse.cpp.o CMakeFiles/OSTRICH.dir/window/Window.cpp.o CMakeFiles/OSTRICH.dir/util/Log.cpp.o CMakeFiles/OSTRICH.dir/util/Rays.cpp.o CMakeFiles/OSTRICH.dir/util/Transition.cpp.o CMakeFiles/OSTRICH.dir/rendering/Camera.cpp.o CMakeFiles/OSTRICH.dir/rendering/Geometry.cpp.o CMakeFiles/OSTRICH.dir/rendering/Program.cpp.o CMakeFiles/OSTRICH.dir/rendering/Shader.cpp.o CMakeFiles/OSTRICH.dir/rendering/VAO.cpp.o | /home/idra/vcpkg/installed/x64-linux/debug/lib/libglad.a /home/idra/vcpkg/installed/x64-linux/debug/lib/libglfw3.a /usr/lib/x86_64-linux-gnu/librt.so /usr/lib/x86_64-linux-gnu/libm.so /usr/lib/x86_64-linux-gnu/libX11.so
+build OSTRICH: CXX_EXECUTABLE_LINKER__OSTRICH CMakeFiles/OSTRICH.dir/main.cpp.o CMakeFiles/OSTRICH.dir/bodies/Body.cpp.o CMakeFiles/OSTRICH.dir/bodies/Massive.cpp.o CMakeFiles/OSTRICH.dir/control/Control.cpp.o CMakeFiles/OSTRICH.dir/input/Keys.cpp.o CMakeFiles/OSTRICH.dir/input/Mouse.cpp.o CMakeFiles/OSTRICH.dir/window/Window.cpp.o CMakeFiles/OSTRICH.dir/util/Log.cpp.o CMakeFiles/OSTRICH.dir/rendering/geometry/Rays.cpp.o CMakeFiles/OSTRICH.dir/rendering/geometry/Transition.cpp.o CMakeFiles/OSTRICH.dir/rendering/shaders/Shader.cpp.o CMakeFiles/OSTRICH.dir/rendering/shaders/Program.cpp.o CMakeFiles/OSTRICH.dir/rendering/Camera.cpp.o CMakeFiles/OSTRICH.dir/rendering/Geometry.cpp.o CMakeFiles/OSTRICH.dir/rendering/VAO.cpp.o | /home/idra/vcpkg/installed/x64-linux/debug/lib/libglad.a /home/idra/vcpkg/installed/x64-linux/debug/lib/libglfw3.a /usr/lib/x86_64-linux-gnu/librt.so /usr/lib/x86_64-linux-gnu/libm.so /usr/lib/x86_64-linux-gnu/libX11.so
   FLAGS = -g
   LINK_LIBRARIES = /home/idra/vcpkg/installed/x64-linux/debug/lib/libglad.a  /home/idra/vcpkg/installed/x64-linux/debug/lib/libglfw3.a  /usr/lib/x86_64-linux-gnu/librt.so  -lm  -ldl  /usr/lib/x86_64-linux-gnu/libX11.so  -lpthread
   OBJECT_DIR = CMakeFiles/OSTRICH.dir

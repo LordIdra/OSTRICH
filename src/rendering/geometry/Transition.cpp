@@ -1,6 +1,6 @@
 #include "Transition.h"
 
-#include "Log.h"
+#include <util/Log.h>
 
 #include <glm/ext/quaternion_geometric.hpp>
 

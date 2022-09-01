@@ -1,20 +1,21 @@
-#include "bodies/Massive.h"
-#include "control/Control.h"
+#include <bodies/Massive.h>
+#include <control/Control.h>
 
-#include "input/Keys.h"
-#include "input/Mouse.h"
+#include <input/Keys.h>
+#include <input/Mouse.h>
 
-#include "rendering/Program.h"
-#include "rendering/VAO.h"
-#include "rendering/Camera.h"
-#include "rendering/Geometry.h"
+#include <rendering/shaders/Program.h>
+#include <rendering/VAO.h>
+#include <rendering/Camera.h>
+#include <rendering/Geometry.h>
 
-#include "util/Log.h"
-#include "util/Rays.h"
-#include "util/Transition.h"
-#include "util/Types.h"
+#include <util/Log.h>
+#include <util/Types.h>
 
-#include "window/Window.h"
+#include <rendering/geometry/Rays.h>
+#include <rendering/geometry/Transition.h>
+
+#include <window/Window.h>
 
 #include <GLFW/glfw3.h>
 #include <glm/gtx/string_cast.hpp>

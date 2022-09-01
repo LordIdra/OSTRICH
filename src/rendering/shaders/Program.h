@@ -1,8 +1,8 @@
 #pragma once
 
-#include "../util/Types.h"
-#include "Material.h"
-#include "Shader.h"
+#include <util/Types.h>
+#include <rendering/structures/Material.h>
+#include <rendering/shaders/Shader.h>
 
 
 

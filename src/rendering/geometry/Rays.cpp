@@ -1,12 +1,13 @@
 #include "Rays.h"
 
-#include "../window/Window.h"
-#include "../rendering/Camera.h"
-#include "Log.h"
+#include <window/Window.h>
+#include <rendering/Camera.h>
+#include <util/Log.h>
 
 #include <glm/geometric.hpp>
 #include <glm/gtx/string_cast.hpp>
 #include <glm/matrix.hpp>
+
 #include <string>
 
 

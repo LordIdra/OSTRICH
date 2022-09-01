@@ -1,11 +1,11 @@
 #include "Camera.h"
 
-#include "../util/Log.h"
-#include "../util/Constants.h"
-#include "../window/Window.h"
+#include <util/Log.h>
+#include <util/Constants.h>
+#include <window/Window.h>
 
-#include "glm/gtx/string_cast.hpp"
-#include "glm/gtc/matrix_transform.hpp"
+#include <glm/gtx/string_cast.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
 #include <string>
 

@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../util/Types.h"
-#include "VertexAttribute.h"
+#include <util/Types.h>
+#include <rendering/structures/VertexAttribute.h>
 
 
 

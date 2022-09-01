@@ -1,6 +1,6 @@
 #include "Shader.h"
 
-#include "../util/Log.h"
+#include <util/Log.h>
 
 #include <glad/glad.h>
 

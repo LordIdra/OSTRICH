@@ -1,7 +1,7 @@
 #include "Geometry.h"
 
-#include "../util/Log.h"
-#include "../util/Constants.h"
+#include <util/Log.h>
+#include <util/Constants.h>
 
 
 

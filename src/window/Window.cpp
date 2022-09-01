@@ -1,6 +1,7 @@
 #include "Window.h"
 
-#include "../util/Log.h"
+#include <util/Log.h>
+
 #include <string>
 
 

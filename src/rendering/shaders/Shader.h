@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../util/Types.h"
+#include <util/Types.h>
 
 
 
@@ -10,6 +10,7 @@ private:
 
     static auto FileExists(const string &path) -> bool;
     static auto ReadFile(const string &path) -> string;
+    
     auto CheckCompileSuccess(const string &path) const -> void;
     auto PrintCompileLog() const -> void;
 

@@ -1,8 +1,8 @@
 #include "VAO.h"
 
-#include "../util/Log.h"
+#include <util/Log.h>
 
-#include "glad/glad.h"
+#include <glad/glad.h>
 
 
 

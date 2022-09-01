@@ -1,8 +1,8 @@
 #include "Massive.h"
 
-#include "../util/Log.h"
-#include "../util/Constants.h"
-#include "../rendering/Geometry.h"
+#include <util/Log.h>
+#include <util/Constants.h>
+#include <rendering/Geometry.h>
 
 
 

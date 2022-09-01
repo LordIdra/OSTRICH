@@ -1,6 +1,6 @@
 #include "Program.h"
 
-#include "../util/Log.h"
+#include <util/Log.h>
 #include <glad/glad.h>
 
 

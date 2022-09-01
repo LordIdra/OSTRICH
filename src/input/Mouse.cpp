@@ -1,7 +1,7 @@
 #include "Mouse.h"
 
-#include "../window/Window.h"
-#include "../util/Log.h"
+#include <window/Window.h>
+#include <util/Log.h>
 
 #include <GLFW/glfw3.h>
 
