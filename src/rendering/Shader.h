@@ -8,8 +8,8 @@ class Shader {
 private:
     unsigned int id;
 
-    auto FileExists(const string &path) const -> bool;
-    auto ReadFile(const string &path) const -> string;
+    static auto FileExists(const string &path) -> bool;
+    static auto ReadFile(const string &path) -> string;
     auto CheckCompileSuccess(const string &path) const -> void;
     auto PrintCompileLog() const -> void;
 
