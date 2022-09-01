@@ -54,10 +54,10 @@ namespace Window {
     }
 
 
-    auto Init(const string &title) -> void {
+    auto Init(const bool fullscreen, const string &title) -> void {
         AcquireMonitorAndMode();
-        SetWindowHints(false);
-        CreateWindow(title, false);
+        SetWindowHints(fullscreen);
+        CreateWindow(title, fullscreen);
     }
 
     auto Update() -> void {

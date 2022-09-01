@@ -162,7 +162,7 @@ auto WireFrame(bool enabled) -> void {
 }
 
 auto main() -> int {
-    Control::Init("TEST!");
+    Control::Init(false, "TEST!");
 
     InitialiseProgram();
     InitialiseVAOs();

@@ -8,7 +8,7 @@
 
 
 namespace Window {
-    auto Init(const string &title) -> void;
+    auto Init(const bool fullscreen, const string &title) -> void;
     auto Update() -> void;
 
     auto Background(vec4 color) -> void;

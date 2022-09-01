@@ -8,7 +8,7 @@
 
 
 namespace Control {
-    auto Init(const string &windowTitle) -> void;
+    auto Init(const bool fullscreen, const string &windowTitle) -> void;
     auto Update() -> void;
 }
 

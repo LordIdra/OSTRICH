@@ -61,7 +61,7 @@ namespace Geometry {
         float phi = 0;
 
         // Iterate horizontally
-        for (int i = 0; i < int((PI - step) / (2*step)); i++) {
+        for (int i = 0; i < int((PI) / (2*step)); i++) {
             
             // First set of triangles
             GenerateTriangleSet(vertices, position, radius, step, phi, 0, step / 2);

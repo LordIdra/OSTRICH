@@ -40,9 +40,9 @@ namespace Control {
     }
 
 
-    auto Init(const string &windowTitle) -> void {
+    auto Init(const bool fullscreen, const string &windowTitle) -> void {
         InitGLFW();
-        Window::Init(windowTitle);
+        Window::Init(fullscreen, windowTitle);
         InitGlad();
         Keys::Init();
         Mouse::Init();
