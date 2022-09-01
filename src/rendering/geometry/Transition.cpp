@@ -12,7 +12,6 @@ Transition::Transition(vec3 start, vec3 end, float totalTime)
       currentTime(0) {}
 
 vec3 Transition::Step(float deltaTime) {
-    Log::Info("fuck");
     if (!Finished()) {
         currentTime += deltaTime;
         float x = currentTime / totalTime;

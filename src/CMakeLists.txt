@@ -41,11 +41,14 @@ set(FILES
     "rendering/geometry/Transition.h"
     "rendering/geometry/Transition.cpp"
 
+    "rendering/shaders/Program.h"
+    "rendering/shaders/Program.cpp"
+
     "rendering/shaders/Shader.h"
     "rendering/shaders/Shader.cpp"
 
-    "rendering/shaders/Program.h"
-    "rendering/shaders/Program.cpp"
+    "rendering/shaders/Util.h"
+    "rendering/shaders/Util.cpp"
 
     "rendering/structures/Material.h"
     "rendering/structures/VertexAttribute.h"
