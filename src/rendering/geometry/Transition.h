@@ -6,6 +6,10 @@
 
 class Transition {
 private:
+
+    static const float A;
+    static const float B;
+
     vec3 start;
     vec3 end;
 
@@ -14,8 +18,8 @@ private:
 
 
 public:
-    Transition(vec3 vector, vec3 end, float totalTime);
+    Transition(const vec3 start, const vec3 end, const float totalTime);
 
-    vec3 Step(float deltaTime);
-    bool Finished();
+    auto Finished() const -> bool;
+    auto Step(const float deltaTime) -> vec3;
 };
