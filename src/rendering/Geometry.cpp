@@ -7,113 +7,72 @@
 
 namespace Geometry {
 
-    const vector<VERTEX_DATA_TYPE> unitTetrahedron = {
-        // TRIANGLE 1
-        sqrtf(8.0/9.0),  0,                  -(1.0/3.0),// vertex
-        sqrtf(8.0/9.0),  0,                  -(1.0/3.0),// normal
-
-        -sqrtf(2.0/9.0),  sqrtf(2.0/3.0), -(1.0/3.0), // vertex
-        -sqrtf(2.0/9.0),  sqrtf(2.0/3.0), -(1.0/3.0), // normal
-
-        -sqrtf(2.0/9.0), -sqrtf(2.0/3.0), -(1.0/3.0), // vertex
-        -sqrtf(2.0/9.0), -sqrtf(2.0/3.0), -(1.0/3.0), // normal
-
-        // TRIANGLE 2
-        sqrtf(8.0/9.0),  0,                  -(1.0/3.0), // vertex
-        sqrtf(8.0/9.0),  0,                  -(1.0/3.0), // normal
-
-        -sqrtf(2.0/9.0),  sqrtf(2.0/3.0), -(1.0/3.0), // vertex
-        -sqrtf(2.0/9.0),  sqrtf(2.0/3.0), -(1.0/3.0), // normal
-
-        0,                  0,                 1,          // vertex
-        0,                  0,                 1,          // normal
-
-        // TRIANGLE 3
-        -sqrtf(2.0/9.0),  sqrtf(2.0/3.0), -(1.0/3.0), // vertex
-        -sqrtf(2.0/9.0),  sqrtf(2.0/3.0), -(1.0/3.0), // normal
-
-        -sqrtf(2.0/9.0), -sqrtf(2.0/3.0), -(1.0/3.0), // vertex
-        -sqrtf(2.0/9.0), -sqrtf(2.0/3.0), -(1.0/3.0), // normal
-
-        0,                  0,                 1,          // vertex
-        0,                  0,                 1,          // normal
-
-        // TRIANGLE 4
-        sqrtf(8.0/9.0),  0,                  -(1.0/3.0), // vertex
-        sqrtf(8.0/9.0),  0,                  -(1.0/3.0), // normal
-
-        -sqrtf(2.0/9.0), -sqrtf(2.0/3.0), -(1.0/3.0),  // vertex
-        -sqrtf(2.0/9.0), -sqrtf(2.0/3.0), -(1.0/3.0),  // normal
-
-        0,                  0,                 1,           // vertex
-        0,                  0,                 1,           // normal
-    };
-
     namespace {
         auto PolarToCartesian(const float radius, const float phi, const float theta) -> vec3 {
+            // Phi representsd the horizontal component while theta represents the vertical component
             return vec3(
                 radius * sinf(phi) * cosf(theta),
                 radius * sinf(phi) * sinf(theta),
                 radius * cosf(phi));
         }
 
-        auto AddVertex(vector<VERTEX_DATA_TYPE> &sphere, const vec3 displacement, const vec3 vertex) -> void{
-            // here we use the elegant fact that the normal to a vertex on a sphere is
+        auto AddVertex(vector<VERTEX_DATA_TYPE> &vertices, const vec3 displacement, const vec3 vertex) -> void{
+            // Here we use the elegant fact that the normal to a vertex on a sphere is
             // simply the unit vector from the centre of the sphere to the vertex
             vec3 displacedVertex = vertex + displacement;
             vec3 normal = glm::normalize(vertex);
 
-            sphere.push_back(displacedVertex.x);
-            sphere.push_back(displacedVertex.y);
-            sphere.push_back(displacedVertex.z);
+            // Add positions
+            vertices.push_back(displacedVertex.x);
+            vertices.push_back(displacedVertex.y);
+            vertices.push_back(displacedVertex.z);
 
-            sphere.push_back(normal.x);
-            sphere.push_back(normal.y);
-            sphere.push_back(normal.z);
+            // Add normals
+            vertices.push_back(normal.x);
+            vertices.push_back(normal.y);
+            vertices.push_back(normal.z);
         }
 
-        auto GenerateTriangles(vector<VERTEX_DATA_TYPE> &sphere, vec3 position, float radius, float step, float phi, float theta1, float theta2) -> void {
-            AddVertex(sphere, position, PolarToCartesian(radius, phi, theta1));
-            AddVertex(sphere, position, PolarToCartesian(radius, phi + step, theta2));
-            AddVertex(sphere, position, PolarToCartesian(radius, phi, theta1 + step));
+        auto GenerateTriangles(vector<VERTEX_DATA_TYPE> &vertices, const vec3 position, const float radius, const float step, const float phi, const float theta1, const float theta2) -> void {
+            // First triangle
+            AddVertex(vertices, position, PolarToCartesian(radius, phi, theta1));
+            AddVertex(vertices, position, PolarToCartesian(radius, phi + step, theta2));
+            AddVertex(vertices, position, PolarToCartesian(radius, phi, theta1 + step));
 
-            AddVertex(sphere, position, PolarToCartesian(radius, phi, theta1 + step));
-            AddVertex(sphere, position, PolarToCartesian(radius, phi + step, theta2));
-            AddVertex(sphere, position, PolarToCartesian(radius, phi + step, theta2 + step));
+            // Second triangle
+            AddVertex(vertices, position, PolarToCartesian(radius, phi, theta1 + step));
+            AddVertex(vertices, position, PolarToCartesian(radius, phi + step, theta2));
+            AddVertex(vertices, position, PolarToCartesian(radius, phi + step, theta2 + step));
         }
 
+        auto GenerateTriangleSet(vector<VERTEX_DATA_TYPE> &vertices, const vec3 position, const float radius, const float step, const float phi, float theta1,  float theta2) -> void {
+            // Iterate vertically
+            for (int j = 0; j < int(2*PI/step); j++) {
+                GenerateTriangles(vertices, position, radius, step, phi, theta1, theta2);
+                theta1 += step;
+                theta2 += step;
+            }
+        }
     }
 
-    auto Sphere(vec3 position, float radius, float steps) -> vector<VERTEX_DATA_TYPE> {
-        vector<VERTEX_DATA_TYPE> sphere;
+    auto Sphere(vec3 position, const float radius, const float step) -> vector<VERTEX_DATA_TYPE> {
+        // Phi is the horizontal component of the angle of the sphere
+        vector<VERTEX_DATA_TYPE> vertices;
         float phi = 0;
 
-        for (float i = 0; i < (PI - steps); i += 2*steps) {
+        // Iterate horizontally
+        for (int i = 0; i < int((PI - step) / (2*step)); i++) {
+            
+            // First set of triangles
+            GenerateTriangleSet(vertices, position, radius, step, phi, 0, step / 2);
+            phi += step;
 
-            // first set of triangles
-            float theta1 = 0;
-            float theta2 = steps / 2;
-            for (float j = 0; j < (2*PI); j += steps) {
-                GenerateTriangles(sphere, position, radius, steps, phi, theta1, theta2);
-                theta1 += steps;
-                theta2 += steps;
-            }
-
-            phi += steps;
-
-            // first set of triangles
-            theta1 = steps / 2;
-            theta2 = 0;
-            for (float j = 0; j < (2*PI); j += steps) {
-                GenerateTriangles(sphere, position, radius, steps, phi, theta1, theta2);
-                theta1 += steps;
-                theta2 += steps;
-            }
-
-            phi += steps;
+            // Second set of triangles
+            GenerateTriangleSet(vertices, position, radius, step, phi, step / 2, 0);
+            phi += step;
         }
 
-        return sphere;
+        return vertices;
     }
 }
 
