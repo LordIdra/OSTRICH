@@ -35,6 +35,14 @@ set(FILES
     "util/Types.h"
 
 
+    "rendering/camera/Camera.h"
+    "rendering/camera/Camera.cpp"
+
+    "rendering/camera/Settings.h"
+
+    "rendering/camera/Util.h"
+    "rendering/camera/Util.cpp"
+
     "rendering/geometry/Rays.h"
     "rendering/geometry/Rays.cpp"
 
@@ -52,9 +60,6 @@ set(FILES
 
     "rendering/structures/Material.h"
     "rendering/structures/VertexAttribute.h"
-
-    "rendering/Camera.h"
-    "rendering/Camera.cpp"
 
     "rendering/Geometry.h"
     "rendering/Geometry.cpp"

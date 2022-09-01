@@ -5,9 +5,6 @@
 
 
 namespace Camera {
-    // a typical camera system uses two matrices, that are multiplied together to form a final camera matrix
-    // this final matrix is used to transform the points of every object on the scene
-    // GetMatrix() will return said final matrix
     auto GetView() -> mat4;
     auto GetProjection() -> mat4;
     auto GetMatrix() -> mat4;

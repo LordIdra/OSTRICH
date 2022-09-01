@@ -6,7 +6,7 @@
 
 #include <rendering/shaders/Program.h>
 #include <rendering/VAO.h>
-#include <rendering/Camera.h>
+#include <rendering/camera/Camera.h>
 #include <rendering/Geometry.h>
 
 #include <util/Log.h>

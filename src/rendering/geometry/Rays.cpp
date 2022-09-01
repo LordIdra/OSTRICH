@@ -1,7 +1,7 @@
 #include "Rays.h"
 
 #include <window/Window.h>
-#include <rendering/Camera.h>
+#include <rendering/camera/Camera.h>
 #include <util/Log.h>
 
 #include <glm/geometric.hpp>
@@ -44,7 +44,7 @@ namespace Rays {
     auto IntersectsSphere(const vec3 cameraPosition, const vec3 cameraDirection, const vec3 spherePosition, const float sphereRadius) -> bool {
         // Calculate lambda; a variable that can be multiplied by cameraDirection to obtain a vector from cameraPosition to the 
         // closest point the ray gets to spherePosition
-        float lambda = -glm::dot(cameraPosition - spherePosition, cameraDirection);
+        const float lambda = -glm::dot(cameraPosition - spherePosition, cameraDirection);
 
         // If lambda is below zero, the ray's closest intersection is behind the camera, so we don't want to select that
         if (lambda < 0) {
@@ -53,7 +53,7 @@ namespace Rays {
 
         // Find the closest point to the camera, the find the distance between that point and the sphere centre
         vec3 closestPoint = cameraPosition + (lambda*cameraDirection);
-        float distance = glm::distance(closestPoint, spherePosition);
+        const float distance = glm::distance(closestPoint, spherePosition);
 
         // If that distance is under the sphere radius, the ray must intersect the sphere
         return distance <= sphereRadius;
