@@ -53,7 +53,6 @@ namespace Window {
         }
     }
 
-
     auto Init(const bool fullscreen, const string &title) -> void {
         AcquireMonitorAndMode();
         SetWindowHints(fullscreen);

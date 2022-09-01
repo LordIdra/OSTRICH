@@ -11,4 +11,3 @@ namespace Control {
     auto Init(const bool fullscreen, const string &windowTitle) -> void;
     auto Update() -> void;
 }
-
