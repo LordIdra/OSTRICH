@@ -23,7 +23,7 @@ auto FileExists(const string &path) -> bool {
 auto ReadFile(const string &path) -> string {
     // Check the file actually exists
     if (!FileExists(path)) {
-        Log::Error("Failed to open file at " + path);
+        Log(ERROR, "Failed to open file at " + path);
     }
 
     // Open the file and read it into a stringstream
@@ -41,7 +41,7 @@ auto PrintCompileLog(const unsigned int id) -> void {
 
     // Read the info log into the log array, then display the log
     glGetShaderInfoLog(id, LOG_LENGTH, nullptr, (char*)log.begin());
-    Log::Error(string(log.begin()));
+    Log(ERROR, string(log.begin()));
 }
 
 auto PrintLinkLog(const unsigned int id) -> void {
@@ -51,7 +51,7 @@ auto PrintLinkLog(const unsigned int id) -> void {
 
     // Read the info log into the log array, then display the log
     glGetProgramInfoLog(id, LOG_LENGTH, nullptr, (char*)log.begin());
-    Log::Error(string(log.begin()));
+    Log(ERROR, string(log.begin()));
 }
 
 auto CheckCompileSuccess(const string &path, const unsigned int id) -> void {
@@ -61,7 +61,7 @@ auto CheckCompileSuccess(const string &path, const unsigned int id) -> void {
 
     // Log a message depending on whether the compile was successful
     if (!success) {
-        Log::Error("Failed to compile shader at " + path);
+        Log(ERROR, "Failed to compile shader at " + path);
         PrintCompileLog(id);
     }
 }
@@ -73,7 +73,7 @@ auto CheckLinkSuccess(const unsigned int id) -> void {
 
     // Log a message depending on whether the link was successful
     if (!success) {
-        Log::Error("Failed to link program");
+        Log(ERROR, "Failed to link program");
         PrintLinkLog(id);
     }
 }

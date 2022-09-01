@@ -8,7 +8,6 @@
 
 
 
-
 namespace Control {
     namespace {
         unsigned int MAJOR_VERSION = 3;
@@ -24,7 +23,7 @@ namespace Control {
 
         auto InitGLFW() -> void {
             if (!glfwInit()) {
-                Log::Error("Failed to initialize GLFW.");
+                Log(ERROR, "Failed to initialize GLFW.");
                 return;
             }
             SetVersionHints();
@@ -32,7 +31,7 @@ namespace Control {
 
         auto InitGlad() -> void {
             if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {  //NOLINT - required cast for GLAD initialization
-                Log::Error("Failed to initialize GLAD.");
+                Log(ERROR, "Failed to initialize GLAD.");
                 return;
             }
             // depth testing makes sure that fragments closer to the camera override fragments further away
