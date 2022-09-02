@@ -1,20 +1,17 @@
 #include "Massive.h"
 
 #include <util/Log.h>
-#include <util/Constants.h>
 #include <rendering/Geometry.h>
 
 
 
-Massive::Massive(bvec3 position, bvec3 velocity, string name, bfloat mass, bfloat radius)
-    : Body(position, velocity, name), mass(mass), radius(radius) {}
+Massive::Massive(const bvec3 &position, const bvec3 &velocity, const string &name, bfloat mass, bfloat radius)
+    : Body(position, velocity, name), mass(std::move(mass)), radius(std::move(radius)) {}
 
-float Massive::ScaledRadius() {
+auto Massive::GetScaledRadius() const -> float {
     return float(radius / SCALE_FACTOR);
 }
 
-vector<VERTEX_DATA_TYPE> Massive::GetSphereVertices() {
-    // steps is constant for now, but it may be wise to modify this in future
-    // so that the number of steps depends on the radius of the sphere
-    return Geometry::Sphere(ScaledPosition(), ScaledRadius(), PI / 24);
+auto Massive::GetSphereVertices() const -> vector<VERTEX_DATA_TYPE>{
+    return Geometry::Sphere(GetScaledPosition(), GetScaledRadius(), STEP);
 }

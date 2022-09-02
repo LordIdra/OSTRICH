@@ -107,19 +107,19 @@ auto SwitchSelectedBody() -> void {
     if (Rays::IntersectsSphere(
         Camera::GetPosition(), 
         direction, 
-        earth.ScaledPosition(), 
-        earth.ScaledRadius())) {
+        earth.GetScaledPosition(), 
+        earth.GetScaledRadius())) {
             selectedBody = &earth;
-            transition = Transition(Camera::GetTarget(), earth.ScaledPosition(), 0.2);
+            transition = Transition(Camera::GetTarget(), earth.GetScaledPosition(), 0.2);
     }
 
     if (Rays::IntersectsSphere(
         Camera::GetPosition(), 
         direction, 
-        moon.ScaledPosition(), 
-        moon.ScaledRadius())) {
+        moon.GetScaledPosition(), 
+        moon.GetScaledRadius())) {
             selectedBody = &moon;
-            transition = Transition(Camera::GetTarget(), moon.ScaledPosition(), 0.2);
+            transition = Transition(Camera::GetTarget(), moon.GetScaledPosition(), 0.2);
     }
 }
 

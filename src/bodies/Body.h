@@ -13,10 +13,8 @@ protected:
 public:
     Body(bvec3 position, bvec3 velocity, string name);
 
-    auto GetName() -> string;
-    vec3 ScaledPosition();
-    vec3 ScaledVelocity();
-
-    // returns vertices constituting an icon to represent the body
-    vector<VERTEX_DATA_TYPE> GetIconVertices();
+    auto GetName() const -> string;
+    auto GetScaledPosition() const -> vec3;
+    auto GetScaledVelocity() const -> vec3;
+    auto GetIconVertices() const -> vector<VERTEX_DATA_TYPE>;
 };

@@ -1,19 +1,19 @@
 #pragma once
 
+#include <util/Constants.h>
 #include <bodies/Body.h>
 
 
 
 class Massive : public Body {
 private:
+    const float STEP = PI / 24;
     bfloat mass;   // kg
     bfloat radius; // m
 
 public:
-    Massive(bvec3 position, bvec3 velocity, string name, bfloat mass, bfloat radius);
+    Massive(const bvec3 &position, const bvec3 &velocity, const string &name, bfloat mass, bfloat radius);
 
-    float ScaledRadius();
-    
-    // returns vertices constituting a sphere to represent the body
-    vector<VERTEX_DATA_TYPE> GetSphereVertices();
+    auto GetScaledRadius() const -> float;
+    auto GetSphereVertices() const -> vector<VERTEX_DATA_TYPE>;
 };
