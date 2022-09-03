@@ -12,13 +12,13 @@ const float MAX_ZOOM = 95.0;
 const float MAX_ANGLE = PI * 0.45F;
 
 const float MAX_ANGLE_SPEED = 0.01;
-const float MAX_ZOOM_SPEED = 0.1;
+const float MAX_ZOOM_SPEED = 0.08;
 
 const float ANGLE_SENSITIVITY = 20.0;
-const float ZOOM_SENSITIVITY = 0.03;
+const float ZOOM_SENSITIVITY = 0.04;
 
 const float ANGLE_DAMPING = 0.001;
-const float ZOOM_DAMPING = 0.01;
+const float ZOOM_DAMPING = 0.007;
 
 const float FIELD_OF_VIEW = 45.0;
 

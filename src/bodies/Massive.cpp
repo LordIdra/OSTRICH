@@ -3,10 +3,11 @@
 #include <util/Log.h>
 #include <rendering/Geometry.h>
 
+using std::move;
 
 
-Massive::Massive(const bvec3 &position, const bvec3 &velocity, const string &name, bfloat mass, bfloat radius)
-    : Body(position, velocity, name), mass(std::move(mass)), radius(std::move(radius)) {}
+Massive::Massive(const string &id, const string &name, const bvec3 &position, const bvec3 &velocity, bfloat mass, bfloat radius)
+    : Body(id, name, position, velocity), mass(move(mass)), radius(move(radius)) {}
 
 auto Massive::GetScaledRadius() const -> float {
     return float(radius / SCALE_FACTOR);

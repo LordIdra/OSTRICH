@@ -1,4 +1,5 @@
 #include "VAO.h"
+#include "util/Log.h"
 
 #include <glad/glad.h>
 
@@ -17,6 +18,8 @@ auto VAO::Init() -> void {
 
     // Unbind VAO
     Unbind();
+
+    Log(INFO, "ono");
 }
 
 auto VAO::Bind() const -> void {

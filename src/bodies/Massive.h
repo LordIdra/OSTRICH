@@ -12,7 +12,7 @@ private:
     bfloat radius; // m
 
 public:
-    Massive(const bvec3 &position, const bvec3 &velocity, const string &name, bfloat mass, bfloat radius);
+    Massive(const string &id, const string &name, const bvec3 &position, const bvec3 &velocity, const bfloat mass, const bfloat radius);
 
     auto GetScaledRadius() const -> float;
     auto GetSphereVertices() const -> vector<VERTEX_DATA_TYPE>;

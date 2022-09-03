@@ -20,12 +20,12 @@ auto Transition::Finished() const -> bool {
 }
 
 
-auto Transition::Step(const float deltaTime) -> vec3 {
+auto Transition::Step(const double deltaTime) -> vec3 {
     // Check that the animation hasn't been finished yet
     if (!Finished()) {
 
         // Increment time
-        currentTime += deltaTime;
+        currentTime += float(deltaTime);
 
         // Find how far through the animation we are (in a range of 0-1)
         float x = currentTime / totalTime;

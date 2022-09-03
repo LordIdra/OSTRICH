@@ -32,6 +32,31 @@ namespace Camera {
         }
     }
 
+    auto Init() -> void {
+        Camera::SetTarget(vec3(0.0F, 0.0F, 0.0F));
+    }
+
+    auto Update() -> void {
+        // Apply deltas
+        angle[0] += angleDelta[0];
+        angle[1] += angleDelta[1];
+        zoom *= (1 - zoomDelta);
+
+        // Damp the angle/zoom deltas
+        ApplyDamping(angleDelta[0], ANGLE_DAMPING);
+        ApplyDamping(angleDelta[1], ANGLE_DAMPING);
+        ApplyDamping(zoomDelta, ZOOM_DAMPING);
+
+        // Clamp the deltas to their minimums/maximums
+        ApplySymmetricRange(angleDelta[0], MAX_ANGLE_SPEED);
+        ApplySymmetricRange(angleDelta[1], MAX_ANGLE_SPEED);
+        ApplySymmetricRange(zoomDelta, MAX_ZOOM_SPEED);
+
+        // Clamp the angle and zoom to their minimums/maximums
+        ApplySymmetricRange(angle[1], MAX_ANGLE);
+        ApplyAsymmetricRange(zoom, MIN_ZOOM, MAX_ZOOM);
+    }
+
     auto GetView() -> mat4 {
         UpdatePosition();
         return glm::lookAt(position, target, VERTICAL);
@@ -68,26 +93,5 @@ namespace Camera {
 
     auto SetTarget(vec3 target_) -> void {
         target = target_;
-    }
-
-    auto Update() -> void {
-        // Apply deltas
-        angle[0] += angleDelta[0];
-        angle[1] += angleDelta[1];
-        zoom *= (1 - zoomDelta);
-
-        // Damp the angle/zoom deltas
-        ApplyDamping(angleDelta[0], ANGLE_DAMPING);
-        ApplyDamping(angleDelta[1], ANGLE_DAMPING);
-        ApplyDamping(zoomDelta, ZOOM_DAMPING);
-
-        // Clamp the deltas to their minimums/maximums
-        ApplySymmetricRange(angleDelta[0], MAX_ANGLE_SPEED);
-        ApplySymmetricRange(angleDelta[1], MAX_ANGLE_SPEED);
-        ApplySymmetricRange(zoomDelta, MAX_ZOOM_SPEED);
-
-        // Clamp the angle and zoom to their minimums/maximums
-        ApplySymmetricRange(angle[1], MAX_ANGLE);
-        ApplyAsymmetricRange(zoom, MIN_ZOOM, MAX_ZOOM);
     }
 }

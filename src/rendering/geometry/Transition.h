@@ -21,5 +21,5 @@ public:
     Transition(const vec3 start, const vec3 end, const float totalTime);
 
     auto Finished() const -> bool;
-    auto Step(const float deltaTime) -> vec3;
+    auto Step(const double deltaTime) -> vec3;
 };

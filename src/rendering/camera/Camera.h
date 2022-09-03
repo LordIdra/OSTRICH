@@ -5,6 +5,9 @@
 
 
 namespace Camera {
+    auto Init() -> void;
+    auto Update() -> void;
+
     auto GetView() -> mat4;
     auto GetProjection() -> mat4;
     auto GetMatrix() -> mat4;
@@ -16,6 +19,4 @@ namespace Camera {
     auto AddZoomDelta(const float zoomDelta_) -> void;
 
     auto SetTarget(const vec3 target_) -> void;
-
-    auto Update() -> void;
 };

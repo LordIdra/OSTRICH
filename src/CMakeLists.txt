@@ -2,12 +2,15 @@ cmake_minimum_required(VERSION 3.16)
 project("OSTRICH")
 
 set(FILES
-    "main.cpp"
+    "main/Bodies.cpp"
+    "main/Control.cpp"
+    "main/Main.cpp"
+    "main/Render.cpp"
 
     "bodies/Body.cpp"
     "bodies/Massive.cpp"
 
-    "control/Control.cpp"
+    "main/Control.cpp"
 
     "input/Mouse.cpp"
     "input/Keys.cpp"
