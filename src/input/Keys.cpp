@@ -1,30 +1,30 @@
 #include "Keys.h"
 
-#include "../window/Window.h"
+#include <window/Window.h>
 
-#include "glad/glad.h"
-#include "GLFW/glfw3.h"
+#include <glad/glad.h>
+#include <GLFW/glfw3.h>
 
 
 
 namespace Keys {
     namespace {
-        unordered_map<unsigned int, void(*)()> functionCalledWhenKeyPressed;  // called only once, when the key is pressed
-        unordered_map<unsigned int, void(*)()> functionCalledWhenKeyReleased; // called only once, when the key is released
-        unordered_map<unsigned int, void(*)()> functionCalledWhenKeyHeld;     // called continuously, when the key is held
-        unordered_map<unsigned int, bool> isKeyHeld;                          // stores if the key is being held down
+        unordered_map<unsigned int, void(*)()> functionCalledWhenKeyPressed;  // Called only once, when the key is pressed
+        unordered_map<unsigned int, void(*)()> functionCalledWhenKeyReleased; // Called only once, when the key is released
+        unordered_map<unsigned int, void(*)()> functionCalledWhenKeyHeld;     // Called continuously, when the key is held
+        unordered_map<unsigned int, bool> isKeyHeld;                          // Stores if the key is being held down
 
         auto ElementExists(std::unordered_map<unsigned int, void(*)()> map, unsigned int key) -> bool{
-            // check if 'map' contains 'key'
+            // Check if 'map' contains 'key'
             return (map.find(key) != map.end());
         }
         
         auto KeyEventCallback(GLFWwindow* window, int key, int scancode, int action, int mods) -> void { // NOLINT(misc-unused-parameters)
-            // called whenever a key press event fires while the window is in focus
-            // checks which type of key press event it is
-            // checks the corresponding map to see if there is a function entry for the key that was pressed
-            // if there is a function entry, said function will be called
-            // also, the isKeyHeld value will (always) be set according to the type of press
+            // Called whenever a key press event fires while the window is in focus
+            // Checks which type of key press event it is
+            // Checks the corresponding map to see if there is a function entry for the key that was pressed
+            // If there is a function entry, said function will be called
+            // Also, the isKeyHeld value will (always) be set according to the type of press
             switch (action) {
             case GLFW_PRESS:
                 isKeyHeld[key] = true;
@@ -48,11 +48,20 @@ namespace Keys {
     }
 
     auto Update() -> void {
-        for (const auto &pair :functionCalledWhenKeyHeld) {
+        // Loop through every entry in the functionCalledWhenKeyHeld map
+        for (const auto &pair : functionCalledWhenKeyHeld) {
+
+            // Check if the key is being held down
             if (isKeyHeld.at(pair.first)) {
+                
+                // Call the function (value)
                 pair.second();
             }
         }
+    }
+
+    auto KeyHeldDown(int key) -> bool {
+        return (glfwGetKey(Window::GetWindow(), key) == GLFW_PRESS);
     }
 
     auto BindFunctionToKeyPress(const int key, void (*function)()) -> void {
@@ -66,9 +75,5 @@ namespace Keys {
     auto BindFunctionToKeyHold(const int key, void (*function)()) -> void {
         functionCalledWhenKeyHeld[key] = function;
         isKeyHeld[key] = false;
-    }
-
-    auto KeyHeldDown(int key) -> bool {
-        return (glfwGetKey(Window::GetWindow(), key) == GLFW_PRESS);
     }
 }

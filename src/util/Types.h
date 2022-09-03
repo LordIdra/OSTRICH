@@ -4,7 +4,7 @@
 #include <vector>
 #include <unordered_map>
 
-#include "glm/glm.hpp"
+#include <glm/glm.hpp>
 
 #include <boost/multiprecision/cpp_dec_float.hpp>
 
@@ -14,7 +14,7 @@ typedef float ELEMENT_DATA_TYPE;
 typedef float VERTEX_DATA_TYPE;
 
 using std::string;
-using std::vector; // NOLINT(misc-unused-using-decls)
+using std::vector;        // NOLINT(misc-unused-using-decls)
 using std::unordered_map; // NOLINT(misc-unused-using-decls)
 
 using glm::vec2;
@@ -37,38 +37,38 @@ struct bvec3 {
     bfloat y;
     bfloat z;
 
-    bvec3(bfloat x, bfloat y, bfloat z) 
+    bvec3(const bfloat x, const bfloat y, const bfloat z) 
         : x(x), y(y), z(z) {}
 
-    bvec3 operator+(bvec3 v) {
+    bvec3 operator+(bvec3 v) const {
         return bvec3(x+v.x, y+v.y, z+v.z);
     }
 
-    bvec3 operator+(bfloat n) {
+    bvec3 operator+(bfloat n) const {
         return bvec3(x+n, y+n, z+n);
     }
 
-    bvec3 operator-(bvec3 v) {
+    bvec3 operator-(bvec3 v) const {
         return bvec3(x-v.x, y-v.y, z-v.z);
     }
 
-    bvec3 operator-(bfloat n) {
+    bvec3 operator-(bfloat n) const {
         return bvec3(x-n, y-n, z-n);
     }
 
-    bvec3 operator*(bvec3 v) {
+    bvec3 operator*(bvec3 v) const {
         return bvec3(x*v.x, y*v.y, z*v.z);
     }
 
-    bvec3 operator*(bfloat n) {
+    bvec3 operator*(bfloat n) const {
         return bvec3(x*n, y*n, z*n);
     }
 
-    bvec3 operator/(bvec3 v) {
+    bvec3 operator/(bvec3 v) const {
         return bvec3(x/v.x, y/v.y, z/v.z);
     }
 
-    bvec3 operator/(bfloat n) {
+    bvec3 operator/(bfloat n) const {
         return bvec3(x/n, y/n, z/n);
     }
 

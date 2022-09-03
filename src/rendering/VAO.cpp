@@ -1,44 +1,45 @@
 #include "VAO.h"
+#include "util/Log.h"
 
-#include "../util/Log.h"
-
-#include "glad/glad.h"
-
+#include <glad/glad.h>
 
 
-VAO::VAO() {}
+
+VAO::VAO() : vbo(0), vao(0), vertexCount(0) {}
 
 auto VAO::Init() -> void {
-    // generate VAO
-    glGenVertexArrays(1, &id);
+    // Generate VAO
+    glGenVertexArrays(1, &vao);
     Bind();
 
-    // generate VBO
+    // Generate VBO
     glGenBuffers(1, &vbo);
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
 
+    // Unbind VAO
     Unbind();
-    Log::Info("Created VAO " + std::to_string(id));
+
+    Log(INFO, "ono");
 }
 
 auto VAO::Bind() const -> void {
-    glBindVertexArray(id);
+    glBindVertexArray(vao);
 }
 
-auto VAO::Unbind() const -> void {
+auto VAO::Unbind() -> void {
     glBindVertexArray(0);
 }
 
 auto VAO::AddVertexAttribute(const VertexAttribute &a) const -> void {
+    // Set and enable vertex attribute
     Bind();
     glVertexAttribPointer(a.index, a.size, a.type, a.normalised, a.stride, a.offset);
     glEnableVertexAttribArray(a.index);
     Unbind();
-    
-    Log::Info("Added vertex attribute " + std::to_string(a.index) + " to VAO " + std::to_string(id));
 }
 
 auto VAO::Data(const vector<VERTEX_DATA_TYPE> &data, unsigned int vertexCount, unsigned int mode) -> void {
+    // Set buffer data
     Bind();
     glBufferData(GL_ARRAY_BUFFER, data.size() * sizeof(VERTEX_DATA_TYPE), &data[0], mode);
     Unbind();
@@ -47,7 +48,7 @@ auto VAO::Data(const vector<VERTEX_DATA_TYPE> &data, unsigned int vertexCount, u
     this->vertexCount = vertexCount;
 }
 
-auto VAO::Render() -> void {
+auto VAO::Render() const -> void {
     Bind();
     glDrawArrays(GL_TRIANGLES, 0, vertexCount);
     Unbind();

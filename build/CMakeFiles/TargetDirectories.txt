@@ -1,3 +1,0 @@
-/home/idra/Sync/NEA/OSTRICH/build/CMakeFiles/rebuild_cache.dir
-/home/idra/Sync/NEA/OSTRICH/build/CMakeFiles/edit_cache.dir
-/home/idra/Sync/NEA/OSTRICH/build/CMakeFiles/OSTRICH.dir
