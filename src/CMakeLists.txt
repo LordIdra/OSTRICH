@@ -4,67 +4,26 @@ project("OSTRICH")
 set(FILES
     "main.cpp"
 
-    
-    "bodies/Body.h"
     "bodies/Body.cpp"
-    
-    "bodies/Massive.h"
     "bodies/Massive.cpp"
 
-
-    "control/Control.h"
     "control/Control.cpp"
 
-
-    "input/Keys.h"
+    "input/Mouse.cpp"
     "input/Keys.cpp"
 
-    "input/Mouse.h"
-    "input/Mouse.cpp"
-
-
-    "window/Window.h"
     "window/Window.cpp"
 
-
-    "util/Constants.h"
-
-    "util/Log.h"
     "util/Log.cpp"
 
-    "util/Types.h"
-
-
-    "rendering/camera/Camera.h"
     "rendering/camera/Camera.cpp"
-
-    "rendering/camera/Settings.h"
-
-    "rendering/camera/Util.h"
     "rendering/camera/Util.cpp"
-
-    "rendering/geometry/Rays.h"
     "rendering/geometry/Rays.cpp"
-
-    "rendering/geometry/Transition.h"
     "rendering/geometry/Transition.cpp"
-
-    "rendering/shaders/Program.h"
     "rendering/shaders/Program.cpp"
-
-    "rendering/shaders/Shader.h"
     "rendering/shaders/Shader.cpp"
-
-    "rendering/shaders/Util.h"
     "rendering/shaders/Util.cpp"
-
-    "rendering/structures/Material.h"
-    "rendering/structures/VertexAttribute.h"
-
-    "rendering/Geometry.h"
     "rendering/Geometry.cpp"
-
-    "rendering/VAO.h"
     "rendering/VAO.cpp"
 )
 
