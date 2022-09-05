@@ -12,12 +12,9 @@ private:
 
 
 public:
-    Program();
+    Program(const Shader &vertex, const Shader &fragment);
     ~Program();
 
-    auto Init() -> void;
-    auto AddShader(const Shader &shader) const -> void;
-    auto Link() const -> void;
     auto Use() const -> void;
 
     auto Set(const string &key, const bool  value) const -> void;

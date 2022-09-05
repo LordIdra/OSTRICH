@@ -1,5 +1,6 @@
 #include "Render.h"
 
+#include <memory>
 #include <rendering/geometry/Transition.h>
 #include <rendering/camera/Camera.h>
 #include <rendering/shaders/Program.h>
@@ -11,6 +12,9 @@
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
+
+using std::unique_ptr;
+using std::make_unique;
 
 
 
@@ -24,7 +28,7 @@ namespace Render {
 
         unordered_map<string, VAO> vaos;
         Transition transition = Transition(ZERO_VECTOR, ZERO_VECTOR, 0.0);
-        Program program;
+        unique_ptr<Program> program;
 
 
         auto KeyZoomIn() -> void {
@@ -66,23 +70,18 @@ namespace Render {
         Keys::BindFunctionToKeyHold(GLFW_KEY_MINUS, KeyZoomOut);
         
         // Program
-        Shader vertex;
-        Shader fragment;
-        vertex.Init("../resource/vertex.vsh", GL_VERTEX_SHADER);
-        fragment.Init("../resource/fragment.fsh", GL_FRAGMENT_SHADER);
-        program.Init();
-        program.AddShader(vertex);
-        program.AddShader(fragment);
-        program.Link();
+        Shader vertex = Shader("../resource/vertex.vsh", GL_VERTEX_SHADER);
+        Shader fragment = Shader("../resource/fragment.fsh", GL_FRAGMENT_SHADER);
+        program = make_unique<Program>(vertex, fragment);
     }
 
     auto Update(double deltaTime) -> void {
         // Set program variables
-        program.Use();
-        program.Set("cameraMatrix", Camera::GetMatrix());
-        program.Set("cameraPosition", Camera::GetPosition());
-        program.Set("lightPosition", LIGHT_POSITION);
-        program.Set("material", planetMaterial);
+        program->Use();
+        program->Set("cameraMatrix", Camera::GetMatrix());
+        program->Set("cameraPosition", Camera::GetPosition());
+        program->Set("lightPosition", LIGHT_POSITION);
+        program->Set("material", planetMaterial);
 
         // Render every VAO
         for (const auto &pair: vaos) {

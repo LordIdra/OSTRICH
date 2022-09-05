@@ -6,23 +6,16 @@
 
 
 
-Program::Program() : id(0) {}
+Program::Program(const Shader &vertex, const Shader &fragment) {
+    id = glCreateProgram();
+    vertex.Attach(id);
+    fragment.Attach(id);
+    glLinkProgram(id);
+    CheckLinkSuccess(id);
+}
 
 Program::~Program() {
     glDeleteProgram(id);
-}
-
-auto Program::Init() -> void {
-    id = glCreateProgram();
-}
-
-auto Program::AddShader(const Shader &shader) const -> void {
-    shader.Attach(id);
-}
-
-auto Program::Link() const -> void {
-    glLinkProgram(id);
-    CheckLinkSuccess(id);
 }
 
 auto Program::Use() const -> void {
