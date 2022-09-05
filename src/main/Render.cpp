@@ -1,6 +1,8 @@
 #include "Render.h"
+#include "util/Log.h"
 
 #include <memory>
+#include <main/Bodies.h>
 #include <rendering/geometry/Transition.h>
 #include <rendering/camera/Camera.h>
 #include <rendering/shaders/Program.h>
@@ -26,10 +28,9 @@ namespace Render {
         const unsigned int STRIDE = 6;
         const float TRANSITION_TIME = 0.2;
 
-        unordered_map<string, VAO> vaos;
+        unordered_map<string, VAO> massive_vaos;
         Transition transition = Transition(ZERO_VECTOR, ZERO_VECTOR, 0.0);
         unique_ptr<Program> program;
-
 
         auto KeyZoomIn() -> void {
             Camera::AddZoomDelta(KEY_ZOOM_AMOUNT);
@@ -84,8 +85,11 @@ namespace Render {
         program->Set("material", planetMaterial);
 
         // Render every VAO
-        for (const auto &pair: vaos) {
-            pair.second.Render();
+        for (const auto &pair: massive_vaos) {
+            const VAO &vao = pair.second;
+            const Massive &body = Bodies::GetMassiveBody(pair.first);
+            program->Set("modelMatrix", body.GetMatrix());
+            vao.Render();
         }
 
         // Update the camera target according to the transition
@@ -96,8 +100,8 @@ namespace Render {
 
     auto AddBody(const Massive &body) -> void {
         // Add a corresponding VAO for the body
-        vaos.insert(std::make_pair(body.GetId(), VAO()));
-        VAO &vao = vaos.at(body.GetId());
+        massive_vaos.insert(std::make_pair(body.GetId(), VAO()));
+        VAO &vao = massive_vaos.at(body.GetId());
         vao.Init();
 
         // Add VAO vertex attributes

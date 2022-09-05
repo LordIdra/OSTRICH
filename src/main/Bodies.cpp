@@ -2,7 +2,6 @@
 
 #include <bodies/Body.h>
 #include <bodies/Massive.h>
-#include <rendering/VAO.h>
 #include <rendering/camera/Camera.h>
 #include <rendering/geometry/Rays.h>
 #include <rendering/shaders/Program.h>
@@ -21,7 +20,7 @@ namespace Bodies {
         string selected;
 
         auto AddBody(const Massive &body) -> void {
-            massive_bodies.insert(std::make_pair(body.GetName(), body));
+            massive_bodies.insert(std::make_pair(body.GetId(), body));
             Render::AddBody(body);
         }
 
@@ -76,5 +75,9 @@ namespace Bodies {
 
         // Render
         Render::Init();
+    }
+
+    auto GetMassiveBody(const string &id) -> Massive {
+        return massive_bodies.at(id);
     }
 }
