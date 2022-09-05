@@ -10,9 +10,8 @@ private:
 
 
 public:
-    Shader();
+    Shader(const string &path, const unsigned int type);
     ~Shader();
     
-    auto Init(const string &path, const unsigned int type) -> void;
     auto Attach(const unsigned int program) const -> void;
 };

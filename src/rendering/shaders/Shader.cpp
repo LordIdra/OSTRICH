@@ -6,13 +6,11 @@
 
 
 
-Shader::Shader() : id(0) {}
-
 Shader::~Shader() {
     glDeleteShader(id);
 }
 
-auto Shader::Init(const string &path, const unsigned int type) -> void {
+Shader::Shader(const string &path, const unsigned int type){
     // Create a shader and read the the file at 'path' into a string
     id = glCreateShader(type);
     const string stringSource = ReadFile(path);

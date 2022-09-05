@@ -10,10 +10,12 @@ private:
     const float STEP = PI / 24;
     bfloat mass;   // kg
     bfloat radius; // m
+    vector<VERTEX_DATA_TYPE> vertices;
 
 public:
     Massive(const string &id, const string &name, const bvec3 &position, const bvec3 &velocity, const bfloat mass, const bfloat radius);
 
     auto GetScaledRadius() const -> float;
     auto GetSphereVertices() const -> vector<VERTEX_DATA_TYPE>;
+    auto GetMatrix() const -> mat4;
 };

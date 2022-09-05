@@ -1,5 +1,8 @@
 #include "Render.h"
+#include "util/Log.h"
 
+#include <memory>
+#include <main/Bodies.h>
 #include <rendering/geometry/Transition.h>
 #include <rendering/camera/Camera.h>
 #include <rendering/shaders/Program.h>
@@ -12,6 +15,9 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
+using std::unique_ptr;
+using std::make_unique;
+
 
 
 namespace Render {
@@ -22,10 +28,9 @@ namespace Render {
         const unsigned int STRIDE = 6;
         const float TRANSITION_TIME = 0.2;
 
-        unordered_map<string, VAO> vaos;
+        unordered_map<string, VAO> massive_vaos;
         Transition transition = Transition(ZERO_VECTOR, ZERO_VECTOR, 0.0);
-        Program program;
-
+        unique_ptr<Program> program;
 
         auto KeyZoomIn() -> void {
             Camera::AddZoomDelta(KEY_ZOOM_AMOUNT);
@@ -66,27 +71,25 @@ namespace Render {
         Keys::BindFunctionToKeyHold(GLFW_KEY_MINUS, KeyZoomOut);
         
         // Program
-        Shader vertex;
-        Shader fragment;
-        vertex.Init("../resource/vertex.vsh", GL_VERTEX_SHADER);
-        fragment.Init("../resource/fragment.fsh", GL_FRAGMENT_SHADER);
-        program.Init();
-        program.AddShader(vertex);
-        program.AddShader(fragment);
-        program.Link();
+        Shader vertex = Shader("../resource/vertex.vsh", GL_VERTEX_SHADER);
+        Shader fragment = Shader("../resource/fragment.fsh", GL_FRAGMENT_SHADER);
+        program = make_unique<Program>(vertex, fragment);
     }
 
     auto Update(double deltaTime) -> void {
         // Set program variables
-        program.Use();
-        program.Set("cameraMatrix", Camera::GetMatrix());
-        program.Set("cameraPosition", Camera::GetPosition());
-        program.Set("lightPosition", LIGHT_POSITION);
-        program.Set("material", planetMaterial);
+        program->Use();
+        program->Set("cameraMatrix", Camera::GetMatrix());
+        program->Set("cameraPosition", Camera::GetPosition());
+        program->Set("lightPosition", LIGHT_POSITION);
+        program->Set("material", planetMaterial);
 
         // Render every VAO
-        for (const auto &pair: vaos) {
-            pair.second.Render();
+        for (const auto &pair: massive_vaos) {
+            const VAO &vao = pair.second;
+            const Massive &body = Bodies::GetMassiveBody(pair.first);
+            program->Set("modelMatrix", body.GetMatrix());
+            vao.Render();
         }
 
         // Update the camera target according to the transition
@@ -97,8 +100,8 @@ namespace Render {
 
     auto AddBody(const Massive &body) -> void {
         // Add a corresponding VAO for the body
-        vaos.insert(std::make_pair(body.GetId(), VAO()));
-        VAO &vao = vaos.at(body.GetId());
+        massive_vaos.insert(std::make_pair(body.GetId(), VAO()));
+        VAO &vao = massive_vaos.at(body.GetId());
         vao.Init();
 
         // Add VAO vertex attributes
