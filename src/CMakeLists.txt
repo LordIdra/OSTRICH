@@ -23,10 +23,10 @@ set(FILES
     "rendering/camera/Util.cpp"
     "rendering/geometry/Rays.cpp"
     "rendering/geometry/Transition.cpp"
+    "rendering/geometry/Sphere.cpp"
     "rendering/shaders/Program.cpp"
     "rendering/shaders/Shader.cpp"
     "rendering/shaders/Util.cpp"
-    "rendering/Geometry.cpp"
     "rendering/VAO.cpp"
 )
 
