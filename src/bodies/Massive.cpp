@@ -7,8 +7,8 @@
 using std::move;
 
 
-Massive::Massive(const string &id, const string &name, const bvec3 &position, const bvec3 &velocity, bfloat mass, bfloat radius)
-    : Body(id, name, position, velocity), mass(move(mass)), radius(move(radius)) {
+Massive::Massive(const string &id, const string &name, const bvec3 &position, const bvec3 &velocity, const Material &material, const bfloat mass, const bfloat radius)
+    : Body(id, name, position, velocity), material(material), mass(move(mass)), radius(move(radius)) {
         vertices = Sphere::Sphere(GetScaledRadius(), STEP);
 }
 
@@ -18,6 +18,10 @@ auto Massive::GetScaledRadius() const -> float {
 
 auto Massive::GetSphereVertices() const -> vector<VERTEX_DATA_TYPE> {
     return vertices;
+}
+
+auto Massive::GetMaterial() const -> Material {
+    return material;
 }
 
 auto Massive::GetMatrix() const -> mat4 {

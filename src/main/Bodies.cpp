@@ -9,6 +9,7 @@
 #include <input/Keys.h>
 #include <input/Mouse.h>
 #include <main/Render.h>
+#include <main/Materials.h>
 
 
 
@@ -56,6 +57,7 @@ namespace Bodies {
             "Earth",
             bvec3(0, 0, 0),
             bvec3(0, 0, 0),
+            Materials::earth,
             bfloat(5.9722e24),     // NOLINT(cppcoreguidelines-avoid-magic-numbers)
             bfloat(6371.0e3)));  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
         AddBody(Massive(
@@ -63,6 +65,7 @@ namespace Bodies {
             "The Moon",
             bvec3(bfloat(0.4055e8), bfloat(0), bfloat(0)), // NOLINT(cppcoreguidelines-avoid-magic-numbers)
             bvec3(bfloat(0), bfloat(0), bfloat(0.970e3)),  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+            Materials::moon,
             bfloat(0.07346e24),    // NOLINT(cppcoreguidelines-avoid-magic-numbers)
             bfloat(1737.4e3)));  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
         AddBody(Massive(
@@ -70,6 +73,7 @@ namespace Bodies {
             "The Moon 2.0",
             bvec3(bfloat(-0.4055e8), bfloat(0), bfloat(0)), // NOLINT(cppcoreguidelines-avoid-magic-numbers)
             bvec3(bfloat(0), bfloat(0), bfloat(0.970e3)),   // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+            Materials::moon,
             bfloat(0.07346e24),    // NOLINT(cppcoreguidelines-avoid-magic-numbers)
             bfloat(2500e3)));  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
 

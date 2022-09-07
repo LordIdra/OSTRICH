@@ -1,5 +1,6 @@
 #pragma once
 
+#include <rendering/structures/Material.h>
 #include <util/Constants.h>
 #include <bodies/Body.h>
 
@@ -11,11 +12,13 @@ private:
     bfloat mass;   // kg
     bfloat radius; // m
     vector<VERTEX_DATA_TYPE> vertices;
+    Material material;
 
 public:
-    Massive(const string &id, const string &name, const bvec3 &position, const bvec3 &velocity, const bfloat mass, const bfloat radius);
+    Massive(const string &id, const string &name, const bvec3 &position, const bvec3 &velocity, const Material &material, const bfloat mass, const bfloat radius);
 
     auto GetScaledRadius() const -> float;
     auto GetSphereVertices() const -> vector<VERTEX_DATA_TYPE>;
+    auto GetMaterial() const -> Material;
     auto GetMatrix() const -> mat4;
 };

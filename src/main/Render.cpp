@@ -82,13 +82,13 @@ namespace Render {
         program->Set("cameraMatrix", Camera::GetMatrix());
         program->Set("cameraPosition", Camera::GetPosition());
         program->Set("lightPosition", LIGHT_POSITION);
-        program->Set("material", planetMaterial);
 
         // Render every VAO
         for (const auto &pair: massive_vaos) {
             const VAO &vao = pair.second;
             const Massive &body = Bodies::GetMassiveBody(pair.first);
             program->Set("modelMatrix", body.GetMatrix());
+            program->Set("material", body.GetMaterial());
             vao.Render();
         }
 
