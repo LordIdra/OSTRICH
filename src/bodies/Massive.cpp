@@ -2,14 +2,14 @@
 
 #include <glm/ext/matrix_transform.hpp>
 #include <util/Log.h>
-#include <rendering/Geometry.h>
+#include <rendering/geometry/Sphere.h>
 
 using std::move;
 
 
 Massive::Massive(const string &id, const string &name, const bvec3 &position, const bvec3 &velocity, bfloat mass, bfloat radius)
     : Body(id, name, position, velocity), mass(move(mass)), radius(move(radius)) {
-        vertices = Geometry::Sphere(vec3(0, 0, 0), GetScaledRadius(), STEP);
+        vertices = Sphere::Sphere(GetScaledRadius(), STEP);
 }
 
 auto Massive::GetScaledRadius() const -> float {
