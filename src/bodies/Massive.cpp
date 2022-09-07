@@ -9,7 +9,7 @@ using std::move;
 
 Massive::Massive(const string &id, const string &name, const bvec3 &position, const bvec3 &velocity, bfloat mass, bfloat radius)
     : Body(id, name, position, velocity), mass(move(mass)), radius(move(radius)) {
-        vertices = Geometry::Sphere(GetScaledPosition(), GetScaledRadius(), STEP);
+        vertices = Geometry::Sphere(vec3(0, 0, 0), GetScaledRadius(), STEP);
 }
 
 auto Massive::GetScaledRadius() const -> float {
