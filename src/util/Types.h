@@ -30,7 +30,6 @@ using glm::mat4;
 typedef boost::multiprecision::cpp_dec_float_50 bfloat;     // bfloat = big float
 
 
-
 struct bvec3 {
 
     bfloat x;
@@ -40,39 +39,100 @@ struct bvec3 {
     bvec3(const bfloat x, const bfloat y, const bfloat z) 
         : x(x), y(y), z(z) {}
 
-    bvec3 operator+(bvec3 v) const {
+
+    auto operator+(const bvec3 v) const -> bvec3{
         return bvec3(x+v.x, y+v.y, z+v.z);
     }
 
-    bvec3 operator+(bfloat n) const {
+    auto operator+(const bfloat n) const -> bvec3{
         return bvec3(x+n, y+n, z+n);
     }
 
-    bvec3 operator-(bvec3 v) const {
+    auto operator+=(const bvec3 v) -> void {
+        x += v.x;
+        y += v.y;
+        z += v.z;
+    }
+
+    auto operator+=(const bfloat n) -> void{
+        x += n;
+        y += n;
+        z += n;
+    }
+
+
+    auto operator-(const bvec3 v) const -> bvec3 {
         return bvec3(x-v.x, y-v.y, z-v.z);
     }
 
-    bvec3 operator-(bfloat n) const {
+    auto operator-(const bfloat n) const -> bvec3 {
         return bvec3(x-n, y-n, z-n);
     }
 
-    bvec3 operator*(bvec3 v) const {
+    auto operator-=(const bvec3 v) -> void {
+        x -= v.x;
+        y -= v.y;
+        z -= v.z;
+    }
+
+    auto operator-=(const bfloat n) -> void{
+        x -= n;
+        y -= n;
+        z -= n;
+    }
+
+
+    auto operator*(const bvec3 v) const -> bvec3 {
         return bvec3(x*v.x, y*v.y, z*v.z);
     }
 
-    bvec3 operator*(bfloat n) const {
+    auto operator*(const bfloat n) const -> bvec3 {
         return bvec3(x*n, y*n, z*n);
     }
 
-    bvec3 operator/(bvec3 v) const {
+    auto operator*=(const bvec3 v) -> void {
+        x *= v.x;
+        y *= v.y;
+        z *= v.z;
+    }
+
+    auto operator*=(const bfloat n) -> void{
+        x *= n;
+        y *= n;
+        z *= n;
+    }
+
+
+    auto operator/(const bvec3 v) const -> bvec3 {
         return bvec3(x/v.x, y/v.y, z/v.z);
     }
 
-    bvec3 operator/(bfloat n) const {
+    auto operator/(const bfloat n) const -> bvec3 {
         return bvec3(x/n, y/n, z/n);
     }
 
-    vec3 asVec3() {
+    auto operator/=(const bvec3 v) -> void {
+        x /= v.x;
+        y /= v.y;
+        z /= v.z;
+    }
+
+    auto operator/=(const bfloat n) -> void{
+        x /= n;
+        y /= n;
+        z /= n;
+    }
+
+
+    auto Power(const int n) const -> bvec3 {
+        return bvec3(boost::multiprecision::pow(x, n), boost::multiprecision::pow(y, n), boost::multiprecision::pow(z, n));
+    }
+
+    auto Sqrt() const -> bvec3 {
+        return bvec3(boost::multiprecision::sqrt(x), boost::multiprecision::sqrt(y), boost::multiprecision::sqrt(z));
+    }
+
+    auto AsVec3() const -> vec3 {
         return vec3(x, y, z);
     }
 };

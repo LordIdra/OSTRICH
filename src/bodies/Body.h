@@ -16,6 +16,12 @@ public:
 
     auto GetId() const -> string;
     auto GetName() const -> string;
+    auto GetVelocity() const -> bvec3;
+    auto GetPosition() const -> bvec3;
+    
     auto GetScaledPosition() const -> vec3;
     auto GetScaledVelocity() const -> vec3;
+
+    auto AddVelocity(bvec3 v) -> void;
+    auto AddPosition(bvec3 x) -> void;
 };

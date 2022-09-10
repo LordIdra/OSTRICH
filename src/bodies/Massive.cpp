@@ -12,6 +12,10 @@ Massive::Massive(const string &id, const string &name, const bvec3 &position, co
         vertices = Sphere::Sphere(GetScaledRadius(), STEP);
 }
 
+auto Massive::GetMass() const -> bfloat {
+    return mass;
+}
+
 auto Massive::GetScaledRadius() const -> float {
     return float(radius / SCALE_FACTOR);
 }
