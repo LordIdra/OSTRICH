@@ -25,15 +25,18 @@ namespace Simulation {
             bfloat distance = displacement.Magnitude();
             bfloat accelerationScalar = (GRAVITATIONAL_CONSTANT * pair.second.GetMass()) / boost::multiprecision::pow(distance, 2);
             acceleration -= direction * accelerationScalar;
-            //Log(INFO, displacement.x.str() + " " + displacement.y.str() + " " + displacement.z.str());
-            //Log(INFO, direction.x.str() + " " + direction.y.str() + " " + direction.z.str());
-
-            //Log(INFO, " ");
         }
 
         // Apply acceleration to velocity
-        //Log(INFO, " ");
         body.AddVelocity(acceleration * TIME_STEP_SIZE);
         body.AddPosition(body.GetVelocity() * TIME_STEP_SIZE);
+    }
+
+    auto Integrate(unordered_map<string, Massive> &massive_bodies) -> void {
+        for (int i = 0; i < TIME_STEPS_PER_FRAME; i++) {
+            for (auto &pair : massive_bodies) {
+                Integrate(massive_bodies, pair.second);
+            }
+        }
     }
 }

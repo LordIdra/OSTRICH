@@ -84,9 +84,7 @@ namespace Bodies {
     }
 
     auto Update() -> void {
-        for (auto &pair : massive_bodies) {
-            Simulation::Integrate(massive_bodies, pair.second);
-        }
+        Simulation::Integrate(massive_bodies);
     }
 
     auto GetMassiveBody(const string &id) -> Massive {
