@@ -7,5 +7,6 @@
 
 namespace Bodies {
     auto Init() -> void;
+    auto Update() -> void;
     auto GetMassiveBody(const string &id) -> Massive;
 }

@@ -1,6 +1,7 @@
 #include "Body.h"
 
 #include <util/Constants.h>
+#include <util/Log.h>
 
 using std::move;
 

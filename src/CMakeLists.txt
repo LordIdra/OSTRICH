@@ -6,11 +6,11 @@ set(FILES
     "main/Control.cpp"
     "main/Main.cpp"
     "main/Render.cpp"
+    "main/Simulation.cpp"
 
     "bodies/Body.cpp"
     "bodies/Massive.cpp"
 
-    "main/Control.cpp"
 
     "input/Mouse.cpp"
     "input/Keys.cpp"

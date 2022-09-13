@@ -51,6 +51,7 @@ namespace Control {
             glfwPollEvents();
             Window::Update();
             Camera::Update();
+            Bodies::Update();
         }
     }
 

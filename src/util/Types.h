@@ -132,6 +132,16 @@ struct bvec3 {
         return bvec3(boost::multiprecision::sqrt(x), boost::multiprecision::sqrt(y), boost::multiprecision::sqrt(z));
     }
 
+    auto Magnitude() const -> bfloat {
+        bvec3 square = Power(2);
+        return boost::multiprecision::sqrt(square.x + square.y + square.z);
+    }
+
+    auto Normalize() const -> bvec3 {
+        bfloat magnitude = Magnitude();
+        return bvec3(*this / magnitude);
+    }
+
     auto AsVec3() const -> vec3 {
         return vec3(x, y, z);
     }

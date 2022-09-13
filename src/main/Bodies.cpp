@@ -1,4 +1,6 @@
 #include "Bodies.h"
+#include "main/Simulation.h"
+#include "util/Log.h"
 
 #include <bodies/Body.h>
 #include <bodies/Massive.h>
@@ -59,26 +61,32 @@ namespace Bodies {
             bvec3(0, 0, 0),
             Materials::earth,
             bfloat(5.9722e24),     // NOLINT(cppcoreguidelines-avoid-magic-numbers)
-            bfloat(6371.0e3)));  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+            bfloat(6371.0e4)));  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
         AddBody(Massive(
             "the-moon",
             "The Moon",
-            bvec3(bfloat(0.4055e8), bfloat(0), bfloat(0)), // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+            bvec3(bfloat(0.4055e9), bfloat(0), bfloat(0)), // NOLINT(cppcoreguidelines-avoid-magic-numbers)
             bvec3(bfloat(0), bfloat(0), bfloat(0.970e3)),  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
             Materials::moon,
             bfloat(0.07346e24),    // NOLINT(cppcoreguidelines-avoid-magic-numbers)
-            bfloat(1737.4e3)));  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+            bfloat(1737.4e4)));  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
         AddBody(Massive(
             "the-moon-2",
             "The Moon 2.0",
-            bvec3(bfloat(-0.4055e8), bfloat(0), bfloat(0)), // NOLINT(cppcoreguidelines-avoid-magic-numbers)
-            bvec3(bfloat(0), bfloat(0), bfloat(0.970e3)),   // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+            bvec3(bfloat(1.4055e9), bfloat(0), bfloat(0)), // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+            bvec3(bfloat(0), bfloat(0), bfloat(-0.470e3)),   // NOLINT(cppcoreguidelines-avoid-magic-numbers)
             Materials::moon,
-            bfloat(0.07346e24),    // NOLINT(cppcoreguidelines-avoid-magic-numbers)
-            bfloat(2500e3)));  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+            bfloat(0.07346e26),    // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+            bfloat(2500e4)));  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
 
         // Render
         Render::Init();
+    }
+
+    auto Update() -> void {
+        for (auto &pair : massive_bodies) {
+            Simulation::Integrate(massive_bodies, pair.second);
+        }
     }
 
     auto GetMassiveBody(const string &id) -> Massive {
