@@ -7,6 +7,11 @@
 
 namespace Simulation {
 
+    namespace {
+        bfloat time_step_size = 1000;
+        bfloat time_steps_per_frame = 100; 
+    }
+
     auto Integrate(const unordered_map<string, Massive> &massive_bodies, Body &body) -> void {
         // Loop through every body - we only need the massive bodies since massless bodies will have no effect on the body's acceleration
         bvec3 acceleration = bvec3(0, 0, 0);
@@ -28,15 +33,23 @@ namespace Simulation {
         }
 
         // Apply acceleration to velocity
-        body.AddVelocity(acceleration * TIME_STEP_SIZE);
-        body.AddPosition(body.GetVelocity() * TIME_STEP_SIZE);
+        body.AddVelocity(acceleration * time_step_size);
+        body.AddPosition(body.GetVelocity() * time_step_size);
     }
 
     auto Integrate(unordered_map<string, Massive> &massive_bodies) -> void {
-        for (int i = 0; i < TIME_STEPS_PER_FRAME; i++) {
+        for (int i = 0; i < time_steps_per_frame; i++) {
             for (auto &pair : massive_bodies) {
                 Integrate(massive_bodies, pair.second);
             }
         }
+    }
+
+    auto SetTimeStepSize(bfloat size) -> void {
+        time_step_size = size;
+    }
+
+    auto SetTimeStepsPerFrame(bfloat steps) -> void {
+        time_steps_per_frame = steps;
     }
 }
