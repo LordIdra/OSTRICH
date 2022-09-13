@@ -1,5 +1,7 @@
+#include "input/Keys.h"
 #include "util/Constants.h"
 #include "util/Log.h"
+#include <GLFW/glfw3.h>
 #include <main/Simulation.h>
 #include <unordered_map>
 
@@ -8,8 +10,34 @@
 namespace Simulation {
 
     namespace {
-        bfloat time_step_size = 1000;
+        const bfloat SPEED_MULTIPLIER = 10;
+        const bfloat MIN_SPEED = 1;
+        const bfloat MAX_SPEED = 10000000;
+
+        bfloat time_step_size = 1;
         bfloat time_steps_per_frame = 100; 
+
+        auto IncreaseSimulationSpeed() -> void {
+            // Check that this action won't increase the simulation speed above the maximum speed
+            if ((time_step_size * SPEED_MULTIPLIER) > MAX_SPEED) {
+                return;
+            }
+            time_step_size *= SPEED_MULTIPLIER;
+        }
+
+        auto DecreaseSimulationSpeed() -> void {
+            // Check that this action won't decrease the simulation speed below the minimum speed
+            if ((time_step_size / SPEED_MULTIPLIER) < MIN_SPEED) {
+                return;
+            }
+            Log(INFO, time_step_size.str());
+            time_step_size /= SPEED_MULTIPLIER;
+        }
+    }
+
+    auto Init() -> void {
+        Keys::BindFunctionToKeyPress(GLFW_KEY_COMMA, DecreaseSimulationSpeed);
+        Keys::BindFunctionToKeyPress(GLFW_KEY_PERIOD, IncreaseSimulationSpeed);
     }
 
     auto Integrate(const unordered_map<string, Massive> &massive_bodies, Body &body) -> void {

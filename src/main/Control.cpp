@@ -7,6 +7,7 @@
 #include <window/Window.h>
 #include <main/Render.h>
 #include <main/Bodies.h>
+#include <main/Simulation.h>
 
 
 
@@ -63,6 +64,7 @@ namespace Control {
         Mouse::Init();
         Keys::Init();
         Bodies::Init();
+        Simulation::Init();
     }
 
     auto Mainloop() -> void {

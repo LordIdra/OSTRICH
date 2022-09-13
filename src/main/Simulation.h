@@ -7,6 +7,8 @@
 
 namespace Simulation {
 
+    auto Init() -> void;
+
     auto Integrate(const unordered_map<string, Massive> &massive_bodies, Body &body) -> void;
     auto Integrate(unordered_map<string, Massive> &massive_bodies) -> void;
 
