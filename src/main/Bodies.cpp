@@ -32,7 +32,7 @@ namespace Bodies {
             vec3 direction = Rays::ScreenToWorld(Mouse::GetPosition());
 
             // Loop through every body
-            for (const auto &pair : massive_bodies) {
+            for (auto &pair : massive_bodies) {
 
                 // Check if the camera direction intersects the body
                 if (Rays::IntersectsSphere(
@@ -65,25 +65,32 @@ namespace Bodies {
         AddBody(Massive(
             "the-moon",
             "The Moon",
-            bvec3(bfloat(0.4055e9), bfloat(0), bfloat(0)), // NOLINT(cppcoreguidelines-avoid-magic-numbers)
-            bvec3(bfloat(0), bfloat(0), bfloat(0.970e3)),  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
-            Materials::moon,
+            bvec3(bfloat(1.4055e9), bfloat(0), bfloat(0)), // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+            bvec3(bfloat(0), bfloat(0), bfloat(0.570e3)),  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+            Materials::moon1,
             bfloat(0.07346e24),    // NOLINT(cppcoreguidelines-avoid-magic-numbers)
             bfloat(1737.4e4)));  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
         AddBody(Massive(
             "the-moon-2",
             "The Moon 2.0",
-            bvec3(bfloat(1.4055e9), bfloat(0), bfloat(0)), // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+            bvec3(bfloat(2.4055e9), bfloat(0), bfloat(0)), // NOLINT(cppcoreguidelines-avoid-magic-numbers)
             bvec3(bfloat(0), bfloat(0), bfloat(-0.470e3)),   // NOLINT(cppcoreguidelines-avoid-magic-numbers)
-            Materials::moon,
+            Materials::moon2,
             bfloat(0.07346e26),    // NOLINT(cppcoreguidelines-avoid-magic-numbers)
-            bfloat(2500e4)));  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+            bfloat(9500e4)));  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
 
         // Render
         Render::Init();
     }
 
     auto Update() -> void {
+        // Check that a body has been selected yet
+        if (massive_bodies.find(selected) != massive_bodies.end()) {
+
+            // Update transition target,so that the camera follows the target
+            Render::UpdateTransitionTarget(massive_bodies.at(selected));
+        }
+
         Simulation::Integrate(massive_bodies);
     }
 

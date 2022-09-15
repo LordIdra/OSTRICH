@@ -22,4 +22,5 @@ public:
 
     auto Finished() const -> bool;
     auto Step(const double deltaTime) -> vec3;
+    auto UpdateTarget(const vec3 target) -> void;
 };

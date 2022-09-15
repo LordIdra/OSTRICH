@@ -43,3 +43,8 @@ auto Transition::Step(const double deltaTime) -> vec3 {
     // If the animation has finished, we can just return the point where the transition is supposed to end
     return end;
 }
+
+
+auto Transition::UpdateTarget(const vec3 target) -> void {
+    end = target;
+}

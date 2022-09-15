@@ -15,7 +15,7 @@ namespace Simulation {
         const bfloat MAX_SPEED = 10000000;
 
         bfloat time_step_size = 1;
-        bfloat time_steps_per_frame = 100; 
+        bfloat time_steps_per_frame = 10; 
 
         auto IncreaseSimulationSpeed() -> void {
             // Check that this action won't increase the simulation speed above the maximum speed
@@ -30,7 +30,6 @@ namespace Simulation {
             if ((time_step_size / SPEED_MULTIPLIER) < MIN_SPEED) {
                 return;
             }
-            Log(INFO, time_step_size.str());
             time_step_size /= SPEED_MULTIPLIER;
         }
     }

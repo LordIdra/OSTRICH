@@ -93,9 +93,7 @@ namespace Render {
         }
 
         // Update the camera target according to the transition
-        if (!transition.Finished()) {
-            Camera::SetTarget(transition.Step(deltaTime));
-        }
+        Camera::SetTarget(transition.Step(deltaTime));
     }
 
     auto AddBody(const Massive &body) -> void {
@@ -113,7 +111,11 @@ namespace Render {
         vao.Data(data, vertexCount,  GL_STATIC_DRAW);
     }
 
-    auto StartTransition(const Massive &body) -> void {
+    auto StartTransition(const Body &body) -> void {
         transition = Transition(Camera::GetTarget(), body.GetScaledPosition(), TRANSITION_TIME);
+    }
+
+    auto UpdateTransitionTarget(const Body &body) -> void {
+        transition.UpdateTarget(body.GetScaledPosition());
     }
 }
