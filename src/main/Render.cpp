@@ -1,6 +1,7 @@
 #include "Render.h"
 #include "util/Log.h"
 
+#include <glm/gtx/string_cast.hpp>
 #include <memory>
 #include <main/Bodies.h>
 #include <rendering/geometry/Transition.h>
@@ -87,6 +88,7 @@ namespace Render {
         for (const auto &pair: massive_vaos) {
             const VAO &vao = pair.second;
             const Massive &body = Bodies::GetMassiveBody(pair.first);
+            //Log(INFO, glm::to_string(body.GetMatrix()));
             program->Set("modelMatrix", body.GetMatrix());
             program->Set("material", body.GetMaterial());
             vao.Render();

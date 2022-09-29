@@ -25,11 +25,4 @@ namespace Materials {
         .specular = vec3(0.6, 0.3, 0.3),
         .shine = 16.0
     };
-    
-    const Material moon3 {
-        .ambient = vec3(0.02, 0.04, 0.02),
-        .diffuse = vec3(0.1, 0.5, 0.3),
-        .specular = vec3(0.2, 0.4, 0.3),
-        .shine = 32.0
-    };
 }

@@ -12,10 +12,10 @@ namespace Simulation {
     namespace {
         const bfloat SPEED_MULTIPLIER = 10;
         const bfloat MIN_SPEED = 1;
-        const bfloat MAX_SPEED = 10000000;
+        const bfloat MAX_SPEED = 100000;
 
         bfloat time_step_size = 1;
-        bfloat time_steps_per_frame = 10; 
+        bfloat time_steps_per_frame = 10;
 
         auto IncreaseSimulationSpeed() -> void {
             // Check that this action won't increase the simulation speed above the maximum speed
