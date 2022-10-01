@@ -57,27 +57,27 @@ namespace Bodies {
         AddBody(Massive(
             "earth",
             "Earth",
-            bvec3(0, 0, 0),
-            bvec3(0, 0, 0),
+            dvec3(0, 0, 0),
+            dvec3(0, 0, 0),
             Materials::earth,
-            bfloat(5.9722e24),     // NOLINT(cppcoreguidelines-avoid-magic-numbers)
-            bfloat(6371.0e4)));  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+            double(5.9722e24),     // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+            double(6371.0e4)));  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
         AddBody(Massive(
             "the-moon",
             "The Moon",
-            bvec3(bfloat(1.4055e9), bfloat(0), bfloat(0)), // NOLINT(cppcoreguidelines-avoid-magic-numbers)
-            bvec3(bfloat(0), bfloat(0), bfloat(0.570e3)),  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+            dvec3(double(1.4055e9), double(0), double(0)), // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+            dvec3(double(0), double(0), double(0.570e3)),  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
             Materials::moon1,
-            bfloat(0.07346e24),    // NOLINT(cppcoreguidelines-avoid-magic-numbers)
-            bfloat(1737.4e4)));  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+            double(0.07346e24),    // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+            double(1737.4e4)));  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
         AddBody(Massive(
             "the-moon-2",
             "The Moon 2.0",
-            bvec3(bfloat(2.4055e9), bfloat(0), bfloat(0)), // NOLINT(cppcoreguidelines-avoid-magic-numbers)
-            bvec3(bfloat(0), bfloat(0), bfloat(-0.470e3)),   // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+            dvec3(double(2.4055e9), double(0), double(0)), // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+            dvec3(double(0), double(0), double(-0.470e3)),   // NOLINT(cppcoreguidelines-avoid-magic-numbers)
             Materials::moon2,
-            bfloat(0.07346e26),    // NOLINT(cppcoreguidelines-avoid-magic-numbers)
-            bfloat(9500e4)));  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+            double(0.07346e26),    // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+            double(9500e4)));  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
 
         // Render
         Render::Init();

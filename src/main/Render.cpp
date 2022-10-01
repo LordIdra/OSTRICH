@@ -25,7 +25,7 @@ namespace Render {
     namespace {
         const float KEY_ZOOM_AMOUNT = 0.2;
         const vec3 ZERO_VECTOR = vec3(0, 0, 0);
-        const vec3 LIGHT_POSITION = vec3(-0.02, 0.0, 0.0);
+        const vec3 LIGHT_POSITION = vec3(0.0, 0.05, 0.0);
         const unsigned int STRIDE = 6;
         const float TRANSITION_TIME = 0.2;
 
@@ -82,7 +82,7 @@ namespace Render {
         program->Use();
         program->Set("cameraMatrix", Camera::GetMatrix());
         program->Set("cameraPosition", Camera::GetPosition());
-        program->Set("lightPosition", LIGHT_POSITION);
+        program->Set("lightPosition", vec3(sin(glfwGetTime()), 0, cos(glfwGetTime())));
 
         // Render every VAO
         for (const auto &pair: massive_vaos) {

@@ -20,7 +20,7 @@ out vec4 FragColor;
 vec3 normal = normalize(fragmentNormal);
 vec3 lightDirection = normalize(lightPosition - fragmentPosition);
 vec3 cameraDirection = normalize(cameraPosition - fragmentPosition);
-vec3 reflectDirection = reflect(-lightDirection, normal);
+vec3 halfwayDirection = normalize(lightDirection - cameraDirection);
 
 
 vec3 Ambient() {
@@ -32,7 +32,7 @@ vec3 Diffuse() {
 }
 
 vec3 Specular() {
-    return material.specular * pow(max(dot(cameraDirection, reflectDirection), 0.0), material.shine);
+    return material.specular * pow(max(dot(normal, halfwayDirection), 0.0), material.shine);
 }
 
 void main() {

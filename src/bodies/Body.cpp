@@ -7,7 +7,7 @@ using std::move;
 
 
 
-Body::Body(string id, string name, bvec3 position, bvec3 velocity)
+Body::Body(string id, string name, dvec3 position, dvec3 velocity)
     : id(move(id)), name(move(name)), position(move(position)), velocity(move(velocity)) {}
 
 auto Body::GetId() const -> string {
@@ -18,26 +18,26 @@ auto Body::GetName() const -> string {
     return name;
 }
 
-auto Body::GetVelocity() const -> bvec3 {
+auto Body::GetVelocity() const -> dvec3 {
     return velocity;
 }
 
-auto Body::GetPosition() const -> bvec3 {
+auto Body::GetPosition() const -> dvec3 {
     return position;
 }
 
 auto Body::GetScaledPosition() const -> vec3 {
-    return (position / SCALE_FACTOR).AsVec3();
+    return position / SCALE_FACTOR;
 }
 
 auto Body::GetScaledVelocity() const -> vec3 {
-    return (velocity / SCALE_FACTOR).AsVec3();
+    return velocity / SCALE_FACTOR;
 }
 
-auto Body::AddVelocity(const bvec3 v) -> void {
+auto Body::AddVelocity(const dvec3 v) -> void {
     velocity += v;
 }
 
-auto Body::AddPosition(const bvec3 x) -> void {
+auto Body::AddPosition(const dvec3 x) -> void {
     position += x;
 }

@@ -9,12 +9,17 @@
 #include <main/Bodies.h>
 #include <main/Simulation.h>
 
+#include <imgui.h>
+#include <imgui_impl_glfw.h>
+#include <imgui_impl_opengl3.h>
+
 
 
 namespace Control {
     namespace {
         const int MAJOR_VERSION = 3;
         const int MINOR_VERSION = 3;
+        const char* GLSL_VERSION = "#version 330";
 
         double previousTime = 0;
         double deltaTime = 0;
@@ -46,13 +51,19 @@ namespace Control {
             glEnable(GL_DEPTH_TEST);
         }
 
-        auto Update() -> void {
-            Mouse::Update();
-            Keys::Update();
-            glfwPollEvents();
-            Window::Update();
-            Camera::Update();
-            Bodies::Update();
+        auto InitImGui() -> void {
+            // Initialize Imgui
+            IMGUI_CHECKVERSION();
+            ImGui::CreateContext();
+            ImGui::StyleColorsDark();
+
+            // Initialise GLFW and OpenGL backends
+            ImGui_ImplGlfw_InitForOpenGL(Window::GetWindow(), true);
+            ImGui_ImplOpenGL3_Init(GLSL_VERSION);
+
+            // Initialize input/output
+            ImGuiIO& io = ImGui::GetIO(); 
+            (void)io;
         }
     }
 
@@ -60,15 +71,20 @@ namespace Control {
         InitGLFW();
         Window::Init(fullscreen, windowTitle);
         InitGlad();
-        Camera::Init();
         Mouse::Init();
         Keys::Init();
+        InitImGui(); // Must be done after mouse/keys init because mouse/keys init will overwrite whatever imgui needs to set
+        Camera::Init();
         Bodies::Init();
         Simulation::Init();
     }
 
     auto Mainloop() -> void {
         while (!Window::ShouldClose()) {
+
+            ImGui_ImplOpenGL3_NewFrame();
+            ImGui_ImplGlfw_NewFrame();
+            ImGui::NewFrame();
 
             deltaTime = glfwGetTime() - previousTime;
             previousTime = glfwGetTime();
@@ -80,9 +96,17 @@ namespace Control {
                 Camera::AddAngleDelta(Mouse::GetPositionDelta());
             }
 
+            Bodies::Update();
             Render::Update(deltaTime);
 
-            Update();
+            ImGui::Render();
+            ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
+            Camera::Update();
+            Mouse::Update();
+            Keys::Update();
+            glfwPollEvents();
+            Window::Update();
         }
     }
 }
