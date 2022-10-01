@@ -23,6 +23,7 @@ set(FILES
     "src/rendering/geometry/Rays.cpp"
     "src/rendering/geometry/Transition.cpp"
     "src/rendering/geometry/Sphere.cpp"
+    "src/rendering/interface/Interface.cpp"
     "src/rendering/shaders/Program.cpp"
     "src/rendering/shaders/Shader.cpp"
     "src/rendering/shaders/Util.cpp"

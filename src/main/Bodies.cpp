@@ -94,6 +94,10 @@ namespace Bodies {
         Simulation::Integrate(massive_bodies);
     }
 
+    auto GetMassiveBodies() -> unordered_map<string, Massive> {
+        return massive_bodies;
+    }
+
     auto GetMassiveBody(const string &id) -> Massive {
         return massive_bodies.at(id);
     }

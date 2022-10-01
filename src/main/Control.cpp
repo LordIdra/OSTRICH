@@ -3,6 +3,7 @@
 #include <input/Keys.h>
 #include <input/Mouse.h>
 #include <rendering/camera/Camera.h>
+#include <rendering/interface/Interface.h>
 #include <util/Log.h>
 #include <window/Window.h>
 #include <main/Render.h>
@@ -98,6 +99,7 @@ namespace Control {
 
             Bodies::Update();
             Render::Update(deltaTime);
+            Interface::DrawIcons();
 
             ImGui::Render();
             ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
