@@ -39,6 +39,7 @@ namespace Control {
                 return;
             }
             SetVersionHints();
+            glfwWindowHint(GLFW_SAMPLES, 32);
         }
 
         auto InitGlad() -> void {
@@ -48,8 +49,21 @@ namespace Control {
                 return;
             }
 
+            // Multisampling makes edges smoother by interpolating pixels
+            glEnable(GL_MULTISAMPLE);  
+
             // Depth testing makes sure that fragments closer to the camera override fragments further away
             glEnable(GL_DEPTH_TEST);
+
+            // Blending fixes issues with PNG images that have a transparent background
+            glEnable(GL_BLEND);
+            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+            // Texture parameters
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
         }
 
         auto InitImGui() -> void {
@@ -75,6 +89,7 @@ namespace Control {
         Mouse::Init();
         Keys::Init();
         InitImGui(); // Must be done after mouse/keys init because mouse/keys init will overwrite whatever imgui needs to set
+        Interface::Init();
         Camera::Init();
         Bodies::Init();
         Simulation::Init();
@@ -98,8 +113,8 @@ namespace Control {
             }
 
             Bodies::Update();
+            Interface::Update();
             Render::Update(deltaTime);
-            Interface::DrawIcons();
 
             ImGui::Render();
             ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());

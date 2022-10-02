@@ -24,9 +24,13 @@ set(FILES
     "src/rendering/geometry/Transition.cpp"
     "src/rendering/geometry/Sphere.cpp"
     "src/rendering/interface/Interface.cpp"
+    "src/rendering/interface/icons/Icons.cpp"
+    "src/rendering/interface/icons/MassiveIcon.cpp"
+    "src/rendering/interface/icons/MasslessIcon.cpp"
     "src/rendering/shaders/Program.cpp"
     "src/rendering/shaders/Shader.cpp"
     "src/rendering/shaders/Util.cpp"
+    "src/rendering/Texture.cpp"
     "src/rendering/VAO.cpp"
 )
 
@@ -46,8 +50,11 @@ find_package(glm CONFIG REQUIRED)
 find_package(Boost REQUIRED)
 find_package(imgui REQUIRED)
 
+
 add_executable(${PROJECT_NAME} ${FILES} ${DEPEND_FILES})
 
 target_include_directories(${PROJECT_NAME} PRIVATE "src")
 
+find_path(STB_INCLUDE_DIRS "stb.h")
+target_include_directories(${PROJECT_NAME} PRIVATE ${STB_INCLUDE_DIRS})
 target_link_libraries (${PROJECT_NAME} PRIVATE glad::glad glfw Boost::boost imgui::imgui)

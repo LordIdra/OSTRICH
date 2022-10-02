@@ -3,5 +3,6 @@
 
 
 namespace Interface {
-    auto DrawIcons() -> void;
+    auto Init() -> void;
+    auto Update() -> void;
 }

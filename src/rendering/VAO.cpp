@@ -22,10 +22,12 @@ auto VAO::Init() -> void {
 
 auto VAO::Bind() const -> void {
     glBindVertexArray(vao);
+    glBindBuffer(GL_ARRAY_BUFFER, vbo);
 }
 
 auto VAO::Unbind() -> void {
     glBindVertexArray(0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
 auto VAO::AddVertexAttribute(const VertexAttribute &a) const -> void {
