@@ -29,7 +29,6 @@ namespace Icons {
 
         unique_ptr<VAO> vao;
         unique_ptr<Program> program;
-        unique_ptr<Texture> massiveTexture;
 
         auto ShouldMassiveBeDrawn(const Massive &massive) -> bool {
             // World and screen coordinates of the body
@@ -79,13 +78,13 @@ namespace Icons {
             float ICON_RADIUS_X = ICON_RADIUS / Window::GetWidth();
             float ICON_RADIUS_Y = ICON_RADIUS / Window::GetHeight();
 
-            AddVertex(vertices, centre.x - ICON_RADIUS_X, centre.y - ICON_RADIUS_Y, icon.GetColor());
-            AddVertex(vertices, centre.x - ICON_RADIUS_X, centre.y + ICON_RADIUS_Y, icon.GetColor());
-            AddVertex(vertices, centre.x + ICON_RADIUS_X, centre.y + ICON_RADIUS_Y, icon.GetColor());
+            AddVertex(vertices, centre.x, centre.y - ICON_RADIUS_Y, icon.GetColor());
+            AddVertex(vertices, centre.x - ICON_RADIUS_X, centre.y, icon.GetColor());
+            AddVertex(vertices, centre.x, centre.y + ICON_RADIUS_Y, icon.GetColor());
 
-            AddVertex(vertices, centre.x - ICON_RADIUS_X, centre.y - ICON_RADIUS_Y, icon.GetColor());
-            AddVertex(vertices, centre.x + ICON_RADIUS_X, centre.y + ICON_RADIUS_Y, icon.GetColor());
-            AddVertex(vertices, centre.x + ICON_RADIUS_X, centre.y - ICON_RADIUS_Y, icon.GetColor());
+            AddVertex(vertices, centre.x, centre.y - ICON_RADIUS_Y, icon.GetColor());
+            AddVertex(vertices, centre.x + ICON_RADIUS_X, centre.y, icon.GetColor());
+            AddVertex(vertices, centre.x, centre.y + ICON_RADIUS_Y, icon.GetColor());
         }
     }
 
@@ -140,7 +139,6 @@ namespace Icons {
         unsigned int vertexCount = data.size() / STRIDE;
         vao->Data(data, vertexCount, GL_STATIC_DRAW);
         program->Use();
-        massiveTexture->Bind();
         vao->Render();
     }
 }
