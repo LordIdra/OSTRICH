@@ -23,10 +23,9 @@ using std::make_unique;
 namespace Icons {
 
     namespace {
-        const double RADIUS_THRESHOLD = 0.01;
-        const unsigned int STRIDE = 7;
-        const float ICON_RADIUS = 30;
-        const float ICON_OPACITY = 0.1;
+        const double RADIUS_THRESHOLD = 0.005;
+        const unsigned int STRIDE = 5;
+        const float ICON_RADIUS = 15;
 
         unique_ptr<VAO> vao;
         unique_ptr<Program> program;
@@ -63,7 +62,7 @@ namespace Icons {
             return true;
         }
 
-        auto AddVertex(vector<float> &vertices, float vx, float vy, const vec3 colour, const float tx,const float ty) -> void {
+        auto AddVertex(vector<float> &vertices, float vx, float vy, const vec3 colour) -> void {
             // Vertex position
             vertices.push_back(vx);
             vertices.push_back(vy);
@@ -72,10 +71,6 @@ namespace Icons {
             vertices.push_back(colour.r);
             vertices.push_back(colour.g);
             vertices.push_back(colour.b);
-
-            // Texture coordinate
-            vertices.push_back(tx);
-            vertices.push_back(ty);
         }
 
         auto AddVertices(vector<float> &vertices, const MassiveIcon icon) -> void {
@@ -84,22 +79,19 @@ namespace Icons {
             float ICON_RADIUS_X = ICON_RADIUS / Window::GetWidth();
             float ICON_RADIUS_Y = ICON_RADIUS / Window::GetHeight();
 
-            AddVertex(vertices, centre.x - ICON_RADIUS_X, centre.y - ICON_RADIUS_Y, icon.GetColor(), 0, 0);
-            AddVertex(vertices, centre.x - ICON_RADIUS_X, centre.y + ICON_RADIUS_Y, icon.GetColor(), 0, 1);
-            AddVertex(vertices, centre.x + ICON_RADIUS_X, centre.y + ICON_RADIUS_Y, icon.GetColor(), 1, 1);
+            AddVertex(vertices, centre.x - ICON_RADIUS_X, centre.y - ICON_RADIUS_Y, icon.GetColor());
+            AddVertex(vertices, centre.x - ICON_RADIUS_X, centre.y + ICON_RADIUS_Y, icon.GetColor());
+            AddVertex(vertices, centre.x + ICON_RADIUS_X, centre.y + ICON_RADIUS_Y, icon.GetColor());
 
-            AddVertex(vertices, centre.x - ICON_RADIUS_X, centre.y - ICON_RADIUS_Y, icon.GetColor(), 0, 0);
-            AddVertex(vertices, centre.x + ICON_RADIUS_X, centre.y + ICON_RADIUS_Y, icon.GetColor(), 1, 1);
-            AddVertex(vertices, centre.x + ICON_RADIUS_X, centre.y - ICON_RADIUS_Y, icon.GetColor(), 1, 0);
+            AddVertex(vertices, centre.x - ICON_RADIUS_X, centre.y - ICON_RADIUS_Y, icon.GetColor());
+            AddVertex(vertices, centre.x + ICON_RADIUS_X, centre.y + ICON_RADIUS_Y, icon.GetColor());
+            AddVertex(vertices, centre.x + ICON_RADIUS_X, centre.y - ICON_RADIUS_Y, icon.GetColor());
         }
     }
 
 
 
     auto Init() -> void {
-        // Create texture
-        massiveTexture = make_unique<Texture>("../resources/icons/Massive.png");
-
         // Create VAO
         vao = make_unique<VAO>();
         vao->Init();
@@ -119,13 +111,6 @@ namespace Icons {
             .normalised = GL_FALSE,
             .stride = STRIDE * sizeof(float),
             .offset = (void*)(2 * sizeof(float))}); // NOLINT(cppcoreguidelines-pro-type-cstyle-cast)
-        vao->AddVertexAttribute(VertexAttribute{
-            .index = 2,
-            .size = 2,
-            .type = GL_FLOAT,
-            .normalised = GL_FALSE,
-            .stride = STRIDE * sizeof(float),
-            .offset = (void*)(5 * sizeof(float))}); // NOLINT(cppcoreguidelines-pro-type-cstyle-cast)
         
         // Compile shaders
         Shader vertex = Shader("../resources/shaders/icon-vertex.vsh", GL_VERTEX_SHADER);

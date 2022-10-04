@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.16)
 project("OSTRICH")
 
 set(FILES
+    "src/depend/stb_image.h"
+    
     "src/main/Bodies.cpp"
     "src/main/Control.cpp"
     "src/main/Main.cpp"
@@ -54,7 +56,4 @@ find_package(imgui REQUIRED)
 add_executable(${PROJECT_NAME} ${FILES} ${DEPEND_FILES})
 
 target_include_directories(${PROJECT_NAME} PRIVATE "src")
-
-find_path(STB_INCLUDE_DIRS "stb.h")
-target_include_directories(${PROJECT_NAME} PRIVATE ${STB_INCLUDE_DIRS})
 target_link_libraries (${PROJECT_NAME} PRIVATE glad::glad glfw Boost::boost imgui::imgui)

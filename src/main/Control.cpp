@@ -4,6 +4,7 @@
 #include <input/Mouse.h>
 #include <rendering/camera/Camera.h>
 #include <rendering/interface/Interface.h>
+#include <string>
 #include <util/Log.h>
 #include <window/Window.h>
 #include <main/Render.h>
@@ -39,7 +40,7 @@ namespace Control {
                 return;
             }
             SetVersionHints();
-            glfwWindowHint(GLFW_SAMPLES, 32);
+            glfwWindowHint(GLFW_SAMPLES, 4);
         }
 
         auto InitGlad() -> void {
@@ -55,14 +56,10 @@ namespace Control {
             // Depth testing makes sure that fragments closer to the camera override fragments further away
             glEnable(GL_DEPTH_TEST);
 
-            // Blending fixes issues with PNG images that have a transparent background
-            glEnable(GL_BLEND);
-            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
             // Texture parameters
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
         }
 
