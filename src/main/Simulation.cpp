@@ -12,7 +12,7 @@ namespace Simulation {
 
     namespace {
         const double SPEED_MULTIPLIER = 10;
-        const double MIN_SPEED = 1;
+        const double MIN_SPEED = 1.0/10000;
         const double MAX_SPEED = 100000;
 
         double time_step_size = 1.0/10000;
