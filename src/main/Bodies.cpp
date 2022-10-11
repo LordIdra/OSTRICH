@@ -69,15 +69,7 @@ namespace Bodies {
             dvec3(double(0), double(0), double(0.570e3)),  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
             Materials::moon1,
             double(0.07346e24),    // NOLINT(cppcoreguidelines-avoid-magic-numbers)
-            double(1737.4e4)));  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
-        AddBody(Massive(
-            "the-moon-2",
-            "The Moon 2.0",
-            dvec3(double(2.4055e9), double(0), double(0)), // NOLINT(cppcoreguidelines-avoid-magic-numbers)
-            dvec3(double(0), double(0), double(-0.470e3)),   // NOLINT(cppcoreguidelines-avoid-magic-numbers)
-            Materials::moon2,
-            double(0.07346e26),    // NOLINT(cppcoreguidelines-avoid-magic-numbers)
-            double(9500e4)));  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+            double(1737.4e3)));  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
 
         // Render
         Render::Init();
@@ -96,6 +88,11 @@ namespace Bodies {
 
     auto GetSelectedBody() -> string {
         return selected;
+    }
+
+    auto SetSelectedBody(const string &id) -> void {
+        selected = id;
+        Render::StartTransition(massive_bodies.at(id));
     }
 
     auto GetMassiveBodies() -> unordered_map<string, Massive> {

@@ -1,6 +1,7 @@
 #include "Icons.h"
 
 #include "MassiveIcon.h"
+#include "input/mouse/Buttons.h"
 #include "input/mouse/Position.h"
 #include "rendering/interface/icons/IconVertex.h"
 #include "window/Window.h"
@@ -16,7 +17,6 @@
 #include <glad/glad.h>
 
 #include <string>
-#include <util/Log.h>
 
 using std::unique_ptr;
 using std::make_unique;
@@ -29,6 +29,7 @@ namespace Icons {
         const double RADIUS_THRESHOLD = 0.005;
         const float MERGE_THRESHOLD = 14;
         const float HOVER_THRESHOLD = 14;
+        const float SELECT_THRESHOLD = 27;
         const unsigned int STRIDE = 5;
 
         const float ICON_MAIN_RADIUS = 10;
@@ -75,18 +76,14 @@ namespace Icons {
             return true;
         }
 
-        auto MouseOnIcon(const MassiveIcon &icon) -> bool {
+        auto MouseOnIcon(const MassiveIcon &icon, float threshold) -> bool {
             // Mouse coordinates are currently between 0 and 1, let's normalize that so they are 0 to width and 0 to height
             vec2 c = Mouse::GetUnNormalizedPosition();
 
             const vec2 k = icon.GetScreenCoordinates();
 
-            bool conditionY = abs(c.y - k.y) <  HOVER_THRESHOLD;
-            bool conditionX = abs(c.x - k.x) < (HOVER_THRESHOLD - abs(c.y -  k.y));
-
-            Log(INFO, std::to_string(c.y));
-            Log(INFO, std::to_string(k.y));
-            Log(INFO, "");
+            bool conditionY = abs(c.y - k.y) <  threshold;
+            bool conditionX = abs(c.x - k.x) < (threshold - abs(c.y -  k.y));
 
             return conditionX && conditionY;
         }
@@ -186,7 +183,7 @@ namespace Icons {
             if (Bodies::GetSelectedBody() == icon.GetBody().GetId()) {
                 AddIconSelected(vertices, icon);
             }
-            if (MouseOnIcon(icon)) {
+            if (MouseOnIcon(icon, HOVER_THRESHOLD)) {
                 AddIconHover(vertices, icon);
             }
         }
@@ -194,10 +191,6 @@ namespace Icons {
         auto IconsIntersect(const MassiveIcon &icon1, const MassiveIcon &icon2) -> bool {
             const vec2 k = icon1.GetScreenCoordinates();
             const vec2 c = icon2.GetScreenCoordinates();
-
-            Log(INFO, std::to_string(k.x));
-            Log(INFO, std::to_string(c.x));
-            Log(INFO, "");
 
             bool conditionY = abs(c.y - k.y) <  (MERGE_THRESHOLD);
             bool conditionX = abs(c.x - k.x) < ((MERGE_THRESHOLD) - abs(c.y -  k.y));
@@ -237,11 +230,35 @@ namespace Icons {
             }
             return false;
         }
+
+        auto GetMergedIcons() -> vector<MassiveIcon> {
+            // Get a list of icons for all bodies
+            vector<MassiveIcon> massiveIcons;
+            for (const auto pair : Bodies::GetMassiveBodies()) {
+                if (ShouldMassiveBeDrawn(pair.second)) {
+                    massiveIcons.push_back(pair.second);
+                }
+            }
+
+            // Merge icons
+            while (FirstLayerMerge(massiveIcons)) {}
+
+            return massiveIcons;
+        }
+
+        auto SwitchBodyBasedOnIcon() -> void {
+            for (const MassiveIcon icon : GetMergedIcons()) {
+                if (MouseOnIcon(icon, SELECT_THRESHOLD)) {
+                    Bodies::SetSelectedBody(icon.GetBody().GetId());
+                }
+            }
+        }
     }
 
-
-
     auto Init() -> void {
+        // Register body switch function
+        Mouse::SetCallbackLeftDouble(SwitchBodyBasedOnIcon);
+
         // Create VAO
         vao = make_unique<VAO>();
         vao->Init();
@@ -269,16 +286,8 @@ namespace Icons {
     }
 
     auto DrawIcons() -> void {
-
         // Compile a list of all massive bodies to have icons rendered
-        vector<MassiveIcon> massiveIcons;
-        for (const auto pair : Bodies::GetMassiveBodies()) {
-            if (ShouldMassiveBeDrawn(pair.second)) {
-                massiveIcons.push_back(pair.second);
-            }
-        }
-
-        while (FirstLayerMerge(massiveIcons)) {}
+        vector<MassiveIcon> massiveIcons = GetMergedIcons();
 
         // Create a vector of vertices
         vector<float> data;
