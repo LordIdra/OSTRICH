@@ -20,5 +20,7 @@ public:
 
     auto GetBody() const -> Massive;
     auto GetColor() const -> vec3;
+    
+    auto GetScreenCoordinates() const-> vec2;
     auto GetNormalizedScreenCoordinates() const-> vec2;
 };

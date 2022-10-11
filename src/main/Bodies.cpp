@@ -29,7 +29,7 @@ namespace Bodies {
 
         auto SwitchSelectedBody() -> void {
             // Find the camera direction
-            vec3 direction = Rays::ScreenToWorld(Mouse::GetPosition());
+            vec3 direction = Rays::ScreenToWorld(Mouse::GetNormalizedPosition());
 
             // Loop through every body
             for (auto &pair : massive_bodies) {
@@ -92,6 +92,10 @@ namespace Bodies {
         }
 
         Simulation::Integrate(massive_bodies);
+    }
+
+    auto GetSelectedBody() -> string {
+        return selected;
     }
 
     auto GetMassiveBodies() -> unordered_map<string, Massive> {

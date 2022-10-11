@@ -5,6 +5,7 @@
 
 
 namespace Mouse {
-    auto GetPosition() -> vec2;
+    auto GetNormalizedPosition() -> vec2;
+    auto GetUnNormalizedPosition() -> vec2;
     auto GetPositionDelta() -> vec2;
 }

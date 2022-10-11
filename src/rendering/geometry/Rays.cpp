@@ -59,6 +59,14 @@ namespace Rays {
         return coords3;
     }
 
+    auto UnNormalize(vec2 position) -> vec2 {
+        // Get from -1 <-> 1 to 0 <-> 1
+        position += vec2(1, 1);
+        position *= vec2(0.5, 0.5);
+        position *= vec2(Window::GetWidth(), Window::GetHeight());
+        return position;
+    }
+
     auto IntersectsSphere(const vec3 cameraPosition, const vec3 cameraDirection, const vec3 spherePosition, const float sphereRadius) -> bool {
         // Calculate lambda; a variable that can be multiplied by cameraDirection to obtain a vector from cameraPosition to the 
         // closest point the ray gets to spherePosition

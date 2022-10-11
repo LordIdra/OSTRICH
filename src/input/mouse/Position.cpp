@@ -20,7 +20,19 @@ namespace Mouse {
         }
     }
 
-    auto GetPosition() -> glm::vec2 {
+    auto GetNormalizedPosition() -> vec2 {
+        return position;
+    }
+
+    auto GetUnNormalizedPosition() -> vec2 {
+        vec2 position = GetNormalizedPosition();
+
+        // Invert Y
+        position = vec2(position.x, 1 - position.y);
+
+        // Normalise between width and height
+        position *= vec2(Window::GetWidth(), Window::GetHeight());
+        
         return position;
     }
 
