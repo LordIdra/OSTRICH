@@ -8,7 +8,6 @@
 
 class Massive : public Body {
 private:
-    const float STEP = PI / 24;
     double mass;   // kg
     double radius; // m
     vector<VERTEX_DATA_TYPE> vertices;

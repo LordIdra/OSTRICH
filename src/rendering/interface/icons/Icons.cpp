@@ -1,7 +1,9 @@
 #include "Icons.h"
 
 #include "MassiveIcon.h"
+#include "rendering/interface/icons/IconVertex.h"
 #include "window/Window.h"
+#include <glm/gtx/string_cast.hpp>
 #include <main/Bodies.h>
 #include <rendering/VAO.h>
 #include <rendering/shaders/Program.h>
@@ -25,7 +27,16 @@ namespace Icons {
     namespace {
         const double RADIUS_THRESHOLD = 0.005;
         const unsigned int STRIDE = 5;
-        const float ICON_RADIUS = 15;
+
+        const float ICON_MAIN_RADIUS = 15;
+        const float ICON_OUTLINE_RADIUS = 19;
+        const float ICON_HOVER_INNER_RADIUS = 25;
+        const float ICON_HOVER_OUTER_RADIUS = 28;
+        const float ICON_SELECTED_RADIUS = 25;
+
+        const vec3 ICON_BORDER_COLOR = vec3(1.0, 0.7, 0.1);
+        const vec3 ICON_HOVER_COLOR = vec3(1.0, 0.2, 0.1);
+        const vec3 ICON_SELECTED_COLOR = vec3(0.8, 0.2, 0.1);
 
         unique_ptr<VAO> vao;
         unique_ptr<Program> program;
@@ -61,30 +72,133 @@ namespace Icons {
             return true;
         }
 
-        auto AddVertex(vector<float> &vertices, float vx, float vy, const vec3 colour) -> void {
+        auto AddVertex(vector<float> &vertices, IconVertex vertex) -> void {
             // Vertex position
-            vertices.push_back(vx);
-            vertices.push_back(vy);
+            vertices.push_back(vertex.x);
+            vertices.push_back(vertex.y);
 
             // Colour
-            vertices.push_back(colour.r);
-            vertices.push_back(colour.g);
-            vertices.push_back(colour.b);
+            vertices.push_back(vertex.r);
+            vertices.push_back(vertex.g);
+            vertices.push_back(vertex.b);
+        }
+
+        auto AddQuad(vector<float> &vertices, IconVertex v1, IconVertex v2, IconVertex v3, IconVertex v4) -> void {
+            AddVertex(vertices, v1);
+            AddVertex(vertices, v2);
+            AddVertex(vertices, v3);
+
+            AddVertex(vertices, v1);
+            AddVertex(vertices, v3);
+            AddVertex(vertices, v4);
         }
 
         auto AddVertices(vector<float> &vertices, const MassiveIcon icon) -> void {
-            vec2 centre = icon.GetScreenCoordinates();
+            vec2 centre = icon.GetNormalizedScreenCoordinates();
 
-            float ICON_RADIUS_X = ICON_RADIUS / Window::GetWidth();
-            float ICON_RADIUS_Y = ICON_RADIUS / Window::GetHeight();
+            float ICON_MAIN_RADIUS_X = ICON_MAIN_RADIUS / Window::GetWidth();
+            float ICON_MAIN_RADIUS_Y = ICON_MAIN_RADIUS / Window::GetHeight();
 
-            AddVertex(vertices, centre.x, centre.y - ICON_RADIUS_Y, icon.GetColor());
-            AddVertex(vertices, centre.x - ICON_RADIUS_X, centre.y, icon.GetColor());
-            AddVertex(vertices, centre.x, centre.y + ICON_RADIUS_Y, icon.GetColor());
+            float ICON_OUTLINE_RADIUS_X = ICON_OUTLINE_RADIUS / Window::GetWidth();
+            float ICON_OUTLINE_RADIUS_Y = ICON_OUTLINE_RADIUS / Window::GetHeight();
 
-            AddVertex(vertices, centre.x, centre.y - ICON_RADIUS_Y, icon.GetColor());
-            AddVertex(vertices, centre.x + ICON_RADIUS_X, centre.y, icon.GetColor());
-            AddVertex(vertices, centre.x, centre.y + ICON_RADIUS_Y, icon.GetColor());
+            float ICON_HOVER_INNER_RADIUS_X = ICON_HOVER_INNER_RADIUS / Window::GetWidth();
+            float ICON_HOVER_INNER_RADIUS_Y = ICON_HOVER_INNER_RADIUS / Window::GetHeight();
+
+            float ICON_HOVER_OUTER_RADIUS_X = ICON_HOVER_OUTER_RADIUS / Window::GetWidth();
+            float ICON_HOVER_OUTER_RADIUS_Y = ICON_HOVER_OUTER_RADIUS / Window::GetHeight();
+
+            float ICON_SELECTED_RADIUS_X = ICON_SELECTED_RADIUS / Window::GetWidth();
+            float ICON_SELECTED_RADIUS_Y = ICON_SELECTED_RADIUS / Window::GetHeight();
+
+            // Centre
+            AddQuad(vertices, 
+                IconVertex(centre.x, centre.y - ICON_MAIN_RADIUS_Y, icon.GetColor()),
+                IconVertex(centre.x - ICON_MAIN_RADIUS_X, centre.y, icon.GetColor()),
+                IconVertex(centre.x, centre.y + ICON_MAIN_RADIUS_Y, icon.GetColor()),
+                IconVertex(centre.x + ICON_MAIN_RADIUS_X, centre.y, icon.GetColor()));
+
+            // Borders
+            AddQuad(vertices, 
+                IconVertex(centre.x, centre.y - ICON_OUTLINE_RADIUS_Y, ICON_BORDER_COLOR),
+                IconVertex(centre.x - ICON_OUTLINE_RADIUS_X, centre.y, ICON_BORDER_COLOR),
+                IconVertex(centre.x, centre.y + ICON_OUTLINE_RADIUS_Y, ICON_BORDER_COLOR),
+                IconVertex(centre.x + ICON_OUTLINE_RADIUS_X, centre.y, ICON_BORDER_COLOR));
+
+            // Selected
+            AddQuad(vertices, 
+                IconVertex(centre.x, centre.y - ICON_SELECTED_RADIUS_Y, ICON_SELECTED_COLOR),
+                IconVertex(centre.x - ICON_SELECTED_RADIUS_X, centre.y, ICON_SELECTED_COLOR),
+                IconVertex(centre.x, centre.y + ICON_SELECTED_RADIUS_Y, ICON_SELECTED_COLOR),
+                IconVertex(centre.x + ICON_SELECTED_RADIUS_X, centre.y, ICON_SELECTED_COLOR));
+        
+            // Hover
+            AddQuad(vertices,
+                IconVertex(centre.x, centre.y - ICON_HOVER_INNER_RADIUS_Y, ICON_HOVER_COLOR),
+                IconVertex(centre.x - ICON_HOVER_INNER_RADIUS_X, centre.y, ICON_HOVER_COLOR),
+                IconVertex(centre.x - ICON_HOVER_OUTER_RADIUS_X, centre.y, ICON_HOVER_COLOR),
+                IconVertex(centre.x, centre.y - ICON_HOVER_OUTER_RADIUS_Y, ICON_HOVER_COLOR));
+            
+            AddQuad(vertices,
+                IconVertex(centre.x, centre.y - ICON_HOVER_INNER_RADIUS_Y, ICON_HOVER_COLOR),
+                IconVertex(centre.x + ICON_HOVER_INNER_RADIUS_X, centre.y, ICON_HOVER_COLOR),
+                IconVertex(centre.x + ICON_HOVER_OUTER_RADIUS_X, centre.y, ICON_HOVER_COLOR),
+                IconVertex(centre.x, centre.y - ICON_HOVER_OUTER_RADIUS_Y, ICON_HOVER_COLOR));
+
+            AddQuad(vertices,
+                IconVertex(centre.x, centre.y + ICON_HOVER_INNER_RADIUS_Y, ICON_HOVER_COLOR),
+                IconVertex(centre.x - ICON_HOVER_INNER_RADIUS_X, centre.y, ICON_HOVER_COLOR),
+                IconVertex(centre.x - ICON_HOVER_OUTER_RADIUS_X, centre.y, ICON_HOVER_COLOR),
+                IconVertex(centre.x, centre.y + ICON_HOVER_OUTER_RADIUS_Y, ICON_HOVER_COLOR));
+
+            AddQuad(vertices,
+                IconVertex(centre.x, centre.y + ICON_HOVER_INNER_RADIUS_Y, ICON_HOVER_COLOR),
+                IconVertex(centre.x + ICON_HOVER_INNER_RADIUS_X, centre.y, ICON_HOVER_COLOR),
+                IconVertex(centre.x + ICON_HOVER_OUTER_RADIUS_X, centre.y, ICON_HOVER_COLOR),
+                IconVertex(centre.x, centre.y + ICON_HOVER_OUTER_RADIUS_Y, ICON_HOVER_COLOR));
+        }
+
+        auto IconsIntersect(const MassiveIcon &icon1, const MassiveIcon &icon2) -> bool {
+            const vec2 k = icon1.GetNormalizedScreenCoordinates();
+            const vec2 c = icon2.GetNormalizedScreenCoordinates();
+
+            bool conditionY = abs(c.y - k.y) <  (2 * ICON_MAIN_RADIUS / Window::GetHeight());
+            bool conditionX = abs(c.x - k.x) < ((2 * ICON_MAIN_RADIUS / Window::GetWidth()) - abs(c.y -  k.y));
+
+            return conditionX && conditionY;
+        }
+
+        auto StartIconMerge(vector<MassiveIcon> &massiveIcons, int i, int j) -> void {
+            if (massiveIcons[i].GetBody().GetMass() >= massiveIcons[j].GetBody().GetMass()) {
+                massiveIcons[i].AddChild(massiveIcons[j].GetBody());
+                massiveIcons.erase(std::next(massiveIcons.begin(), j));
+            } else {
+                massiveIcons[j].AddChild(massiveIcons[i].GetBody());
+                massiveIcons.erase(std::next(massiveIcons.begin(), i));
+            }
+        }
+
+        auto SecondLayerMerge(vector<MassiveIcon> &massiveIcons, int i) -> bool {
+            for (int j = 0; j < massiveIcons.size(); j++) {
+                if (i == j) {
+                    continue;
+                }
+
+                if (IconsIntersect(massiveIcons[i], massiveIcons[j])) {
+                    StartIconMerge(massiveIcons, i, j);
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        auto FirstLayerMerge(vector<MassiveIcon> &massiveIcons) -> bool {
+            for (int i = 0; i < massiveIcons.size(); i++) {
+                if (SecondLayerMerge(massiveIcons, i)) {
+                    return true;
+                }
+            }
+            return false;
         }
     }
 
@@ -127,7 +241,7 @@ namespace Icons {
             }
         }
 
-        /* merge icons */
+        while (FirstLayerMerge(massiveIcons)) {}
 
         // Create a vector of vertices
         vector<float> data;

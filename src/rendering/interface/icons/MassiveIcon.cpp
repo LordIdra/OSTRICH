@@ -15,10 +15,14 @@ auto MassiveIcon::AddChild(const Massless body) -> void {
     masslessChildren.push_back(body);
 }
 
+auto MassiveIcon::GetBody() const -> Massive {
+    return parent;
+}
+
 auto MassiveIcon::GetColor() const -> vec3 {
     return parent.GetMaterial().diffuse;
 }
 
-auto MassiveIcon::GetScreenCoordinates() const -> vec2 {
+auto MassiveIcon::GetNormalizedScreenCoordinates() const -> vec2 {
     return Rays::WorldToScreen(parent.GetScaledPosition());
 }

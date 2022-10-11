@@ -18,6 +18,7 @@ public:
     auto AddChild(const Massive body) -> void;
     auto AddChild(const Massless body) -> void;
 
+    auto GetBody() const -> Massive;
     auto GetColor() const -> vec3;
-    auto GetScreenCoordinates() const-> vec2;
+    auto GetNormalizedScreenCoordinates() const-> vec2;
 };
