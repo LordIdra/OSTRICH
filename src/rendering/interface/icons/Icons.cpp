@@ -27,9 +27,9 @@ namespace Icons {
 
     namespace {
         const double RADIUS_THRESHOLD = 0.005;
-        const float MERGE_THRESHOLD = 14;
+        const float MERGE_THRESHOLD = 24;
         const float HOVER_THRESHOLD = 14;
-        const float SELECT_THRESHOLD = 27;
+        const float SELECT_THRESHOLD = 20;
         const unsigned int STRIDE = 5;
 
         const float ICON_MAIN_RADIUS = 10;

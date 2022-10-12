@@ -1,5 +1,6 @@
 #include "Control.h"
 
+#include <glm/gtx/string_cast.hpp>
 #include <input/Keys.h>
 #include <input/Mouse.h>
 #include <rendering/camera/Camera.h>
@@ -111,12 +112,12 @@ namespace Control {
 
             Bodies::Update();
             Interface::Update();
+            Camera::Update();
             Render::Update(deltaTime);
 
             ImGui::Render();
             ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
-            Camera::Update();
             Mouse::Update();
             Keys::Update();
             glfwPollEvents();

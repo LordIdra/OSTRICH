@@ -76,14 +76,14 @@ namespace Bodies {
     }
 
     auto Update() -> void {
+        Simulation::Integrate(massive_bodies);
+        
         // Check that a body has been selected yet
         if (massive_bodies.find(selected) != massive_bodies.end()) {
 
             // Update transition target,so that the camera follows the target
             Render::UpdateTransitionTarget(massive_bodies.at(selected));
         }
-
-        Simulation::Integrate(massive_bodies);
     }
 
     auto GetSelectedBody() -> string {

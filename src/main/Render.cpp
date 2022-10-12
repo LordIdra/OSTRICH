@@ -78,11 +78,19 @@ namespace Render {
     }
 
     auto Update(double deltaTime) -> void {
+        // Update the camera target according to the transition
+        Camera::SetTarget(transition.Step(deltaTime));
+
         // Set program variables
         program->Use();
+        Log(INFO, glm::to_string(Camera::GetPosition()));
         program->Set("cameraMatrix", Camera::GetMatrix());
+        Log(INFO, glm::to_string(Camera::GetPosition()));
         program->Set("cameraPosition", Camera::GetPosition());
+        Log(INFO, glm::to_string(Camera::GetPosition()));
         program->Set("lightPosition", vec3(sin(glfwGetTime()), 0, cos(glfwGetTime())));
+
+        Log(INFO, "");
 
         // Render every VAO
         for (const auto &pair: massive_vaos) {
@@ -92,9 +100,6 @@ namespace Render {
             program->Set("material", body.GetMaterial());
             vao.Render();
         }
-
-        // Update the camera target according to the transition
-        Camera::SetTarget(transition.Step(deltaTime));
     }
 
     auto AddBody(const Massive &body) -> void {
