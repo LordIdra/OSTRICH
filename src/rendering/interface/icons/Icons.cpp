@@ -179,54 +179,59 @@ namespace Icons {
         }
 
         auto AddVertices(vector<float> &vertices, const MassiveIcon &icon) -> void {
+            // Centre + borders
             AddIconCentre(vertices, icon);
             AddIconBorder(vertices, icon);
+
+            // Selected
             if (Bodies::GetSelectedBody() == icon.GetBody().GetId()) {
                 AddIconSelected(vertices, icon);
             }
+
+            // Hover
             if (MouseOnIcon(icon, HOVER_THRESHOLD)) {
                 AddIconHover(vertices, icon);
             }
         }
 
         auto IconsIntersect(const MassiveIcon &icon1, const MassiveIcon &icon2) -> bool {
+            // Get icon screen coordinates
             const vec2 k = icon1.GetScreenCoordinates();
             const vec2 c = icon2.GetScreenCoordinates();
 
+            // Check if both the X and Y conditions for the rhombus intersection are true
             bool conditionY = abs(c.y - k.y) <  (MERGE_THRESHOLD);
             bool conditionX = abs(c.x - k.x) < ((MERGE_THRESHOLD) - abs(c.y -  k.y));
-
             return conditionX && conditionY;
         }
 
         auto StartIconMerge(vector<MassiveIcon> &massiveIcons, int i, int j) -> void {
+            // If the mass of icon i is greater, merge j into i
             if (massiveIcons[i].GetBody().GetMass() >= massiveIcons[j].GetBody().GetMass()) {
                 massiveIcons[i].AddChild(massiveIcons[j].GetBody());
                 massiveIcons.erase(std::next(massiveIcons.begin(), j));
+            
+            // Otherwise, merge i into j
             } else {
                 massiveIcons[j].AddChild(massiveIcons[i].GetBody());
                 massiveIcons.erase(std::next(massiveIcons.begin(), i));
             }
         }
 
-        auto SecondLayerMerge(vector<MassiveIcon> &massiveIcons, int i) -> bool {
-            for (int j = 0; j < massiveIcons.size(); j++) {
-                if (i == j) {
-                    continue;
-                }
-
-                if (IconsIntersect(massiveIcons[i], massiveIcons[j])) {
-                    StartIconMerge(massiveIcons, i, j);
-                    return true;
-                }
-            }
-            return false;
-        }
-
         auto FirstLayerMerge(vector<MassiveIcon> &massiveIcons) -> bool {
             for (int i = 0; i < massiveIcons.size(); i++) {
-                if (SecondLayerMerge(massiveIcons, i)) {
-                    return true;
+                for (int j = 0; j < massiveIcons.size(); j++) {
+
+                    // Make sure we're not trying to merge the icon with itself...
+                    if (i == j) {
+                        continue;
+                    }
+
+                    // Check if the icons intersect - if so, merge them
+                    if (IconsIntersect(massiveIcons[i], massiveIcons[j])) {
+                        StartIconMerge(massiveIcons, i, j);
+                        return true;
+                    }
                 }
             }
             return false;
