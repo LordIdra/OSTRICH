@@ -24,6 +24,16 @@ namespace Mouse {
         return position;
     }
 
+    auto GetScreenPosition() -> vec2 {
+        // Invert y coordinates, so they start from the bottom left rather than top left
+        vec2 position1 = vec2(position.x, 1 - position.y);
+
+        // Linearise to the range -1 to 1
+        vec2 position2 = vec2(position1.x*2 - 1, position1.y*2 - 1);
+
+        return position2;
+    }
+
     auto GetUnNormalizedPosition() -> vec2 {
         vec2 position = GetNormalizedPosition();
 

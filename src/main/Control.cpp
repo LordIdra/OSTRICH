@@ -12,6 +12,8 @@
 #include <main/Bodies.h>
 #include <main/Simulation.h>
 
+#include <rendering/geometry/Rays.h>
+
 #include <imgui.h>
 #include <imgui_impl_glfw.h>
 #include <imgui_impl_opengl3.h>
@@ -109,6 +111,10 @@ namespace Control {
             if (Mouse::RightButtonHeld()) {
                 Camera::AddAngleDelta(Mouse::GetPositionDelta());
             }
+
+            vec3 direction = Rays::ScreenToWorld(Mouse::GetScreenPosition());
+
+            Log(INFO, "MOUSE " + glm::to_string(direction));
 
             Bodies::Update();
             Interface::Update();

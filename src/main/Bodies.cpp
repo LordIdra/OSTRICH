@@ -4,6 +4,7 @@
 
 #include <bodies/Body.h>
 #include <bodies/Massive.h>
+#include <glm/gtx/string_cast.hpp>
 #include <rendering/camera/Camera.h>
 #include <rendering/geometry/Rays.h>
 #include <rendering/shaders/Program.h>
@@ -29,7 +30,7 @@ namespace Bodies {
 
         auto SwitchSelectedBody() -> void {
             // Find the camera direction
-            vec3 direction = Rays::ScreenToWorld(Mouse::GetNormalizedPosition());
+            vec3 direction = Rays::ScreenToWorld(Mouse::GetScreenPosition());
 
             // Loop through every body
             for (auto &pair : massive_bodies) {

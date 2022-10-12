@@ -1,10 +1,10 @@
 #include "Icons.h"
 
-#include "MassiveIcon.h"
-#include "input/mouse/Buttons.h"
-#include "input/mouse/Position.h"
-#include "rendering/interface/icons/IconVertex.h"
-#include "window/Window.h"
+#include <rendering/interface/icons/MassiveIcon.h>
+#include <input/mouse/Buttons.h>
+#include <input/mouse/Position.h>
+#include <rendering/interface/icons/IconVertex.h>
+#include <window/Window.h>
 #include <glm/gtx/string_cast.hpp>
 #include <main/Bodies.h>
 #include <rendering/VAO.h>
@@ -13,6 +13,7 @@
 #include <rendering/Texture.h>
 #include <rendering/camera/Camera.h>
 #include <rendering/camera/Settings.h>
+#include <util/Log.h>
 
 #include <glad/glad.h>
 
@@ -231,6 +232,26 @@ namespace Icons {
             return false;
         }
 
+        auto CheckOcclusion(vector<MassiveIcon> &massiveIcons) -> bool {
+            for (int i = 0; i < massiveIcons.size(); i++) {
+                for (auto pair : Bodies::GetMassiveBodies()) {
+
+                    // Make sure we're not checking if the icon is occluded by its own parent (that would make no sense)
+                    if (pair.first == massiveIcons[i].GetBody().GetId()) {
+                        continue;
+                    }
+
+                    // Check if the ray from the camera position in the direction of the icon intersects the body
+                    vec3 direction = Rays::ScreenToWorld(massiveIcons[i].GetNormalizedScreenCoordinates());
+                    if (Rays::IntersectsSphere(Camera::GetPosition(), direction, pair.second.GetScaledPosition(), pair.second.GetScaledRadius())) {
+                        massiveIcons.erase(std::next(massiveIcons.begin(), i));
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
         auto GetMergedIcons() -> vector<MassiveIcon> {
             // Get a list of icons for all bodies
             vector<MassiveIcon> massiveIcons;
@@ -242,6 +263,7 @@ namespace Icons {
 
             // Merge icons
             while (FirstLayerMerge(massiveIcons)) {}
+            while (CheckOcclusion(massiveIcons)) {}
 
             return massiveIcons;
         }
