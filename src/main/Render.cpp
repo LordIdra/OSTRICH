@@ -83,14 +83,9 @@ namespace Render {
 
         // Set program variables
         program->Use();
-        Log(INFO, glm::to_string(Camera::GetPosition()));
         program->Set("cameraMatrix", Camera::GetMatrix());
-        Log(INFO, glm::to_string(Camera::GetPosition()));
         program->Set("cameraPosition", Camera::GetPosition());
-        Log(INFO, glm::to_string(Camera::GetPosition()));
         program->Set("lightPosition", vec3(sin(glfwGetTime()), 0, cos(glfwGetTime())));
-
-        Log(INFO, "");
 
         // Render every VAO
         for (const auto &pair: massive_vaos) {
