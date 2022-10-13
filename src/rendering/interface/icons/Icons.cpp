@@ -207,17 +207,30 @@ namespace Icons {
             return conditionX && conditionY;
         }
 
+        auto MergeIconIntoIcon(vector<MassiveIcon> &massiveIcons, int from, int to) -> void {
+            massiveIcons[to].AddChild(massiveIcons[from].GetBody());
+            massiveIcons.erase(std::next(massiveIcons.begin(), from));
+        }
+
         auto MergeIcon(vector<MassiveIcon> &massiveIcons, int i, int j) -> void {
+            // If i is the selected icon, merge j into i
+            if (Bodies::GetSelectedBody() == massiveIcons[i].GetBody().GetId()) {
+                MergeIconIntoIcon(massiveIcons, j, i);
+                return;
+            // If i is the selected icon, merge i into j
+            } else if (Bodies::GetSelectedBody() == massiveIcons[j].GetBody().GetId()) {
+                MergeIconIntoIcon(massiveIcons, i, j);
+                return;
+            }
+
             // If the mass of icon i is greater, merge j into i
             if (massiveIcons[i].GetBody().GetMass() >= massiveIcons[j].GetBody().GetMass()) {
-                massiveIcons[i].AddChild(massiveIcons[j].GetBody());
-                massiveIcons.erase(std::next(massiveIcons.begin(), j));
+                MergeIconIntoIcon(massiveIcons, j, i);
+                return;
+            }
             
             // Otherwise, merge i into j
-            } else {
-                massiveIcons[j].AddChild(massiveIcons[i].GetBody());
-                massiveIcons.erase(std::next(massiveIcons.begin(), i));
-            }
+            MergeIconIntoIcon(massiveIcons, i, j);
         }
 
         auto DoOneIconMerge(vector<MassiveIcon> &massiveIcons) -> bool {
