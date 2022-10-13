@@ -1,11 +1,12 @@
 #pragma once
 
+#include <rendering/interface/icons/Icon.h>
 #include <bodies/Massive.h>
 #include <bodies/Massless.h>
 
 
 
-class MassiveIcon {
+class MassiveIcon : public Icon {
 private:
     Massive parent;
     vector<Massive> massiveChildren;

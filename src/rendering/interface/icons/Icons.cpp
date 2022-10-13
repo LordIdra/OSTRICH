@@ -1,8 +1,7 @@
 #include "Icons.h"
 
 #include <rendering/interface/icons/MassiveIcon.h>
-#include <input/mouse/Buttons.h>
-#include <input/mouse/Position.h>
+#include <input/Mouse.h>
 #include <rendering/interface/icons/IconVertex.h>
 #include <window/Window.h>
 #include <glm/gtx/string_cast.hpp>
@@ -14,6 +13,7 @@
 #include <rendering/camera/Camera.h>
 #include <rendering/camera/Settings.h>
 #include <util/Log.h>
+#include <rendering/interface/icons/Icon.h>
 
 #include <glad/glad.h>
 
@@ -27,21 +27,7 @@ using std::make_unique;
 namespace Icons {
 
     namespace {
-        const double RADIUS_THRESHOLD = 0.005;
-        const float MERGE_THRESHOLD = 24;
-        const float HOVER_THRESHOLD = 14;
-        const float SELECT_THRESHOLD = 20;
         const unsigned int STRIDE = 5;
-
-        const float ICON_MAIN_RADIUS = 10;
-        const float ICON_OUTLINE_RADIUS = 13;
-        const float ICON_HOVER_INNER_RADIUS = 19;
-        const float ICON_HOVER_OUTER_RADIUS = 24;
-        const float ICON_SELECTED_RADIUS = 24;
-
-        const vec3 ICON_BORDER_COLOR = vec3(1.0, 0.7, 0.1);
-        const vec3 ICON_HOVER_COLOR = vec3(1.0, 0.2, 0.1);
-        const vec3 ICON_SELECTED_COLOR = vec3(0.8, 0.2, 0.1);
 
         const float OFF_SCREEN_RADIUS = 1.1;
 
@@ -72,138 +58,21 @@ namespace Icons {
             }
 
             // If the body is too large a radius, skip it
-            if (sphereRadiusOnScreen > RADIUS_THRESHOLD) {
+            if (sphereRadiusOnScreen > Icon::RADIUS_THRESHOLD) {
                 return false;
             }
 
             return true;
         }
 
-        auto MouseOnIcon(const MassiveIcon &icon, float threshold) -> bool {
-            // Mouse coordinates are currently between 0 and 1, let's normalize that so they are 0 to width and 0 to height
-            vec2 c = Mouse::GetUnNormalizedPosition();
-
-            const vec2 k = icon.GetScreenCoordinates();
-
-            bool conditionY = abs(c.y - k.y) <  threshold;
-            bool conditionX = abs(c.x - k.x) < (threshold - abs(c.y -  k.y));
-
-            return conditionX && conditionY;
-        }
-
-        auto AddVertex(vector<float> &vertices, IconVertex vertex) -> void {
-            // Vertex position
-            vertices.push_back(vertex.x);
-            vertices.push_back(vertex.y);
-
-            // Colour
-            vertices.push_back(vertex.r);
-            vertices.push_back(vertex.g);
-            vertices.push_back(vertex.b);
-        }
-
-        auto AddQuad(vector<float> &vertices, IconVertex v1, IconVertex v2, IconVertex v3, IconVertex v4) -> void {
-            AddVertex(vertices, v1);
-            AddVertex(vertices, v2);
-            AddVertex(vertices, v3);
-
-            AddVertex(vertices, v1);
-            AddVertex(vertices, v3);
-            AddVertex(vertices, v4);
-        }
-
-        auto AddIconCentre(vector<float> &vertices, const MassiveIcon &icon) -> void {
-            vec2 centre = icon.GetNormalizedScreenCoordinates();
-            float ICON_MAIN_RADIUS_X = ICON_MAIN_RADIUS / float(Window::GetWidth());
-            float ICON_MAIN_RADIUS_Y = ICON_MAIN_RADIUS / float(Window::GetHeight());
-
-            AddQuad(vertices, 
-                IconVertex(centre.x, centre.y - ICON_MAIN_RADIUS_Y, icon.GetColor()),
-                IconVertex(centre.x - ICON_MAIN_RADIUS_X, centre.y, icon.GetColor()),
-                IconVertex(centre.x, centre.y + ICON_MAIN_RADIUS_Y, icon.GetColor()),
-                IconVertex(centre.x + ICON_MAIN_RADIUS_X, centre.y, icon.GetColor()));
-        }
-
-        auto AddIconBorder(vector<float> &vertices, const MassiveIcon &icon) -> void {
-            vec2 centre = icon.GetNormalizedScreenCoordinates();
-            float ICON_OUTLINE_RADIUS_X = ICON_OUTLINE_RADIUS / float(Window::GetWidth());
-            float ICON_OUTLINE_RADIUS_Y = ICON_OUTLINE_RADIUS / float(Window::GetHeight());
-
-            AddQuad(vertices, 
-                IconVertex(centre.x, centre.y - ICON_OUTLINE_RADIUS_Y, ICON_BORDER_COLOR),
-                IconVertex(centre.x - ICON_OUTLINE_RADIUS_X, centre.y, ICON_BORDER_COLOR),
-                IconVertex(centre.x, centre.y + ICON_OUTLINE_RADIUS_Y, ICON_BORDER_COLOR),
-                IconVertex(centre.x + ICON_OUTLINE_RADIUS_X, centre.y, ICON_BORDER_COLOR));
-        }
-
-        auto AddIconSelected(vector<float> &vertices, const MassiveIcon &icon) -> void {
-            vec2 centre = icon.GetNormalizedScreenCoordinates();
-            float ICON_SELECTED_RADIUS_X = ICON_SELECTED_RADIUS / float(Window::GetWidth());
-            float ICON_SELECTED_RADIUS_Y = ICON_SELECTED_RADIUS / float(Window::GetHeight());
-
-            AddQuad(vertices, 
-                IconVertex(centre.x, centre.y - ICON_SELECTED_RADIUS_Y, ICON_SELECTED_COLOR),
-                IconVertex(centre.x - ICON_SELECTED_RADIUS_X, centre.y, ICON_SELECTED_COLOR),
-                IconVertex(centre.x, centre.y + ICON_SELECTED_RADIUS_Y, ICON_SELECTED_COLOR),
-                IconVertex(centre.x + ICON_SELECTED_RADIUS_X, centre.y, ICON_SELECTED_COLOR));
-        }
-
-        auto AddIconHover(vector<float> &vertices, const MassiveIcon &icon) -> void {
-            vec2 centre = icon.GetNormalizedScreenCoordinates();
-            float ICON_HOVER_INNER_RADIUS_X = ICON_HOVER_INNER_RADIUS / float(Window::GetWidth());
-            float ICON_HOVER_INNER_RADIUS_Y = ICON_HOVER_INNER_RADIUS / float(Window::GetHeight());
-            float ICON_HOVER_OUTER_RADIUS_X = ICON_HOVER_OUTER_RADIUS / float(Window::GetWidth());
-            float ICON_HOVER_OUTER_RADIUS_Y = ICON_HOVER_OUTER_RADIUS / float(Window::GetHeight());
-
-            AddQuad(vertices,
-                IconVertex(centre.x, centre.y - ICON_HOVER_INNER_RADIUS_Y, ICON_HOVER_COLOR),
-                IconVertex(centre.x - ICON_HOVER_INNER_RADIUS_X, centre.y, ICON_HOVER_COLOR),
-                IconVertex(centre.x - ICON_HOVER_OUTER_RADIUS_X, centre.y, ICON_HOVER_COLOR),
-                IconVertex(centre.x, centre.y - ICON_HOVER_OUTER_RADIUS_Y, ICON_HOVER_COLOR));
-
-            AddQuad(vertices,
-                IconVertex(centre.x, centre.y - ICON_HOVER_INNER_RADIUS_Y, ICON_HOVER_COLOR),
-                IconVertex(centre.x + ICON_HOVER_INNER_RADIUS_X, centre.y, ICON_HOVER_COLOR),
-                IconVertex(centre.x + ICON_HOVER_OUTER_RADIUS_X, centre.y, ICON_HOVER_COLOR),
-                IconVertex(centre.x, centre.y - ICON_HOVER_OUTER_RADIUS_Y, ICON_HOVER_COLOR));
-
-            AddQuad(vertices,
-                IconVertex(centre.x, centre.y + ICON_HOVER_INNER_RADIUS_Y, ICON_HOVER_COLOR),
-                IconVertex(centre.x - ICON_HOVER_INNER_RADIUS_X, centre.y, ICON_HOVER_COLOR),
-                IconVertex(centre.x - ICON_HOVER_OUTER_RADIUS_X, centre.y, ICON_HOVER_COLOR),
-                IconVertex(centre.x, centre.y + ICON_HOVER_OUTER_RADIUS_Y, ICON_HOVER_COLOR));
-
-            AddQuad(vertices,
-                IconVertex(centre.x, centre.y + ICON_HOVER_INNER_RADIUS_Y, ICON_HOVER_COLOR),
-                IconVertex(centre.x + ICON_HOVER_INNER_RADIUS_X, centre.y, ICON_HOVER_COLOR),
-                IconVertex(centre.x + ICON_HOVER_OUTER_RADIUS_X, centre.y, ICON_HOVER_COLOR),
-                IconVertex(centre.x, centre.y + ICON_HOVER_OUTER_RADIUS_Y, ICON_HOVER_COLOR));
-        }
-
-        auto AddVertices(vector<float> &vertices, const MassiveIcon &icon) -> void {
-            // Centre + borders
-            AddIconCentre(vertices, icon);
-            AddIconBorder(vertices, icon);
-
-            // Selected
-            if (Bodies::GetSelectedBody() == icon.GetBody().GetId()) {
-                AddIconSelected(vertices, icon);
-            }
-
-            // Hover
-            if (MouseOnIcon(icon, HOVER_THRESHOLD)) {
-                AddIconHover(vertices, icon);
-            }
-        }
-
-        auto IconsIntersect(const MassiveIcon &icon1, const MassiveIcon &icon2) -> bool {
+        auto IconsIntersect(const Icon &icon1, const Icon &icon2) -> bool {
             // Get icon screen coordinates
             const vec2 k = icon1.GetScreenCoordinates();
             const vec2 c = icon2.GetScreenCoordinates();
 
             // Check if both the X and Y conditions for the rhombus intersection are true
-            bool conditionY = abs(c.y - k.y) <  (MERGE_THRESHOLD);
-            bool conditionX = abs(c.x - k.x) < ((MERGE_THRESHOLD) - abs(c.y -  k.y));
+            bool conditionY = abs(c.y - k.y) <  (Icon::MERGE_THRESHOLD);
+            bool conditionX = abs(c.x - k.x) < ((Icon::MERGE_THRESHOLD) - abs(c.y -  k.y));
             return conditionX && conditionY;
         }
 
@@ -281,7 +150,7 @@ namespace Icons {
             return false;
         }
 
-        auto GetIcons() -> vector<MassiveIcon> {
+        auto GetMassiveIcons() -> vector<MassiveIcon> {
             // Get a list of icons for all bodies
             vector<MassiveIcon> massiveIcons;
             for (const auto &pair : Bodies::GetMassiveBodies()) {
@@ -298,8 +167,8 @@ namespace Icons {
         }
 
         auto SwitchBodyBasedOnIcon() -> void {
-            for (const MassiveIcon &icon : GetIcons()) {
-                if (MouseOnIcon(icon, SELECT_THRESHOLD)) {
+            for (const MassiveIcon &icon : GetMassiveIcons()) {
+                if (icon.MouseOnIcon(Icon::SELECT_THRESHOLD)) {
                     Bodies::SetSelectedBody(icon.GetBody().GetId());
                 }
             }
@@ -338,12 +207,12 @@ namespace Icons {
 
     auto DrawIcons() -> void {
         // Compile a list of all massive bodies to have icons rendered
-        vector<MassiveIcon> massiveIcons = GetIcons();
+        vector<MassiveIcon> massiveIcons = GetMassiveIcons();
 
         // Create a vector of vertices
         vector<float> data;
         for (const MassiveIcon &icon : massiveIcons) {
-            AddVertices(data, icon);
+            icon.AddVertices(data);
         }
 
         // Showtime
