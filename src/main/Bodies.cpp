@@ -83,8 +83,10 @@ namespace Bodies {
         AddBody(Massless(
             "spacecraft",
             "Spacecraft",
-            dvec3(double(-1.4055e9), double(0), double(0)),   // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+            dvec3(double(-1.4055e9), double(0), double(0)),  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
             dvec3(double(0), double(0), double(0.570e3))));  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+        
+        selected = massive_bodies.begin()->first;
         
         // Render
         Render::Init();
@@ -103,6 +105,10 @@ namespace Bodies {
 
     auto GetSelectedBody() -> string {
         return selected;
+    }
+
+    auto GetMinZoom() -> float {
+        return Bodies::GetMassiveBody(Bodies::GetSelectedBody()).GetScaledRadius() * ZOOM_RADIUS_MULTIPLIER;
     }
 
     auto SetSelectedBody(const string &id) -> void {

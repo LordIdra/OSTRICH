@@ -8,6 +8,7 @@
 #include <rendering/camera/Camera.h>
 #include <rendering/shaders/Program.h>
 #include <rendering/VAO.h>
+#include <string>
 #include <util/Types.h>
 #include <input/Mouse.h>
 #include <input/Keys.h>
@@ -30,7 +31,7 @@ namespace Render {
         const float TRANSITION_TIME = 0.2;
 
         unordered_map<string, VAO> massive_vaos;
-        Transition transition = Transition(ZERO_VECTOR, ZERO_VECTOR, 0.0);
+        Transition transition = Transition(ZERO_VECTOR, ZERO_VECTOR, 0.0, 0.0, 0.0);
         unique_ptr<Program> program;
 
         auto KeyZoomIn() -> void {
@@ -79,7 +80,7 @@ namespace Render {
 
     auto Update(double deltaTime) -> void {
         // Update the camera target according to the transition
-        Camera::SetTarget(transition.Step(deltaTime));
+        transition.Step(deltaTime);
 
         // Set program variables
         program->Use();
@@ -113,7 +114,12 @@ namespace Render {
     }
 
     auto StartTransition(const Body &body) -> void {
-        transition = Transition(Camera::GetTarget(), body.GetScaledPosition(), TRANSITION_TIME);
+        transition = Transition(
+            Camera::GetTarget(), 
+            body.GetScaledPosition(), 
+            Camera::GetZoom(), 
+            Bodies::GetMinZoom(),
+            TRANSITION_TIME);
     }
 
     auto UpdateTransitionTarget(const Body &body) -> void {

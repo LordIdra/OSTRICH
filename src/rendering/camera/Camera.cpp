@@ -4,6 +4,8 @@
 #include <rendering/camera/Util.h>
 #include <window/Window.h>
 
+#include <util/Constants.h>
+
 #include <glm/gtx/string_cast.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
@@ -36,7 +38,7 @@ namespace Camera {
         Camera::SetTarget(vec3(0.0F, 0.0F, 0.0F));
     }
 
-    auto Update() -> void {
+    auto Update(float minZoom) -> void {
         // Apply deltas
         angle[0] += angleDelta[0];
         angle[1] += angleDelta[1];
@@ -54,7 +56,7 @@ namespace Camera {
 
         // Clamp the angle and zoom to their minimums/maximums
         ApplySymmetricRange(angle[1], MAX_ANGLE);
-        ApplyAsymmetricRange(zoom, MIN_ZOOM, MAX_ZOOM);
+        ApplyAsymmetricRange(zoom, minZoom, MAX_ZOOM);
     }
 
     auto GetView() -> mat4 {
@@ -83,6 +85,10 @@ namespace Camera {
         return target;
     }
 
+    auto GetZoom() -> float {
+        return zoom;
+    }
+
     auto AddAngleDelta(vec2 angleDelta_) -> void {
         angleDelta += angleDelta_ * ANGLE_SENSITIVITY;
     }
@@ -93,5 +99,9 @@ namespace Camera {
 
     auto SetTarget(vec3 target_) -> void {
         target = target_;
+    }
+
+    auto SetZoom(float zoom_) -> void {
+        zoom = zoom_;
     }
 }

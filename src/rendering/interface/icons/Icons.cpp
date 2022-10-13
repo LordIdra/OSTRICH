@@ -263,6 +263,13 @@ namespace Icons {
                         continue;
                     }
 
+                    // If the body is further from the camera than the icon, then it cannot be occluding the icon
+                    float distanceFromCameraToIcon = glm::length(Camera::GetPosition() - massiveIcons[i].GetBody().GetScaledPosition());
+                    float distanceFromCameraToBody = glm::length(Camera::GetPosition() - pair.second.GetScaledPosition());
+                    if (distanceFromCameraToBody > distanceFromCameraToIcon) {
+                        continue;
+                    }
+
                     // Check if the ray from the camera position in the direction of the icon intersects the body
                     vec3 direction = Rays::ScreenToWorld(massiveIcons[i].GetNormalizedScreenCoordinates());
                     if (Rays::IntersectsSphere(Camera::GetPosition(), direction, pair.second.GetScaledPosition(), pair.second.GetScaledRadius())) {

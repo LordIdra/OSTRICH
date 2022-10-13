@@ -10,6 +10,7 @@ namespace Bodies {
     auto Update() -> void;
     auto SetSelectedBody(const string &id) -> void;
     auto GetSelectedBody() -> string;
+    auto GetMinZoom() -> float;
     auto GetMassiveBodies() -> unordered_map<string, Massive>;
     auto GetMassiveBody(const string &id) -> Massive;
 }

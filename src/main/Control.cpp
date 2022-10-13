@@ -116,7 +116,7 @@ namespace Control {
 
             Bodies::Update();
             Interface::Update();
-            Camera::Update();
+            Camera::Update(Bodies::GetMinZoom());
             Render::Update(deltaTime);
 
             ImGui::Render();
