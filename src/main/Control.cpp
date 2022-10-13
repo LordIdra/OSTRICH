@@ -114,8 +114,6 @@ namespace Control {
 
             vec3 direction = Rays::ScreenToWorld(Mouse::GetScreenPosition());
 
-            Log(INFO, "MOUSE " + glm::to_string(direction));
-
             Bodies::Update();
             Interface::Update();
             Camera::Update();

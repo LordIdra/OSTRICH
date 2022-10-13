@@ -6,5 +6,5 @@
 
 class Massless : public Body {
 public:
-    Massless(uvec3 position, uvec3 velocity, string name);
+    Massless(string id, string name, dvec3 position, dvec3 velocity) : Body(id, name, position, velocity) {}
 };

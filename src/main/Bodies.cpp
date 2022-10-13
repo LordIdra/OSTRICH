@@ -4,6 +4,7 @@
 
 #include <bodies/Body.h>
 #include <bodies/Massive.h>
+#include <bodies/Massless.h>
 #include <glm/gtx/string_cast.hpp>
 #include <rendering/camera/Camera.h>
 #include <rendering/geometry/Rays.h>
@@ -20,6 +21,7 @@ namespace Bodies {
 
     namespace {
         unordered_map<string, Massive> massive_bodies;
+        unordered_map<string, Massless> massless_bodies;
 
         string selected;
 
@@ -28,7 +30,14 @@ namespace Bodies {
             Render::AddBody(body);
         }
 
+        auto AddBody(const Massless &body) -> void {
+            // Massless bodies only need icons, so we don't need to worry about the Render namespace
+            massless_bodies.insert(std::make_pair(body.GetId(), body));
+        }
+
         auto SwitchSelectedBody() -> void {
+            // This function only cares about the spheres representing massive bodies
+            // Seletcing via icons is handles in the Icons namespace
             // Find the camera direction
             vec3 direction = Rays::ScreenToWorld(Mouse::GetScreenPosition());
 
@@ -71,7 +80,12 @@ namespace Bodies {
             Materials::moon1,
             double(0.07346e24),    // NOLINT(cppcoreguidelines-avoid-magic-numbers)
             double(1737.4e3)));  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
-
+        AddBody(Massless(
+            "spacecraft",
+            "Spacecraft",
+            dvec3(double(-1.4055e9), double(0), double(0)),   // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+            dvec3(double(0), double(0), double(0.570e3))));  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+        
         // Render
         Render::Init();
     }

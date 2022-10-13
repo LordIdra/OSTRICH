@@ -34,7 +34,7 @@ namespace Icons {
         const unsigned int STRIDE = 5;
 
         const float ICON_MAIN_RADIUS = 10;
-        const float ICON_OUTLINE_RADIUS = 14;
+        const float ICON_OUTLINE_RADIUS = 13;
         const float ICON_HOVER_INNER_RADIUS = 19;
         const float ICON_HOVER_OUTER_RADIUS = 24;
         const float ICON_SELECTED_RADIUS = 24;
@@ -217,8 +217,10 @@ namespace Icons {
             if (Bodies::GetSelectedBody() == massiveIcons[i].GetBody().GetId()) {
                 MergeIconIntoIcon(massiveIcons, j, i);
                 return;
+            }
+
             // If i is the selected icon, merge i into j
-            } else if (Bodies::GetSelectedBody() == massiveIcons[j].GetBody().GetId()) {
+            if (Bodies::GetSelectedBody() == massiveIcons[j].GetBody().GetId()) {
                 MergeIconIntoIcon(massiveIcons, i, j);
                 return;
             }
@@ -228,7 +230,7 @@ namespace Icons {
                 MergeIconIntoIcon(massiveIcons, j, i);
                 return;
             }
-            
+
             // Otherwise, merge i into j
             MergeIconIntoIcon(massiveIcons, i, j);
         }
