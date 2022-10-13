@@ -13,32 +13,52 @@
 
 
 namespace Rays {
+    
+    namespace {
+        vec3 UP_DIRECTION = vec3(0, 1, 0);
+    }
+
     auto ScreenToWorld(const vec2 coords) -> vec3 {
-        // Invert y coordinates, so they start from the bottom left rather than top left
-        vec2 coords1 = vec2(coords.x, 1 - coords.y);
-
-        // Linearise to the range -1 to 1
-        vec2 coords2 = vec2(coords1.x*2 - 1, coords1.y*2 - 1);
-
         // Add w and z component
-        vec4 coords3 = vec4(coords2, -1.0, 1.0);
+        vec4 coords1 = vec4(coords, -1.0, 1.0);
 
         // Transform to eye space
-        vec4 coords4 = glm::inverse(Camera::GetProjection()) * coords3;
+        vec4 coords2 = glm::inverse(Camera::GetProjection()) * coords1;
 
         // Set ray to point forwards and set w component to 0 to make this a vector
-        vec4 coords5 = vec4(coords4.x, coords4.y, -1.0, 0.0);
+        vec4 coords3 = vec4(coords2.x, coords2.y, -1.0, 0.0);
 
-        // Transform to world soace
-        vec4 coords6 = glm::inverse(Camera::GetView()) * coords5;
+        // Transform to world space
+        vec4 coords4 = glm::inverse(Camera::GetView()) * coords3;
 
         // Remove w component to make this a vector
-        vec3 coords7 = vec3(coords6.x, coords6.y, coords6.z);
+        vec3 coords5 = vec3(coords4.x, coords4.y, coords4.z);
 
         // Normalise vector
-        vec3 coords8 = glm::normalize(coords7);
+        vec3 coords6 = glm::normalize(coords5);
         
-        return coords8;
+        return coords6;
+    }
+
+    auto WorldToScreen(const vec3 coords) -> vec2 {
+        // Get model matrix
+        mat4 modelMatrix = glm::translate(mat4(1.0), coords);
+
+        // Transform from world space to eye space
+        vec4 coords2 = Camera::GetMatrix() * modelMatrix * vec4(0, 0, 0, 1);
+
+        // Rasterize 3D coordinates to screen
+        vec2 coords3 = vec2(coords2.x / coords2.z, coords2.y / coords2.z);
+
+        return coords3;
+    }
+
+    auto UnNormalize(vec2 coords) -> vec2 {
+        // Get from -1 <-> 1 to 0 <-> 1
+        coords += vec2(1, 1);
+        coords *= vec2(0.5, 0.5); // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+        coords *= vec2(Window::GetWidth(), Window::GetHeight());
+        return coords;
     }
 
     auto IntersectsSphere(const vec3 cameraPosition, const vec3 cameraDirection, const vec3 spherePosition, const float sphereRadius) -> bool {
@@ -57,5 +77,24 @@ namespace Rays {
 
         // If that distance is under the sphere radius, the ray must intersect the sphere
         return distance <= sphereRadius;
+    }
+
+    auto RadiusOnScreen(const Massive &massive) -> double {
+        // Find the vector pointing from the camera to the body
+        vec3 cameraToBodyDirection = Camera::GetPosition() - massive.GetScaledPosition();
+
+        // Find a unit vector perpendicular to cameraToBodyDirection
+        vec3 perpendicularVector = massive.GetScaledRadius() * glm::normalize(glm::cross(UP_DIRECTION, cameraToBodyDirection));
+
+        // Get the two relevant positions
+        vec3 worldBodyPosition = massive.GetScaledPosition();
+        vec3 worldEdgePosition = worldBodyPosition + perpendicularVector;
+
+        // Convert the positions
+        vec2 screenBodyPosition = WorldToScreen(worldBodyPosition);
+        vec2 screenEdgePosition = WorldToScreen(worldEdgePosition);
+
+        // Get the distance between them
+        return glm::distance(screenBodyPosition, screenEdgePosition);
     }
 }

@@ -21,17 +21,19 @@ namespace Mouse {
 
         auto DefaultCallback() -> void {}
 
-        void (*leftPress)() = DefaultCallback;
-        void (*leftRelease)() = DefaultCallback;
-        void (*leftDouble)() = DefaultCallback;
+        vector<void (*)()> leftPress;
+        vector<void (*)()> leftRelease;
+        vector<void (*)()> leftDouble;
 
-        void (*rightPress)() = DefaultCallback;
-        void (*rightRelease)() = DefaultCallback;
+        vector<void (*)()> rightPress;
+        vector<void (*)()> rightRelease;
 
         auto ButtonCallbackPressLeft() -> void {
             // Double click stuff
             if (leftActive) {
-                leftDouble();
+                for (void (*function)() : leftDouble) {
+                    function();
+                }
             } else {
                 leftActive = true;
                 timeOfLastLeftClick = glfwGetTime();
@@ -39,7 +41,9 @@ namespace Mouse {
 
             // General callback stuff
             leftHeld = true;
-            leftPress();
+            for (void (*function)() : leftPress) {
+                function();
+            }
         }
 
         auto ButtonCallbackPressRight() -> void {
@@ -48,13 +52,17 @@ namespace Mouse {
 
             // General callback stuff
             rightHeld = true;
-            rightPress();
+            for (void (*function)() : rightPress) {
+                function();
+            }
         }
 
         auto ButtonCallbackReleaseLeft() -> void {
             // General callback stuff
             leftHeld = false;
-            leftRelease();
+            for (void (*function)() : leftRelease) {
+                function();
+            }
         }
 
         auto ButtonCallbackReleaseRight() -> void {
@@ -63,7 +71,9 @@ namespace Mouse {
 
             // General callback stuff
             rightHeld = false;
-            rightRelease();
+            for (void (*function)() : rightRelease) {
+                function();
+            }
         }
 
         auto ButtonCallbackPress(const int button) -> void {
@@ -101,23 +111,23 @@ namespace Mouse {
     }
 
     auto SetCallbackLeftPress(void (*function)()) -> void {
-        leftPress = function;
+        leftPress.push_back(function);
     }
 
     auto SetCallbackLeftRelease(void (*function)()) -> void {
-        leftRelease = function;
+        leftRelease.push_back(function);
     }
 
     auto SetCallbackLeftDouble(void (*function)()) -> void {
-        leftDouble = function;
+        leftDouble.push_back(function);
     }
 
     auto SetCallbackRightPress(void (*function)()) -> void {
-        rightPress = function;
+        rightPress.push_back(function);
     }
 
     auto SetCallbackRightRelease(void (*function)()) -> void {
-        rightRelease = function;
+        rightRelease.push_back(function);
     }
 
     auto LeftButtonHeld() -> bool {

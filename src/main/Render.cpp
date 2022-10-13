@@ -1,6 +1,7 @@
 #include "Render.h"
 #include "util/Log.h"
 
+#include <glm/gtx/string_cast.hpp>
 #include <memory>
 #include <main/Bodies.h>
 #include <rendering/geometry/Transition.h>
@@ -24,7 +25,7 @@ namespace Render {
     namespace {
         const float KEY_ZOOM_AMOUNT = 0.2;
         const vec3 ZERO_VECTOR = vec3(0, 0, 0);
-        const vec3 LIGHT_POSITION = vec3(-0.02, 0.0, 0.0);
+        const vec3 LIGHT_POSITION = vec3(0.0, 0.05, 0.0);
         const unsigned int STRIDE = 6;
         const float TRANSITION_TIME = 0.2;
 
@@ -71,30 +72,28 @@ namespace Render {
         Keys::BindFunctionToKeyHold(GLFW_KEY_MINUS, KeyZoomOut);
         
         // Program
-        Shader vertex = Shader("../resource/vertex.vsh", GL_VERTEX_SHADER);
-        Shader fragment = Shader("../resource/fragment.fsh", GL_FRAGMENT_SHADER);
+        Shader vertex = Shader("../resources/shaders/massive-vertex.vsh", GL_VERTEX_SHADER);
+        Shader fragment = Shader("../resources/shaders/massive-fragment.fsh", GL_FRAGMENT_SHADER);
         program = make_unique<Program>(vertex, fragment);
     }
 
     auto Update(double deltaTime) -> void {
+        // Update the camera target according to the transition
+        Camera::SetTarget(transition.Step(deltaTime));
+
         // Set program variables
         program->Use();
         program->Set("cameraMatrix", Camera::GetMatrix());
         program->Set("cameraPosition", Camera::GetPosition());
-        program->Set("lightPosition", LIGHT_POSITION);
-        program->Set("material", planetMaterial);
+        program->Set("lightPosition", vec3(sin(glfwGetTime()), 0, cos(glfwGetTime())));
 
         // Render every VAO
         for (const auto &pair: massive_vaos) {
             const VAO &vao = pair.second;
             const Massive &body = Bodies::GetMassiveBody(pair.first);
             program->Set("modelMatrix", body.GetMatrix());
+            program->Set("material", body.GetMaterial());
             vao.Render();
-        }
-
-        // Update the camera target according to the transition
-        if (!transition.Finished()) {
-            Camera::SetTarget(transition.Step(deltaTime));
         }
     }
 
@@ -113,7 +112,11 @@ namespace Render {
         vao.Data(data, vertexCount,  GL_STATIC_DRAW);
     }
 
-    auto StartTransition(const Massive &body) -> void {
+    auto StartTransition(const Body &body) -> void {
         transition = Transition(Camera::GetTarget(), body.GetScaledPosition(), TRANSITION_TIME);
+    }
+
+    auto UpdateTransitionTarget(const Body &body) -> void {
+        transition.UpdateTarget(body.GetScaledPosition());
     }
 }

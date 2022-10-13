@@ -8,5 +8,6 @@ namespace Render {
     auto Init() -> void;
     auto Update(double deltaTime) -> void;
     auto AddBody(const Massive &body) -> void;
-    auto StartTransition(const Massive &body) -> void;
+    auto StartTransition(const Body &body) -> void;
+    auto UpdateTransitionTarget(const Body &body) -> void;
 }

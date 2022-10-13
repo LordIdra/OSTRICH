@@ -1,12 +1,22 @@
 #include "Control.h"
 
+#include <glm/gtx/string_cast.hpp>
 #include <input/Keys.h>
 #include <input/Mouse.h>
 #include <rendering/camera/Camera.h>
+#include <rendering/interface/Interface.h>
+#include <string>
 #include <util/Log.h>
 #include <window/Window.h>
 #include <main/Render.h>
 #include <main/Bodies.h>
+#include <main/Simulation.h>
+
+#include <rendering/geometry/Rays.h>
+
+#include <imgui.h>
+#include <imgui_impl_glfw.h>
+#include <imgui_impl_opengl3.h>
 
 
 
@@ -14,6 +24,7 @@ namespace Control {
     namespace {
         const int MAJOR_VERSION = 3;
         const int MINOR_VERSION = 3;
+        const char* GLSL_VERSION = "#version 330";
 
         double previousTime = 0;
         double deltaTime = 0;
@@ -32,6 +43,7 @@ namespace Control {
                 return;
             }
             SetVersionHints();
+            glfwWindowHint(GLFW_SAMPLES, 4);
         }
 
         auto InitGlad() -> void {
@@ -41,16 +53,32 @@ namespace Control {
                 return;
             }
 
+            // Multisampling makes edges smoother by interpolating pixels
+            glEnable(GL_MULTISAMPLE);  
+
             // Depth testing makes sure that fragments closer to the camera override fragments further away
             glEnable(GL_DEPTH_TEST);
+
+            // Texture parameters
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
         }
 
-        auto Update() -> void {
-            Mouse::Update();
-            Keys::Update();
-            glfwPollEvents();
-            Window::Update();
-            Camera::Update();
+        auto InitImGui() -> void {
+            // Initialize Imgui
+            IMGUI_CHECKVERSION();
+            ImGui::CreateContext();
+            ImGui::StyleColorsDark();
+
+            // Initialise GLFW and OpenGL backends
+            ImGui_ImplGlfw_InitForOpenGL(Window::GetWindow(), true);
+            ImGui_ImplOpenGL3_Init(GLSL_VERSION);
+
+            // Initialize input/output
+            ImGuiIO& io = ImGui::GetIO(); 
+            (void)io;
         }
     }
 
@@ -58,14 +86,21 @@ namespace Control {
         InitGLFW();
         Window::Init(fullscreen, windowTitle);
         InitGlad();
-        Camera::Init();
         Mouse::Init();
         Keys::Init();
+        InitImGui(); // Must be done after mouse/keys init because mouse/keys init will overwrite whatever imgui needs to set
+        Interface::Init();
+        Camera::Init();
         Bodies::Init();
+        Simulation::Init();
     }
 
     auto Mainloop() -> void {
         while (!Window::ShouldClose()) {
+
+            ImGui_ImplOpenGL3_NewFrame();
+            ImGui_ImplGlfw_NewFrame();
+            ImGui::NewFrame();
 
             deltaTime = glfwGetTime() - previousTime;
             previousTime = glfwGetTime();
@@ -77,9 +112,22 @@ namespace Control {
                 Camera::AddAngleDelta(Mouse::GetPositionDelta());
             }
 
+            vec3 direction = Rays::ScreenToWorld(Mouse::GetScreenPosition());
+
+            Log(INFO, "MOUSE " + glm::to_string(direction));
+
+            Bodies::Update();
+            Interface::Update();
+            Camera::Update();
             Render::Update(deltaTime);
 
-            Update();
+            ImGui::Render();
+            ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
+            Mouse::Update();
+            Keys::Update();
+            glfwPollEvents();
+            Window::Update();
         }
     }
 }

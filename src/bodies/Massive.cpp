@@ -2,14 +2,17 @@
 
 #include <glm/ext/matrix_transform.hpp>
 #include <util/Log.h>
-#include <rendering/Geometry.h>
-
-using std::move;
+#include <rendering/geometry/Sphere.h>
 
 
-Massive::Massive(const string &id, const string &name, const bvec3 &position, const bvec3 &velocity, bfloat mass, bfloat radius)
-    : Body(id, name, position, velocity), mass(move(mass)), radius(move(radius)) {
-        vertices = Geometry::Sphere(GetScaledPosition(), GetScaledRadius(), STEP);
+
+Massive::Massive(const string &id, const string &name, const dvec3 &position, const dvec3 &velocity, const Material &material, const double mass, const double radius)
+    : Body(id, name, position, velocity), material(material), mass(mass), radius(radius) {
+        vertices = Sphere::Sphere(GetScaledRadius(), SPHERE_STEP);
+}
+
+auto Massive::GetMass() const -> double {
+    return mass;
 }
 
 auto Massive::GetScaledRadius() const -> float {
@@ -18,6 +21,10 @@ auto Massive::GetScaledRadius() const -> float {
 
 auto Massive::GetSphereVertices() const -> vector<VERTEX_DATA_TYPE> {
     return vertices;
+}
+
+auto Massive::GetMaterial() const -> Material {
+    return material;
 }
 
 auto Massive::GetMatrix() const -> mat4 {
