@@ -7,7 +7,7 @@
 
 
 
-Texture::Texture(const char *path) {
+Texture::Texture(const char *path) { // NOLINT(cppcoreguidelines-pro-type-member-init)
     // Load image
     unsigned char *data = stbi_load(path, &width, &height, &channels, 0); 
     
@@ -21,6 +21,6 @@ Texture::Texture(const char *path) {
     stbi_image_free(data);
 }
 
-auto Texture::Bind() -> void {
+auto Texture::Bind() const -> void {
     glBindTexture(GL_TEXTURE_2D, id);
 }

@@ -15,8 +15,11 @@ namespace Simulation {
         const double MIN_SPEED = 1.0/10000;
         const double MAX_SPEED = 100000;
 
-        double time_step_size = 1.0/10000;
-        double time_steps_per_frame = 10000;
+        const double INITIAL_TIME_STEP_SIZE = 1.0/10000;
+        const double INITIAL_TIME_STEPS_PER_FRAME = 10000;
+
+        double time_step_size = INITIAL_TIME_STEP_SIZE;
+        double time_steps_per_frame = INITIAL_TIME_STEPS_PER_FRAME;
 
         auto IncreaseSimulationSpeed() -> void {
             // Check that this action won't increase the simulation speed above the maximum speed
@@ -43,7 +46,7 @@ namespace Simulation {
     auto Integrate(const unordered_map<string, Massive> &massive_bodies, Body &body) -> void {
         // Loop through every body - we only need the massive bodies since massless bodies will have no effect on the body's acceleration
         dvec3 acceleration = dvec3(0, 0, 0);
-        for (auto &pair : massive_bodies) {
+        for (const auto &pair : massive_bodies) {
 
             // Check that the massive body is not the target body
             // If this was the case, we would be trying to apply the body's gravitational force to itself...
@@ -77,7 +80,7 @@ namespace Simulation {
         time_step_size = size;
     }
 
-    auto SetTimeStepsPerFrame(double steps) -> void {
-        time_steps_per_frame = steps;
+    auto SetTimeStepsPerFrame(double size) -> void {
+        time_steps_per_frame = size;
     }
 }

@@ -13,10 +13,10 @@ private:
 
 
 public:
-    MassiveIcon(const Massive parent);
+    MassiveIcon(const Massive &parent);
 
-    auto AddChild(const Massive body) -> void;
-    auto AddChild(const Massless body) -> void;
+    auto AddChild(const Massive &body) -> void;
+    auto AddChild(const Massless &body) -> void;
 
     auto GetBody() const -> Massive;
     auto GetColor() const -> vec3;

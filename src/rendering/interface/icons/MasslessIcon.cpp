@@ -2,4 +2,4 @@
 
 
 
-MasslessIcon::MasslessIcon(const Massless parent) : parent(parent) {}
+MasslessIcon::MasslessIcon(const Massless &parent) : parent(parent) {}

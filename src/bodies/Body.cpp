@@ -3,12 +3,10 @@
 #include <util/Constants.h>
 #include <util/Log.h>
 
-using std::move;
-
 
 
 Body::Body(string id, string name, dvec3 position, dvec3 velocity)
-    : id(move(id)), name(move(name)), position(move(position)), velocity(move(velocity)) {}
+    : id(std::move(id)), name(std::move(name)), position(position), velocity(velocity) {}
 
 auto Body::GetId() const -> string {
     return id;

@@ -5,14 +5,14 @@
 
 
 
-MassiveIcon::MassiveIcon(const Massive parent) 
+MassiveIcon::MassiveIcon(const Massive &parent) 
     : parent(parent) {}
 
-auto MassiveIcon::AddChild(const Massive body) -> void {
+auto MassiveIcon::AddChild(const Massive &body) -> void {
     massiveChildren.push_back(body);
 }
 
-auto MassiveIcon::AddChild(const Massless body) -> void {
+auto MassiveIcon::AddChild(const Massless &body) -> void {
     masslessChildren.push_back(body);
 }
 

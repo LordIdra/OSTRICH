@@ -13,5 +13,5 @@ private:
 public:
     Texture(const char *path);
 
-    auto Bind() -> void;
+    auto Bind() const -> void;
 };

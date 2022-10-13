@@ -9,5 +9,5 @@ private:
     Massless parent;
 
 public:
-    MasslessIcon(const Massless parent);
+    MasslessIcon(const Massless &parent);
 };

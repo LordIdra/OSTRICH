@@ -53,12 +53,12 @@ namespace Rays {
         return coords3;
     }
 
-    auto UnNormalize(vec2 position) -> vec2 {
+    auto UnNormalize(vec2 coords) -> vec2 {
         // Get from -1 <-> 1 to 0 <-> 1
-        position += vec2(1, 1);
-        position *= vec2(0.5, 0.5);
-        position *= vec2(Window::GetWidth(), Window::GetHeight());
-        return position;
+        coords += vec2(1, 1);
+        coords *= vec2(0.5, 0.5); // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+        coords *= vec2(Window::GetWidth(), Window::GetHeight());
+        return coords;
     }
 
     auto IntersectsSphere(const vec3 cameraPosition, const vec3 cameraDirection, const vec3 spherePosition, const float sphereRadius) -> bool {
@@ -79,7 +79,7 @@ namespace Rays {
         return distance <= sphereRadius;
     }
 
-    auto RadiusOnScreen(const Massive massive) -> double {
+    auto RadiusOnScreen(const Massive &massive) -> double {
         // Find the vector pointing from the camera to the body
         vec3 cameraToBodyDirection = Camera::GetPosition() - massive.GetScaledPosition();
 

@@ -43,6 +43,8 @@ namespace Icons {
         const vec3 ICON_HOVER_COLOR = vec3(1.0, 0.2, 0.1);
         const vec3 ICON_SELECTED_COLOR = vec3(0.8, 0.2, 0.1);
 
+        const float OFF_SCREEN_RADIUS = 1.1;
+
         unique_ptr<VAO> vao;
         unique_ptr<Program> program;
 
@@ -60,7 +62,7 @@ namespace Icons {
             double sphereRadiusOnScreen = Rays::RadiusOnScreen(massive);
 
             // If the body is off-screen, skip it
-            if (screenCoords.x < -1.1 || screenCoords.x > 1.1 || screenCoords.y < -1.1 || screenCoords.y > 1.1) {
+            if (screenCoords.x < -OFF_SCREEN_RADIUS || screenCoords.x > OFF_SCREEN_RADIUS || screenCoords.y < -OFF_SCREEN_RADIUS || screenCoords.y > OFF_SCREEN_RADIUS) {
                 return false;
             }
 
@@ -112,8 +114,8 @@ namespace Icons {
 
         auto AddIconCentre(vector<float> &vertices, const MassiveIcon &icon) -> void {
             vec2 centre = icon.GetNormalizedScreenCoordinates();
-            float ICON_MAIN_RADIUS_X = ICON_MAIN_RADIUS / Window::GetWidth();
-            float ICON_MAIN_RADIUS_Y = ICON_MAIN_RADIUS / Window::GetHeight();
+            float ICON_MAIN_RADIUS_X = ICON_MAIN_RADIUS / float(Window::GetWidth());
+            float ICON_MAIN_RADIUS_Y = ICON_MAIN_RADIUS / float(Window::GetHeight());
 
             AddQuad(vertices, 
                 IconVertex(centre.x, centre.y - ICON_MAIN_RADIUS_Y, icon.GetColor()),
@@ -124,8 +126,8 @@ namespace Icons {
 
         auto AddIconBorder(vector<float> &vertices, const MassiveIcon &icon) -> void {
             vec2 centre = icon.GetNormalizedScreenCoordinates();
-            float ICON_OUTLINE_RADIUS_X = ICON_OUTLINE_RADIUS / Window::GetWidth();
-            float ICON_OUTLINE_RADIUS_Y = ICON_OUTLINE_RADIUS / Window::GetHeight();
+            float ICON_OUTLINE_RADIUS_X = ICON_OUTLINE_RADIUS / float(Window::GetWidth());
+            float ICON_OUTLINE_RADIUS_Y = ICON_OUTLINE_RADIUS / float(Window::GetHeight());
 
             AddQuad(vertices, 
                 IconVertex(centre.x, centre.y - ICON_OUTLINE_RADIUS_Y, ICON_BORDER_COLOR),
@@ -136,8 +138,8 @@ namespace Icons {
 
         auto AddIconSelected(vector<float> &vertices, const MassiveIcon &icon) -> void {
             vec2 centre = icon.GetNormalizedScreenCoordinates();
-            float ICON_SELECTED_RADIUS_X = ICON_SELECTED_RADIUS / Window::GetWidth();
-            float ICON_SELECTED_RADIUS_Y = ICON_SELECTED_RADIUS / Window::GetHeight();
+            float ICON_SELECTED_RADIUS_X = ICON_SELECTED_RADIUS / float(Window::GetWidth());
+            float ICON_SELECTED_RADIUS_Y = ICON_SELECTED_RADIUS / float(Window::GetHeight());
 
             AddQuad(vertices, 
                 IconVertex(centre.x, centre.y - ICON_SELECTED_RADIUS_Y, ICON_SELECTED_COLOR),
@@ -148,10 +150,10 @@ namespace Icons {
 
         auto AddIconHover(vector<float> &vertices, const MassiveIcon &icon) -> void {
             vec2 centre = icon.GetNormalizedScreenCoordinates();
-            float ICON_HOVER_INNER_RADIUS_X = ICON_HOVER_INNER_RADIUS / Window::GetWidth();
-            float ICON_HOVER_INNER_RADIUS_Y = ICON_HOVER_INNER_RADIUS / Window::GetHeight();
-            float ICON_HOVER_OUTER_RADIUS_X = ICON_HOVER_OUTER_RADIUS / Window::GetWidth();
-            float ICON_HOVER_OUTER_RADIUS_Y = ICON_HOVER_OUTER_RADIUS / Window::GetHeight();
+            float ICON_HOVER_INNER_RADIUS_X = ICON_HOVER_INNER_RADIUS / float(Window::GetWidth());
+            float ICON_HOVER_INNER_RADIUS_Y = ICON_HOVER_INNER_RADIUS / float(Window::GetHeight());
+            float ICON_HOVER_OUTER_RADIUS_X = ICON_HOVER_OUTER_RADIUS / float(Window::GetWidth());
+            float ICON_HOVER_OUTER_RADIUS_Y = ICON_HOVER_OUTER_RADIUS / float(Window::GetHeight());
 
             AddQuad(vertices,
                 IconVertex(centre.x, centre.y - ICON_HOVER_INNER_RADIUS_Y, ICON_HOVER_COLOR),
@@ -205,7 +207,7 @@ namespace Icons {
             return conditionX && conditionY;
         }
 
-        auto StartIconMerge(vector<MassiveIcon> &massiveIcons, int i, int j) -> void {
+        auto MergeIcon(vector<MassiveIcon> &massiveIcons, int i, int j) -> void {
             // If the mass of icon i is greater, merge j into i
             if (massiveIcons[i].GetBody().GetMass() >= massiveIcons[j].GetBody().GetMass()) {
                 massiveIcons[i].AddChild(massiveIcons[j].GetBody());
@@ -218,7 +220,7 @@ namespace Icons {
             }
         }
 
-        auto FirstLayerMerge(vector<MassiveIcon> &massiveIcons) -> bool {
+        auto DoOneIconMerge(vector<MassiveIcon> &massiveIcons) -> bool {
             for (int i = 0; i < massiveIcons.size(); i++) {
                 for (int j = 0; j < massiveIcons.size(); j++) {
 
@@ -229,7 +231,7 @@ namespace Icons {
 
                     // Check if the icons intersect - if so, merge them
                     if (IconsIntersect(massiveIcons[i], massiveIcons[j])) {
-                        StartIconMerge(massiveIcons, i, j);
+                        MergeIcon(massiveIcons, i, j);
                         return true;
                     }
                 }
@@ -239,7 +241,7 @@ namespace Icons {
 
         auto CheckOcclusion(vector<MassiveIcon> &massiveIcons) -> bool {
             for (int i = 0; i < massiveIcons.size(); i++) {
-                for (auto pair : Bodies::GetMassiveBodies()) {
+                for (const auto &pair : Bodies::GetMassiveBodies()) {
 
                     // Make sure we're not checking if the icon is occluded by its own parent (that would make no sense)
                     if (pair.first == massiveIcons[i].GetBody().GetId()) {
@@ -257,24 +259,24 @@ namespace Icons {
             return false;
         }
 
-        auto GetMergedIcons() -> vector<MassiveIcon> {
+        auto GetIcons() -> vector<MassiveIcon> {
             // Get a list of icons for all bodies
             vector<MassiveIcon> massiveIcons;
-            for (const auto pair : Bodies::GetMassiveBodies()) {
+            for (const auto &pair : Bodies::GetMassiveBodies()) {
                 if (ShouldMassiveBeDrawn(pair.second)) {
-                    massiveIcons.push_back(pair.second);
+                    massiveIcons.emplace_back(pair.second);
                 }
             }
 
             // Merge icons
-            while (FirstLayerMerge(massiveIcons)) {}
+            while (DoOneIconMerge(massiveIcons)) {}
             while (CheckOcclusion(massiveIcons)) {}
 
             return massiveIcons;
         }
 
         auto SwitchBodyBasedOnIcon() -> void {
-            for (const MassiveIcon icon : GetMergedIcons()) {
+            for (const MassiveIcon &icon : GetIcons()) {
                 if (MouseOnIcon(icon, SELECT_THRESHOLD)) {
                     Bodies::SetSelectedBody(icon.GetBody().GetId());
                 }
@@ -314,7 +316,7 @@ namespace Icons {
 
     auto DrawIcons() -> void {
         // Compile a list of all massive bodies to have icons rendered
-        vector<MassiveIcon> massiveIcons = GetMergedIcons();
+        vector<MassiveIcon> massiveIcons = GetIcons();
 
         // Create a vector of vertices
         vector<float> data;
