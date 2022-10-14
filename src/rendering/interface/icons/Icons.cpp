@@ -35,35 +35,55 @@ namespace Icons {
         unique_ptr<VAO> vao;
         unique_ptr<Program> program;
 
-        auto ShouldMassiveBeDrawn(const Massive &massive) -> bool {
-            // World and screen coordinates of the body
-            vec3 worldCoords = massive.GetScaledPosition();
+        auto IsBodyOffScreen(const Body &body) -> bool {
+            vec3 worldCoords = body.GetScaledPosition();
             vec2 screenCoords = Rays::WorldToScreen(worldCoords);
+            return (screenCoords.x < -OFF_SCREEN_RADIUS || screenCoords.x > OFF_SCREEN_RADIUS || screenCoords.y < -OFF_SCREEN_RADIUS || screenCoords.y > OFF_SCREEN_RADIUS);
+        }
 
-            // Calculatee the angle between the camera direction and the vector from the camera to the body
+        auto IsBodyOffCamera(const Body &body) -> bool {
             vec3 cameraDirection = glm::normalize(Camera::GetPosition() - Camera::GetTarget());
-            vec3 bodyDirection = glm::normalize(Camera::GetPosition() - massive.GetScaledPosition());
+            vec3 bodyDirection = glm::normalize(Camera::GetPosition() - body.GetScaledPosition());
             double angle = acos(glm::dot(cameraDirection, bodyDirection));
+            return glm::degrees(angle) > FIELD_OF_VIEW;
+        }
 
-            // Find the radius of the circle drawn to represent the sphere on-screen
-            double sphereRadiusOnScreen = Rays::RadiusOnScreen(massive);
+        auto IsBodyOccluded(Body const &body) -> bool {
+            // Occlusion check
+            for (const auto &pair : Bodies::GetMassiveBodies()) {
 
-            // If the body is off-screen, skip it
-            if (screenCoords.x < -OFF_SCREEN_RADIUS || screenCoords.x > OFF_SCREEN_RADIUS || screenCoords.y < -OFF_SCREEN_RADIUS || screenCoords.y > OFF_SCREEN_RADIUS) {
-                return false;
+                // Make sure we're not checking if the body occludes itself
+                if (pair.second.GetId() == body.GetId()) {
+                    continue;
+                }
+
+                // If the body is closer to the camera than the icon, then it may be occluding the icon
+                float distanceFromCameraToIcon = glm::length(Camera::GetPosition() - body.GetScaledPosition());
+                float distanceFromCameraToBody = glm::length(Camera::GetPosition() - pair.second.GetScaledPosition());
+                if (distanceFromCameraToBody < distanceFromCameraToIcon) {
+
+                    // Check if it is in fact occluding the icon
+                    // The icon will be rendered in the middle of the body, so it makes sense to just consider the middle of the body (as a single point)
+                    vec3 direction1 = Rays::ScreenToWorld(Rays::WorldToScreen(body.GetScaledPosition()));
+                    if (Rays::IntersectsSphere(Camera::GetPosition(), direction1, pair.second.GetScaledPosition(), pair.second.GetScaledRadius())) {
+                        return true;
+                    }
+                }
             }
 
-            // If the body is off-camera, skip it           
-            if (glm::degrees(angle) > FIELD_OF_VIEW) {
-                return false;
-            }
+            return false;
+        }
 
-            // If the body is too large a radius, skip it
-            if (sphereRadiusOnScreen > Icon::RADIUS_THRESHOLD) {
-                return false;
-            }
+        auto IsBodyTooClose(const Massive &massive) -> bool {
+            return Rays::RadiusOnScreen(massive) > Icon::RADIUS_THRESHOLD;
+        }
 
-            return true;
+        auto ShouldMassiveBeDrawn(const Massive &massive) -> bool {
+            return !(IsBodyOffScreen(massive) || IsBodyOffCamera(massive) || IsBodyOccluded(massive) || IsBodyTooClose(massive));
+        }
+
+        auto ShouldMasslessBeDrawn(const Massless &massless) -> bool {
+            return !(IsBodyOffScreen(massless) || IsBodyOffCamera(massless) || IsBodyOccluded(massless));
         }
 
         auto IconsIntersect(const Icon &icon1, const Icon &icon2) -> bool {
@@ -77,91 +97,61 @@ namespace Icons {
             return conditionX && conditionY;
         }
 
-        auto MergeIconIntoIcon(vector<MassiveIcon> &massiveIcons, int from, int to) -> void {
-            massiveIcons[to].AddChild(massiveIcons[from].GetBody());
-            massiveIcons.erase(std::next(massiveIcons.begin(), from));
+        auto MergeIconIntoIcon(unordered_map<string, MassiveIcon> &massiveIcons, string from, string to) -> void {
+            massiveIcons.at(to).AddChild(massiveIcons.at(from).GetBody());
+            massiveIcons.erase(from);
         }
 
-        auto MergeIcon(vector<MassiveIcon> &massiveIcons, int i, int j) -> void {
+        auto MergeIcon(unordered_map<string, MassiveIcon> &massiveIcons, string icon1, string icon2) -> void {
             // If i is the selected icon, merge j into i
-            if (Bodies::GetSelectedBody() == massiveIcons[i].GetBody().GetId()) {
-                MergeIconIntoIcon(massiveIcons, j, i);
+            if (Bodies::GetSelectedBody() == massiveIcons.at(icon1).GetBody().GetId()) {
+                MergeIconIntoIcon(massiveIcons, icon2, icon1);
                 return;
             }
 
             // If i is the selected icon, merge i into j
-            if (Bodies::GetSelectedBody() == massiveIcons[j].GetBody().GetId()) {
-                MergeIconIntoIcon(massiveIcons, i, j);
+            if (Bodies::GetSelectedBody() == massiveIcons.at(icon2).GetBody().GetId()) {
+                MergeIconIntoIcon(massiveIcons, icon1, icon2);
                 return;
             }
 
             // If the mass of icon i is greater, merge j into i
-            if (massiveIcons[i].GetBody().GetMass() >= massiveIcons[j].GetBody().GetMass()) {
-                MergeIconIntoIcon(massiveIcons, j, i);
+            if (massiveIcons.at(icon1).GetBody().GetMass() >= massiveIcons.at(icon2).GetBody().GetMass()) {
+                MergeIconIntoIcon(massiveIcons, icon2, icon1);
                 return;
             }
 
             // Otherwise, merge i into j
-            MergeIconIntoIcon(massiveIcons, i, j);
+            MergeIconIntoIcon(massiveIcons, icon1, icon2);
         }
 
-        auto DoOneIconMerge(vector<MassiveIcon> &massiveIcons) -> bool {
-            for (int i = 0; i < massiveIcons.size(); i++) {
-                for (int j = 0; j < massiveIcons.size(); j++) {
+        auto DoOneIconMerge(unordered_map<string, MassiveIcon> &massiveIcons) -> bool {
+            for (auto const &pair1 : massiveIcons) {
+                for (auto const &pair2 : massiveIcons) {
 
                     // Make sure we're not trying to merge the icon with itself...
-                    if (i == j) {
+                    if (pair1.first == pair2.first) {
                         continue;
                     }
 
                     // Check if the icons intersect - if so, merge them
-                    if (IconsIntersect(massiveIcons[i], massiveIcons[j])) {
-                        MergeIcon(massiveIcons, i, j);
+                    if (IconsIntersect(pair1.second, pair2.second)) {
+                        MergeIcon(massiveIcons, pair1.first, pair2.first);
                         return true;
                     }
                 }
             }
+
             return false;
         }
 
-        auto CheckOcclusion(vector<MassiveIcon> &massiveIcons) -> bool {
-            for (int i = 0; i < massiveIcons.size(); i++) {
-                for (const auto &pair : Bodies::GetMassiveBodies()) {
-
-                    // Make sure we're not checking if the icon is occluded by its own parent (that would make no sense)
-                    if (pair.first == massiveIcons[i].GetBody().GetId()) {
-                        continue;
-                    }
-
-                    // If the body is further from the camera than the icon, then it cannot be occluding the icon
-                    float distanceFromCameraToIcon = glm::length(Camera::GetPosition() - massiveIcons[i].GetBody().GetScaledPosition());
-                    float distanceFromCameraToBody = glm::length(Camera::GetPosition() - pair.second.GetScaledPosition());
-                    if (distanceFromCameraToBody > distanceFromCameraToIcon) {
-                        continue;
-                    }
-
-                    // Check if the ray from the camera position in the direction of the icon intersects the body
-                    vec3 direction = Rays::ScreenToWorld(massiveIcons[i].GetNormalizedScreenCoordinates());
-                    if (Rays::IntersectsSphere(Camera::GetPosition(), direction, pair.second.GetScaledPosition(), pair.second.GetScaledRadius())) {
-                        massiveIcons.erase(std::next(massiveIcons.begin(), i));
-                        return true;
-                    }
-                }
-            }
-            return false;
-        }
-
-        auto GetMassiveIcons() -> vector<MassiveIcon> {
-            vector<MassiveIcon> massiveIcons;
+        auto GetMassiveIcons() -> unordered_map<string, MassiveIcon> {
+            unordered_map<string, MassiveIcon> massiveIcons;
             for (const auto &pair : Bodies::GetMassiveBodies()) {
                 if (ShouldMassiveBeDrawn(pair.second)) {
-                    massiveIcons.emplace_back(pair.second);
+                    massiveIcons.insert(std::pair<string, MassiveIcon>(pair.first, pair.second));
                 }
             }
-
-            // Merge icons
-            while (DoOneIconMerge(massiveIcons)) {}
-            while (CheckOcclusion(massiveIcons)) {}
 
             return massiveIcons;
         }
@@ -169,16 +159,18 @@ namespace Icons {
         auto GetMasslessIcons() -> vector<MasslessIcon> {
             vector<MasslessIcon> masslessIcons;
             for (const auto &pair : Bodies::GetMasslessBodies()) {
-                if (ShouldMassiveBeDrawn(pair.second)) {
-                    massiveIcons.emplace_back(pair.second);
+                if (ShouldMasslessBeDrawn(pair.second)) {
+                    masslessIcons.emplace_back(pair.second);
                 }
             }
+
+            return masslessIcons;
         }
 
         auto SwitchBodyBasedOnIcon() -> void {
-            for (const MassiveIcon &icon : GetMassiveIcons()) {
-                if (icon.MouseOnIcon(Icon::SELECT_THRESHOLD)) {
-                    Bodies::SetSelectedBody(icon.GetBody().GetId());
+            for (const auto &pair : GetMassiveIcons()) {
+                if (pair.second.MouseOnIcon(Icon::SELECT_THRESHOLD)) {
+                    Bodies::SetSelectedBody(pair.second.GetBody().GetId());
                 }
             }
         }
@@ -216,13 +208,16 @@ namespace Icons {
 
     auto DrawIcons() -> void {
         // Compile a list of all massive bodies to have icons rendered
-        vector<MassiveIcon> massiveIcons = GetMassiveIcons();
-        vector<MassiveIcon> masslessIcons = GetMasslessIcons();
+        unordered_map<string, MassiveIcon> massiveIcons = GetMassiveIcons();
+        //vector<MasslessIcon> masslessIcons = GetMasslessIcons();
+
+        // Merge icons
+        while (DoOneIconMerge(massiveIcons)) {}
 
         // Create a vector of vertices
         vector<float> data;
-        for (const MassiveIcon &icon : massiveIcons) {
-            icon.AddVertices(data);
+        for (const auto &pair : massiveIcons) {
+            pair.second.AddVertices(data);
         }
 
         // Showtime
