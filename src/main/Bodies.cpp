@@ -147,7 +147,7 @@ namespace Bodies {
         return massiveBodies.at(id);
     }
 
-    auto GetMasslessBody(const string &id) -> Massive {
-        return massiveBodies.at(id);
+    auto GetMasslessBody(const string &id) -> Massless {
+        return masslessBodies.at(id);
     }
 }
