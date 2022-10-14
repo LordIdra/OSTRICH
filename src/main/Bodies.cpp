@@ -103,12 +103,14 @@ namespace Bodies {
 
     auto Update() -> void {
         Simulation::Integrate(massiveBodies, masslessBodies);
-        
-        // Check that a body has been selected yet
-        if (massiveBodies.find(selected) != massiveBodies.end()) {
 
-            // Update transition target,so that the camera follows the target
+        // Update transition target,so that the camera follows the target
+        // If the selected body is massive
+        if (selectedType == MASSIVE) {
             Render::UpdateTransitionTarget(massiveBodies.at(selected));
+        // If the selected body is massless
+        } else if (selectedType == MASSLESS) {
+            Render::UpdateTransitionTarget(masslessBodies.at(selected));
         }
     }
 
