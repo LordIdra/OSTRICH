@@ -1,7 +1,4 @@
 #include "Icons.h"
-#include "rendering/interface/icons/MasslessIcon.h"
-
-#include <rendering/interface/icons/MassiveIcon.h>
 #include <input/Mouse.h>
 #include <rendering/interface/icons/IconVertex.h>
 #include <window/Window.h>
@@ -97,37 +94,38 @@ namespace Icons {
             return conditionX && conditionY;
         }
 
-        auto MergeIconIntoIcon(unordered_map<string, MassiveIcon> &massiveIcons, string from, string to) -> void {
-            massiveIcons.at(to).AddChild(massiveIcons.at(from).GetBody());
-            massiveIcons.erase(from);
+        auto MergeIconIntoIcon(unordered_map<string, Icon> &icons, string from, string to) -> void {
+            icons.at(to).AddChild(from);
+            icons.erase(from);
         }
 
-        auto MergeIcon(unordered_map<string, MassiveIcon> &massiveIcons, string icon1, string icon2) -> void {
+        auto MergeIcon(unordered_map<string, Icon> &icons, string icon1, string icon2) -> void {
             // If i is the selected icon, merge j into i
-            if (Bodies::GetSelectedBody() == massiveIcons.at(icon1).GetBody().GetId()) {
-                MergeIconIntoIcon(massiveIcons, icon2, icon1);
+            if (Bodies::GetSelectedBody() == icons.at(icon1).GetId()) {
+                MergeIconIntoIcon(icons, icon2, icon1);
                 return;
             }
 
             // If i is the selected icon, merge i into j
-            if (Bodies::GetSelectedBody() == massiveIcons.at(icon2).GetBody().GetId()) {
-                MergeIconIntoIcon(massiveIcons, icon1, icon2);
+            if (Bodies::GetSelectedBody() == icons.at(icon2).GetId()) {
+                MergeIconIntoIcon(icons, icon1, icon2);
                 return;
             }
 
             // If the mass of icon i is greater, merge j into i
-            if (massiveIcons.at(icon1).GetBody().GetMass() >= massiveIcons.at(icon2).GetBody().GetMass()) {
-                MergeIconIntoIcon(massiveIcons, icon2, icon1);
+            // Massless icons have mass 0
+            if (icons.at(icon1).GetMass() >= icons.at(icon2).GetMass()) {
+                MergeIconIntoIcon(icons, icon2, icon1);
                 return;
             }
 
             // Otherwise, merge i into j
-            MergeIconIntoIcon(massiveIcons, icon1, icon2);
+            MergeIconIntoIcon(icons, icon1, icon2);
         }
 
-        auto DoOneIconMerge(unordered_map<string, MassiveIcon> &massiveIcons) -> bool {
-            for (auto const &pair1 : massiveIcons) {
-                for (auto const &pair2 : massiveIcons) {
+        auto DoOneIconMerge(unordered_map<string, Icon> &icons) -> bool {
+            for (auto const &pair1 : icons) {
+                for (auto const &pair2 : icons) {
 
                     // Make sure we're not trying to merge the icon with itself...
                     if (pair1.first == pair2.first) {
@@ -136,7 +134,7 @@ namespace Icons {
 
                     // Check if the icons intersect - if so, merge them
                     if (IconsIntersect(pair1.second, pair2.second)) {
-                        MergeIcon(massiveIcons, pair1.first, pair2.first);
+                        MergeIcon(icons, pair1.first, pair2.first);
                         return true;
                     }
                 }
@@ -145,32 +143,30 @@ namespace Icons {
             return false;
         }
 
-        auto GetMassiveIcons() -> unordered_map<string, MassiveIcon> {
-            unordered_map<string, MassiveIcon> massiveIcons;
+        auto GenerateIcons() -> unordered_map<string, Icon> {
+            unordered_map<string, Icon> icons;
+
+            // Massive icons
             for (const auto &pair : Bodies::GetMassiveBodies()) {
                 if (ShouldMassiveBeDrawn(pair.second)) {
-                    massiveIcons.insert(std::pair<string, MassiveIcon>(pair.first, pair.second));
+                    icons.insert({pair.first, pair.second});
                 }
             }
 
-            return massiveIcons;
-        }
-
-        auto GetMasslessIcons() -> vector<MasslessIcon> {
-            vector<MasslessIcon> masslessIcons;
+            // Massless icons
             for (const auto &pair : Bodies::GetMasslessBodies()) {
                 if (ShouldMasslessBeDrawn(pair.second)) {
-                    masslessIcons.emplace_back(pair.second);
+                   icons.insert({pair.first, pair.second});
                 }
             }
 
-            return masslessIcons;
+            return icons;
         }
 
         auto SwitchBodyBasedOnIcon() -> void {
-            for (const auto &pair : GetMassiveIcons()) {
+            for (const auto &pair : GenerateIcons()) {
                 if (pair.second.MouseOnIcon(Icon::SELECT_THRESHOLD)) {
-                    Bodies::SetSelectedBody(pair.second.GetBody().GetId());
+                    Bodies::SetSelectedBody(pair.first);
                 }
             }
         }
@@ -208,15 +204,14 @@ namespace Icons {
 
     auto DrawIcons() -> void {
         // Compile a list of all massive bodies to have icons rendered
-        unordered_map<string, MassiveIcon> massiveIcons = GetMassiveIcons();
-        //vector<MasslessIcon> masslessIcons = GetMasslessIcons();
+        unordered_map<string, Icon> icons = GenerateIcons();
 
         // Merge icons
-        while (DoOneIconMerge(massiveIcons)) {}
+        while (DoOneIconMerge(icons)) {}
 
         // Create a vector of vertices
         vector<float> data;
-        for (const auto &pair : massiveIcons) {
+        for (const auto &pair : icons) {
             pair.second.AddVertices(data);
         }
 

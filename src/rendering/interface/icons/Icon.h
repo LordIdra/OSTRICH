@@ -1,5 +1,7 @@
 #pragma once
 
+#include <bodies/Massive.h>
+#include <bodies/Massless.h>
 #include <util/Types.h>
 #include <rendering/interface/icons/IconVertex.h>
 
@@ -16,9 +18,10 @@ private:
     static const vec3 ICON_BORDER_COLOR;
     static const vec3 ICON_HOVER_COLOR;
     static const vec3 ICON_SELECTED_COLOR;
-    
-    string id;
-    vec3 color;
+
+    Body body;
+
+    vector<string> children;
 
     auto AddVertex(vector<float> &vertices, IconVertex vertex) const -> void;
     auto AddQuad(vector<float> &vertices, IconVertex v1, IconVertex v2, IconVertex v3, IconVertex v4) const -> void;
@@ -35,13 +38,17 @@ public:
     static const float HOVER_THRESHOLD;
     static const float SELECT_THRESHOLD;
 
-    Icon(string id, vec3 color);
+    Icon(const Body &body);
 
-    virtual auto GetScreenCoordinates() const -> vec2;
-    virtual auto GetNormalizedScreenCoordinates() const -> vec2;
+    auto GetScreenCoordinates() const -> vec2;
+    auto GetNormalizedScreenCoordinates() const -> vec2;
+
+    auto AddChild(const string &id) -> void;
 
     auto AddVertices(vector<float> &vertices) const -> void;
     auto MouseOnIcon(const float threshold) const -> bool;
 
-    auto GetColor() -> vec3;
+    auto GetId() const -> string;
+    auto GetColor() const -> vec3;
+    auto GetMass() const -> double;
 };

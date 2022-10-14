@@ -1,4 +1,5 @@
 #include "Icon.h"
+#include "rendering/geometry/Rays.h"
 
 #include <window/Window.h>
 #include <input/Mouse.h>
@@ -51,10 +52,10 @@ auto Icon::AddIconCentre(vector<float> &vertices) const -> void {
     float ICON_MAIN_RADIUS_Y = ICON_MAIN_RADIUS / float(Window::GetHeight());
 
     AddQuad(vertices, 
-        IconVertex(centre.x, centre.y - ICON_MAIN_RADIUS_Y, color),
-        IconVertex(centre.x - ICON_MAIN_RADIUS_X, centre.y, color),
-        IconVertex(centre.x, centre.y + ICON_MAIN_RADIUS_Y, color),
-        IconVertex(centre.x + ICON_MAIN_RADIUS_X, centre.y, color));
+        IconVertex(centre.x, centre.y - ICON_MAIN_RADIUS_Y, GetColor()),
+        IconVertex(centre.x - ICON_MAIN_RADIUS_X, centre.y, GetColor()),
+        IconVertex(centre.x, centre.y + ICON_MAIN_RADIUS_Y, GetColor()),
+        IconVertex(centre.x + ICON_MAIN_RADIUS_X, centre.y, GetColor()));
 }
 
 auto Icon::AddIconBorder(vector<float> &vertices) const -> void {
@@ -113,16 +114,18 @@ auto Icon::AddIconHover(vector<float> &vertices) const -> void {
         IconVertex(centre.x, centre.y + ICON_HOVER_OUTER_RADIUS_Y, ICON_HOVER_COLOR));
 }
 
-Icon::Icon(string id, vec3 color) : id(id), color(color) {}
+Icon::Icon(const Body &body) : body(body) {}
 
 auto Icon::GetScreenCoordinates() const -> vec2 {
-    Log(WARN, "This function should never be called (Icon.cpp | GetScreenCoordinates())");
-    return vec2();
+    return Rays::UnNormalize(GetNormalizedScreenCoordinates());
 }
 
 auto Icon::GetNormalizedScreenCoordinates() const -> vec2 {
-    Log(WARN, "This function should never be called (Icon.cpp | GetNormalizedScreenCoordinates())");
-    return vec2();
+    return Rays::WorldToScreen(body.GetScaledPosition());
+}
+
+auto Icon::AddChild(const string &id) -> void {
+    children.push_back(id);
 }
 
 auto Icon::AddVertices(vector<float> &vertices) const -> void {
@@ -131,7 +134,7 @@ auto Icon::AddVertices(vector<float> &vertices) const -> void {
     AddIconBorder(vertices);
 
     // Selected
-    if (Bodies::GetSelectedBody() == id) {
+    if (Bodies::GetSelectedBody() == GetId()) {
         AddIconSelected(vertices);
     }
 
@@ -153,6 +156,14 @@ auto Icon::MouseOnIcon(const float threshold) const -> bool {
     return conditionX && conditionY;
 }
 
-auto Icon::GetColor() -> vec3 {
-    return color;
+auto Icon::GetId() const -> string {
+    return body.GetId();
+}
+
+auto Icon::GetColor() const -> vec3 {
+    return body.GetColor();
+}
+
+auto Icon::GetMass() const -> double {
+    return body.GetMass();
 }

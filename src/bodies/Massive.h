@@ -9,12 +9,11 @@
 class Massive : public Body {
 private:
     Material material;
-    double mass;   // kg
-    double radius; // m
+    double radius;
     vector<VERTEX_DATA_TYPE> vertices;
 
 public:
-    Massive(const string &id, const string &name, const dvec3 &position, const dvec3 &velocity, const Material &material, const double mass, const double radius);
+    Massive(const string &id, const string &name, const vec3 &color, const dvec3 &position, const dvec3 &velocity, const Material &material, const double mass, const double radius);
 
     auto GetMass() const -> double;
     auto GetScaledRadius() const -> float;

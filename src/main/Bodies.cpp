@@ -56,6 +56,7 @@ namespace Bodies {
                     pair.second.GetScaledRadius())) {
 
                         // If so, update the selected body and start a transition
+                        selectedType = MASSIVE;
                         selected = pair.first;
                         Render::StartTransition(pair.second);
                 }
@@ -71,6 +72,7 @@ namespace Bodies {
         AddBody(Massive(
             "earth",
             "Earth",
+            vec3(0.0, 0.0, 1.0),
             dvec3(0, 0, 0),
             dvec3(0, 0, 0),
             Materials::earth,
@@ -79,6 +81,7 @@ namespace Bodies {
         AddBody(Massive(
             "the-moon",
             "The Moon",
+            vec3(0.6, 0.6, 0.6),
             dvec3(double(1.4055e9), double(0), double(0)), // NOLINT(cppcoreguidelines-avoid-magic-numbers)
             dvec3(double(0), double(0), double(0.570e3)),  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
             Materials::moon1,
@@ -87,6 +90,7 @@ namespace Bodies {
         AddBody(Massless(
             "spacecraft",
             "Spacecraft",
+            vec3(0.1, 0.9, 0.3),
             dvec3(double(-1.4055e9), double(0), double(0)),  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
             dvec3(double(0), double(0), double(0.570e3))));  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
         
