@@ -115,9 +115,9 @@ namespace Control {
             vec3 direction = Rays::ScreenToWorld(Mouse::GetScreenPosition());
 
             Bodies::Update();
-            Interface::Update();
             Camera::Update(Bodies::GetMinZoom());
             Render::Update(deltaTime);
+            Interface::Update();
 
             ImGui::Render();
             ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
