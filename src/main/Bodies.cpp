@@ -2,6 +2,7 @@
 #include "main/Simulation.h"
 #include "util/Log.h"
 
+#include <bodies/BodyType.h>
 #include <bodies/Body.h>
 #include <bodies/Massive.h>
 #include <bodies/Massless.h>
@@ -20,29 +21,32 @@
 namespace Bodies {
 
     namespace {
-        unordered_map<string, Massive> massive_bodies;
-        unordered_map<string, Massless> massless_bodies;
+        unordered_map<string, Massive> massiveBodies;
+        unordered_map<string, Massless> masslessBodies;
 
+        BodyType selectedType;
         string selected;
 
+        float MASSLESS_MIN_ZOOM = 0.01;
+
         auto AddBody(const Massive &body) -> void {
-            massive_bodies.insert(std::make_pair(body.GetId(), body));
+            massiveBodies.insert(std::make_pair(body.GetId(), body));
             Render::AddBody(body);
         }
 
         auto AddBody(const Massless &body) -> void {
             // Massless bodies only need icons, so we don't need to worry about the Render namespace
-            massless_bodies.insert(std::make_pair(body.GetId(), body));
+            masslessBodies.insert(std::make_pair(body.GetId(), body));
         }
 
-        auto SwitchSelectedBody() -> void {
+        auto SwitchSelectedBodyWhenSphereClicked() -> void {
             // This function only cares about the spheres representing massive bodies
             // Seletcing via icons is handles in the Icons namespace
             // Find the camera direction
             vec3 direction = Rays::ScreenToWorld(Mouse::GetScreenPosition());
 
             // Loop through every body
-            for (auto &pair : massive_bodies) {
+            for (auto &pair : massiveBodies) {
 
                 // Check if the camera direction intersects the body
                 if (Rays::IntersectsSphere(
@@ -61,7 +65,7 @@ namespace Bodies {
 
     auto Init() -> void {
         // Input
-        Mouse::SetCallbackLeftDouble(SwitchSelectedBody);
+        Mouse::SetCallbackLeftDouble(SwitchSelectedBodyWhenSphereClicked);
 
         // Bodies
         AddBody(Massive(
@@ -86,20 +90,21 @@ namespace Bodies {
             dvec3(double(-1.4055e9), double(0), double(0)),  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
             dvec3(double(0), double(0), double(0.570e3))));  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
         
-        selected = massive_bodies.begin()->first;
+        selectedType = MASSIVE;
+        selected = massiveBodies.begin()->first;
         
         // Render
         Render::Init();
     }
 
     auto Update() -> void {
-        Simulation::Integrate(massive_bodies);
+        Simulation::Integrate(massiveBodies);
         
         // Check that a body has been selected yet
-        if (massive_bodies.find(selected) != massive_bodies.end()) {
+        if (massiveBodies.find(selected) != massiveBodies.end()) {
 
             // Update transition target,so that the camera follows the target
-            Render::UpdateTransitionTarget(massive_bodies.at(selected));
+            Render::UpdateTransitionTarget(massiveBodies.at(selected));
         }
     }
 
@@ -108,19 +113,41 @@ namespace Bodies {
     }
 
     auto GetMinZoom() -> float {
-        return Bodies::GetMassiveBody(Bodies::GetSelectedBody()).GetScaledRadius() * ZOOM_RADIUS_MULTIPLIER;
+        if (selectedType == MASSIVE) {
+            return Bodies::GetMassiveBody(Bodies::GetSelectedBody()).GetScaledRadius() * ZOOM_RADIUS_MULTIPLIER;
+        } else {
+            return MASSLESS_MIN_ZOOM;
+        }
     }
 
     auto SetSelectedBody(const string &id) -> void {
         selected = id;
-        Render::StartTransition(massive_bodies.at(id));
+
+        // If the id corresponds to a massive body
+        if (massiveBodies.find(id) != massiveBodies.end()) {
+            selectedType = MASSIVE;
+            Render::StartTransition(massiveBodies.at(id));
+        
+        // If the id corresponds to a massless body
+        } else if (masslessBodies.find(id) != masslessBodies.end()) {
+            selectedType = MASSLESS;
+            Render::StartTransition(masslessBodies.at(id));
+        }
     }
 
     auto GetMassiveBodies() -> unordered_map<string, Massive> {
-        return massive_bodies;
+        return massiveBodies;
+    }
+
+    auto GetMasslessBodies() -> unordered_map<string, Massless> {
+        return masslessBodies;
     }
 
     auto GetMassiveBody(const string &id) -> Massive {
-        return massive_bodies.at(id);
+        return massiveBodies.at(id);
+    }
+
+    auto GetMasslessBody(const string &id) -> Massive {
+        return massiveBodies.at(id);
     }
 }

@@ -1,0 +1,4 @@
+enum BodyType {
+    MASSIVE,
+    MASSLESS
+};
