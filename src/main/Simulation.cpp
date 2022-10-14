@@ -68,10 +68,14 @@ namespace Simulation {
         body.AddPosition(body.GetVelocity() * time_step_size);
     }
 
-    auto Integrate(unordered_map<string, Massive> &massive_bodies) -> void {
+    auto Integrate(unordered_map<string, Massive> &massiveBodies, unordered_map<string, Massless> &masslessBodies) -> void {
         for (int i = 0; i < time_steps_per_frame; i++) {
-            for (auto &pair : massive_bodies) {
-                Integrate(massive_bodies, pair.second);
+            for (auto &pair : massiveBodies) {
+                Integrate(massiveBodies, pair.second);
+            }
+
+            for (auto &pair : masslessBodies) {
+                Integrate(massiveBodies, pair.second);
             }
         }
     }

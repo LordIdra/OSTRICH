@@ -92,7 +92,7 @@ namespace Bodies {
             "Spacecraft",
             vec3(0.1, 0.9, 0.3),
             dvec3(double(-1.4055e9), double(0), double(0)),  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
-            dvec3(double(0), double(0), double(0.570e3))));  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+            dvec3(double(0), double(0), double(-0.570e3))));  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
         
         selectedType = MASSIVE;
         selected = massiveBodies.begin()->first;
@@ -102,7 +102,7 @@ namespace Bodies {
     }
 
     auto Update() -> void {
-        Simulation::Integrate(massiveBodies);
+        Simulation::Integrate(massiveBodies, masslessBodies);
         
         // Check that a body has been selected yet
         if (massiveBodies.find(selected) != massiveBodies.end()) {
