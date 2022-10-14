@@ -1,4 +1,5 @@
 #include "Icons.h"
+#include "rendering/interface/icons/MasslessIcon.h"
 
 #include <rendering/interface/icons/MassiveIcon.h>
 #include <input/Mouse.h>
@@ -151,7 +152,6 @@ namespace Icons {
         }
 
         auto GetMassiveIcons() -> vector<MassiveIcon> {
-            // Get a list of icons for all bodies
             vector<MassiveIcon> massiveIcons;
             for (const auto &pair : Bodies::GetMassiveBodies()) {
                 if (ShouldMassiveBeDrawn(pair.second)) {
@@ -164,6 +164,15 @@ namespace Icons {
             while (CheckOcclusion(massiveIcons)) {}
 
             return massiveIcons;
+        }
+
+        auto GetMasslessIcons() -> vector<MasslessIcon> {
+            vector<MasslessIcon> masslessIcons;
+            for (const auto &pair : Bodies::GetMasslessBodies()) {
+                if (ShouldMassiveBeDrawn(pair.second)) {
+                    massiveIcons.emplace_back(pair.second);
+                }
+            }
         }
 
         auto SwitchBodyBasedOnIcon() -> void {
@@ -208,6 +217,7 @@ namespace Icons {
     auto DrawIcons() -> void {
         // Compile a list of all massive bodies to have icons rendered
         vector<MassiveIcon> massiveIcons = GetMassiveIcons();
+        vector<MassiveIcon> masslessIcons = GetMasslessIcons();
 
         // Create a vector of vertices
         vector<float> data;
