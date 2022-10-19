@@ -1,4 +1,5 @@
 #include "Control.h"
+#include "main/Scenarios.h"
 
 #include <glm/gtx/string_cast.hpp>
 #include <input/Keys.h>
@@ -93,6 +94,9 @@ namespace Control {
         Camera::Init();
         Bodies::Init();
         Simulation::Init();
+        
+        Scenarios::LoadScenario("../scenarios/example.yml");
+        Scenarios::SaveScenario("../scenarios/save-test.yml");
     }
 
     auto Mainloop() -> void {

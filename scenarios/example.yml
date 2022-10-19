@@ -1,0 +1,22 @@
+massive:
+  earth:
+    name: "The Earth"
+    color: [0.1, 0.4, 0.9]
+    radius: 6371.0e+4
+    mass: 5.9722e+24
+    position: [0, 0, 0]
+    velocity: [0, 0, 0]
+  moon:
+    name: "The Moon"
+    color: [0.6, 0.6, 0.6]
+    radius: 1737.4e+3
+    mass: 0.07346e+24
+    position: [1.4055e+9, 0, 0]
+    velocity: [0, 0, 0.570e+3]
+  
+massless:
+  spacecraft:
+    name: "Spacecraft"
+    color: [0.1, 0.9, 0.3]
+    position: [-1.4055e+9, 0, 0]
+    velocity: [0, 0, -0.570e+3]

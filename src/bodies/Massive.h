@@ -16,8 +16,10 @@ public:
     Massive(const string &id, const string &name, const vec3 &color, const dvec3 &position, const dvec3 &velocity, const Material &material, const double mass, const double radius);
 
     auto GetMass() const -> double;
+    auto GetRadius() const -> double;
     auto GetScaledRadius() const -> float;
     auto GetSphereVertices() const -> vector<VERTEX_DATA_TYPE>;
     auto GetMaterial() const -> Material;
     auto GetMatrix() const -> mat4;
+
 };

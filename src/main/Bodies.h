@@ -10,6 +10,9 @@ namespace Bodies {
     auto Init() -> void;
     auto Update() -> void;
 
+    auto AddBody(const Massive &body) -> void;
+    auto AddBody(const Massless &body) -> void;
+
     auto SetSelectedBody(const string &id) -> void;
     auto GetSelectedBody() -> string;
 

@@ -19,8 +19,6 @@ namespace Window {
         auto FramebufferSizeCallback(GLFWwindow* window, int width_, int height_) -> void { //NOLINT(misc-unused-parameters)
             // This function is called whenever the window is resized
             // Resize the viewport (the range in which OpenGL draws geometry) and update the width/height
-            Log(INFO, std::to_string(width_));
-            Log(INFO, std::to_string(height_));
             glViewport(0, 0, width_, height_);
             width = width_;
             height = height_;

@@ -15,6 +15,10 @@ auto Massive::GetMass() const -> double {
     return mass;
 }
 
+auto Massive::GetRadius() const -> double {
+    return radius;
+}
+
 auto Massive::GetScaledRadius() const -> float {
     return float(radius / SCALE_FACTOR);
 }

@@ -8,6 +8,7 @@ set(FILES
     "src/main/Control.cpp"
     "src/main/Main.cpp"
     "src/main/Render.cpp"
+    "src/main/Scenarios.cpp"
     "src/main/Simulation.cpp"
 
     "src/bodies/Body.cpp"
@@ -51,8 +52,9 @@ find_package(glfw3 CONFIG REQUIRED)
 find_package(glm CONFIG REQUIRED)
 find_package(Boost REQUIRED)
 find_package(imgui REQUIRED)
+find_package(yaml-cpp CONFIG REQUIRED)
 
 add_executable(${PROJECT_NAME} ${FILES} ${DEPEND_FILES})
 
 target_include_directories(${PROJECT_NAME} PRIVATE "src")
-target_link_libraries (${PROJECT_NAME} PRIVATE glad::glad glfw Boost::boost imgui::imgui)
+target_link_libraries (${PROJECT_NAME} PRIVATE glad::glad glfw Boost::boost imgui::imgui yaml-cpp)

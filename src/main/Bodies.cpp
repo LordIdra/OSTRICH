@@ -24,20 +24,10 @@ namespace Bodies {
         unordered_map<string, Massive> massiveBodies;
         unordered_map<string, Massless> masslessBodies;
 
-        BodyType selectedType;
-        string selected;
+        BodyType selectedType = NONE;
+        string selected = "";
 
         float MASSLESS_MIN_ZOOM = 0.01;
-
-        auto AddBody(const Massive &body) -> void {
-            massiveBodies.insert(std::make_pair(body.GetId(), body));
-            Render::AddBody(body);
-        }
-
-        auto AddBody(const Massless &body) -> void {
-            // Massless bodies only need icons, so we don't need to worry about the Render namespace
-            masslessBodies.insert(std::make_pair(body.GetId(), body));
-        }
 
         auto SwitchSelectedBodyWhenSphereClicked() -> void {
             // This function only cares about the spheres representing massive bodies
@@ -68,34 +58,11 @@ namespace Bodies {
         // Input
         Mouse::SetCallbackLeftDouble(SwitchSelectedBodyWhenSphereClicked);
 
-        // Bodies
-        AddBody(Massive(
-            "earth",
-            "Earth",
-            vec3(0.0, 0.0, 1.0),
-            dvec3(0, 0, 0),
-            dvec3(0, 0, 0),
-            Materials::earth,
-            double(5.9722e24),     // NOLINT(cppcoreguidelines-avoid-magic-numbers)
-            double(6371.0e4)));  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
-        AddBody(Massive(
-            "the-moon",
-            "The Moon",
-            vec3(0.6, 0.6, 0.6),
-            dvec3(double(1.4055e9), double(0), double(0)), // NOLINT(cppcoreguidelines-avoid-magic-numbers)
-            dvec3(double(0), double(0), double(0.570e3)),  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
-            Materials::moon1,
-            double(0.07346e24),    // NOLINT(cppcoreguidelines-avoid-magic-numbers)
-            double(1737.4e3)));  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
-        AddBody(Massless(
-            "spacecraft",
-            "Spacecraft",
-            vec3(0.1, 0.9, 0.3),
-            dvec3(double(-1.4055e9), double(0), double(0)),  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
-            dvec3(double(0), double(0), double(-0.570e3))));  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
-        
-        selectedType = MASSIVE;
-        selected = massiveBodies.begin()->first;
+        // Initial camera lock
+        if (massiveBodies.size() != 0) {
+            selectedType = MASSIVE;
+            selected = massiveBodies.begin()->first;
+        }
         
         // Render
         Render::Init();
@@ -105,13 +72,21 @@ namespace Bodies {
         Simulation::Integrate(massiveBodies, masslessBodies);
 
         // Update transition target,so that the camera follows the target
-        // If the selected body is massive
         if (selectedType == MASSIVE) {
             Render::UpdateTransitionTarget(massiveBodies.at(selected));
-        // If the selected body is massless
         } else if (selectedType == MASSLESS) {
             Render::UpdateTransitionTarget(masslessBodies.at(selected));
         }
+    }
+
+    auto AddBody(const Massive &body) -> void {
+        massiveBodies.insert(std::make_pair(body.GetId(), body));
+        Render::AddBody(body);
+    }
+
+    auto AddBody(const Massless &body) -> void {
+        // Massless bodies only need icons, so we don't need to worry about the Render namespace
+        masslessBodies.insert(std::make_pair(body.GetId(), body));
     }
 
     auto GetSelectedBody() -> string {
