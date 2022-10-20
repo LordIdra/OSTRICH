@@ -69,6 +69,7 @@ namespace Bodies {
     }
 
     auto Update() -> void {
+        // Integrate to get the future positions of all bodies
         positions = Simulation::Integrate(massiveBodies, masslessBodies);
 
         // Update transition target,so that the camera follows the target
@@ -130,5 +131,9 @@ namespace Bodies {
 
     auto GetMasslessBody(const string &id) -> Massless {
         return masslessBodies.at(id);
+    }
+
+    auto GetPositions() -> unordered_map<string, vector<vec3>> {
+        return positions;
     }
 }
