@@ -1,14 +1,27 @@
 #include "OrbitPaths.h"
+#include "rendering/VAO.h"
 
+#include <memory>
+#include <rendering/shaders/Program.h>
 #include <rendering/geometry/Rays.h>
 #include <util/Types.h>
 #include <main/Bodies.h>
+
+#include <glad/glad.h>
+
+using std::unique_ptr;
 
 
 
 namespace OrbitPaths {
 
     namespace {
+
+        const int STRIDE = 5;
+
+        unique_ptr<VAO> vao;
+        unique_ptr<Program> program;
+
         auto TransformCoordinatesToScreenSpace(const unordered_map<string, vector<vec3>> &worldPositions) -> unordered_map<string, vector<vec2>> {
             unordered_map<string, vector<vec2>> screenPositions;
             for (const auto pair : worldPositions) {
@@ -27,7 +40,29 @@ namespace OrbitPaths {
     }
 
     auto Init() -> void {
-        
+        // Create Program
+        Shader vertex = Shader("../resources/shaders/path-vertex.vsh", GL_VERTEX_SHADER);
+        Shader fragment = Shader("../resources/shaders/path-fragment.fsh", GL_FRAGMENT_SHADER);
+        program = std::make_unique<Program>(vertex, fragment);
+
+        // Create VAO
+        vao = std::make_unique<VAO>();
+        vao->Init();
+        vao->AddVertexAttribute(
+            VertexAttribute{
+            .index = 0,
+            .size = 2,
+            .type = GL_FLOAT,
+            .normalised = GL_FALSE,
+            .stride = STRIDE * sizeof(float),
+            .offset = nullptr});
+        vao->AddVertexAttribute(VertexAttribute{
+            .index = 1,
+            .size = 3,
+            .type = GL_FLOAT,
+            .normalised = GL_FALSE,
+            .stride = STRIDE * sizeof(float),
+            .offset = (void*)(2 * sizeof(float))}); // NOLINT(cppcoreguidelines-pro-type-cstyle-cast)
     }
 
     auto Update() -> void {

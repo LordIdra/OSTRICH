@@ -42,10 +42,6 @@ namespace MassiveRender {
             Camera::AddZoomDelta(-KEY_ZOOM_AMOUNT);
         }
 
-        auto WireFrame(bool enabled) -> void {
-            glPolygonMode(GL_FRONT_AND_BACK, enabled ? GL_LINE : GL_FILL);
-        }
-
         auto AddVertexAttributes(VAO &vao) -> void {
             vao.AddVertexAttribute(VertexAttribute{
                 .index = 0,
@@ -65,9 +61,6 @@ namespace MassiveRender {
     }
 
     auto Init() -> void {
-        // Wireframe
-        WireFrame(false);
-
         // Input
         Keys::BindFunctionToKeyHold(GLFW_KEY_EQUAL, KeyZoomIn);
         Keys::BindFunctionToKeyHold(GLFW_KEY_MINUS, KeyZoomOut);
