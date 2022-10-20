@@ -1,15 +1,19 @@
 #include "Interface.h"
-#include "rendering/interface/icons/Icons.h"
+
+#include <rendering/interface/MassiveRender.h>
+#include <rendering/interface/icons/Icons.h>
 
 
 namespace Interface {
 
     auto Init() -> void {
         Icons::Init();
+        MassiveRender::Init();
     }
     
-    auto Update() -> void {
+    auto Update(const double deltaTime) -> void {
         Icons::DrawIcons();
+        MassiveRender::Update(deltaTime);
     }
 
 }

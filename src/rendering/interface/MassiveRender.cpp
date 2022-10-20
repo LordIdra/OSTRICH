@@ -1,4 +1,4 @@
-#include "Render.h"
+#include "MassiveRender.h"
 #include "util/Log.h"
 
 #include <glm/gtx/string_cast.hpp>
@@ -22,7 +22,7 @@ using std::make_unique;
 
 
 
-namespace Render {
+namespace MassiveRender {
     namespace {
         const float KEY_ZOOM_AMOUNT = 0.2;
         const vec3 ZERO_VECTOR = vec3(0, 0, 0);

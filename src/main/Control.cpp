@@ -9,7 +9,6 @@
 #include <string>
 #include <util/Log.h>
 #include <window/Window.h>
-#include <main/Render.h>
 #include <main/Bodies.h>
 #include <main/Simulation.h>
 
@@ -120,8 +119,7 @@ namespace Control {
 
             Bodies::Update();
             Camera::Update(Bodies::GetMinZoom());
-            Render::Update(deltaTime);
-            Interface::Update();
+            Interface::Update(deltaTime);
 
             ImGui::Render();
             ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());

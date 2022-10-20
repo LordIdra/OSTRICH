@@ -7,7 +7,6 @@ set(FILES
     "src/main/Bodies.cpp"
     "src/main/Control.cpp"
     "src/main/Main.cpp"
-    "src/main/Render.cpp"
     "src/main/Scenarios.cpp"
     "src/main/Simulation.cpp"
 
@@ -26,6 +25,7 @@ set(FILES
     "src/rendering/geometry/Rays.cpp"
     "src/rendering/geometry/Transition.cpp"
     "src/rendering/geometry/Sphere.cpp"
+    "src/rendering/interface/MassiveRender.cpp"
     "src/rendering/interface/Interface.cpp"
     "src/rendering/interface/icons/Icon.cpp"
     "src/rendering/interface/icons/Icons.cpp"

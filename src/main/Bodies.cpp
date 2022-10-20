@@ -13,8 +13,9 @@
 #include <rendering/geometry/Transition.h>
 #include <input/Keys.h>
 #include <input/Mouse.h>
-#include <main/Render.h>
+#include <rendering/interface/MassiveRender.h>
 #include <main/Materials.h>
+#include <unordered_map>
 
 
 
@@ -23,6 +24,8 @@ namespace Bodies {
     namespace {
         unordered_map<string, Massive> massiveBodies;
         unordered_map<string, Massless> masslessBodies;
+
+        unordered_map<string, vector<vec3>> positions;
 
         BodyType selectedType = NONE;
         string selected = "";
@@ -48,7 +51,7 @@ namespace Bodies {
                         // If so, update the selected body and start a transition
                         selectedType = MASSIVE;
                         selected = pair.first;
-                        Render::StartTransition(pair.second);
+                        MassiveRender::StartTransition(pair.second);
                 }
             }
         }
@@ -63,25 +66,22 @@ namespace Bodies {
             selectedType = MASSIVE;
             selected = massiveBodies.begin()->first;
         }
-        
-        // Render
-        Render::Init();
     }
 
     auto Update() -> void {
-        Simulation::Integrate(massiveBodies, masslessBodies);
+        positions = Simulation::Integrate(massiveBodies, masslessBodies);
 
         // Update transition target,so that the camera follows the target
         if (selectedType == MASSIVE) {
-            Render::UpdateTransitionTarget(massiveBodies.at(selected));
+            MassiveRender::UpdateTransitionTarget(massiveBodies.at(selected));
         } else if (selectedType == MASSLESS) {
-            Render::UpdateTransitionTarget(masslessBodies.at(selected));
+            MassiveRender::UpdateTransitionTarget(masslessBodies.at(selected));
         }
     }
 
     auto AddBody(const Massive &body) -> void {
         massiveBodies.insert(std::make_pair(body.GetId(), body));
-        Render::AddBody(body);
+        MassiveRender::AddBody(body);
     }
 
     auto AddBody(const Massless &body) -> void {
@@ -107,12 +107,12 @@ namespace Bodies {
         // If the id corresponds to a massive body
         if (massiveBodies.find(id) != massiveBodies.end()) {
             selectedType = MASSIVE;
-            Render::StartTransition(massiveBodies.at(id));
+            MassiveRender::StartTransition(massiveBodies.at(id));
         
         // If the id corresponds to a massless body
         } else if (masslessBodies.find(id) != masslessBodies.end()) {
             selectedType = MASSLESS;
-            Render::StartTransition(masslessBodies.at(id));
+            MassiveRender::StartTransition(masslessBodies.at(id));
         }
     }
 

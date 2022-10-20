@@ -4,7 +4,7 @@
 
 
 
-namespace Render {
+namespace MassiveRender {
     auto Init() -> void;
     auto Update(double deltaTime) -> void;
     auto AddBody(const Massive &body) -> void;
