@@ -38,13 +38,6 @@ namespace Icons {
             return (screenCoords.x < -OFF_SCREEN_RADIUS || screenCoords.x > OFF_SCREEN_RADIUS || screenCoords.y < -OFF_SCREEN_RADIUS || screenCoords.y > OFF_SCREEN_RADIUS);
         }
 
-        auto IsBodyOffCamera(const Body &body) -> bool {
-            vec3 cameraDirection = glm::normalize(Camera::GetPosition() - Camera::GetTarget());
-            vec3 bodyDirection = glm::normalize(Camera::GetPosition() - body.GetScaledPosition());
-            double angle = acos(glm::dot(cameraDirection, bodyDirection));
-            return glm::degrees(angle) > FIELD_OF_VIEW;
-        }
-
         auto IsBodyOccluded(Body const &body) -> bool {
             // Occlusion check
             for (const auto &pair : Bodies::GetMassiveBodies()) {
@@ -76,11 +69,11 @@ namespace Icons {
         }
 
         auto ShouldMassiveBeDrawn(const Massive &massive) -> bool {
-            return !(IsBodyOffScreen(massive) || IsBodyOffCamera(massive) || IsBodyOccluded(massive) || IsBodyTooClose(massive));
+            return !(IsBodyOffScreen(massive) || Rays::IsCoordinateOffCamera(massive.GetScaledPosition()) || IsBodyOccluded(massive) || IsBodyTooClose(massive));
         }
 
         auto ShouldMasslessBeDrawn(const Massless &massless) -> bool {
-            return !(IsBodyOffScreen(massless) || IsBodyOffCamera(massless) || IsBodyOccluded(massless));
+            return !(IsBodyOffScreen(massless) || Rays::IsCoordinateOffCamera(massless.GetScaledPosition()) || IsBodyOccluded(massless));
         }
 
         auto IconsIntersect(const Icon &icon1, const Icon &icon2) -> bool {

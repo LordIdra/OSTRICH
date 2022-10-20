@@ -14,4 +14,6 @@ namespace Rays {
 
     auto IntersectsSphere(const vec3 cameraPosition, const vec3 cameraDirection, const vec3 spherePosition, const float sphereRadius) -> bool;
     auto RadiusOnScreen(const Massive &massive) -> double;
+
+    auto IsCoordinateOffCamera(const vec3 &coordinate) -> bool;
 }

@@ -2,6 +2,7 @@
 
 #include <window/Window.h>
 #include <rendering/camera/Camera.h>
+#include <rendering/camera/Settings.h>
 #include <util/Log.h>
 
 #include <glm/geometric.hpp>
@@ -96,5 +97,12 @@ namespace Rays {
 
         // Get the distance between them
         return glm::distance(screenBodyPosition, screenEdgePosition);
+    }
+
+    auto IsCoordinateOffCamera(const vec3 &coordinate) -> bool {
+        vec3 cameraDirection = glm::normalize(Camera::GetPosition() - Camera::GetTarget());
+        vec3 coordinateDirection = glm::normalize(Camera::GetPosition() - coordinate);
+        double angle = acos(glm::dot(cameraDirection, coordinateDirection));
+        return glm::degrees(angle) > FIELD_OF_VIEW;
     }
 }
