@@ -107,7 +107,7 @@ namespace OrbitPaths {
         // Find positions that each body will be in the future
         unordered_map<string, vector<dvec3>> worldPositions = Bodies::GetPositions();
 
-        // Loop through all the body IDs
+        // Transform the positions into screen space, this is much more efficient and easier to work with
         unordered_map<string, vector<vector<vec2>>> screenPositions = TransformCoordinatesToScreenSpace(worldPositions);
 
         // Remove positions outside of the screen
@@ -172,14 +172,17 @@ namespace OrbitPaths {
                     v3 = sequence[i] + (direction * PATH_WIDTH);
                     v4 = sequence[i] - (direction * PATH_WIDTH);
 
-                    // Add new vertices (two triangles to form a quadrilateral)
-                    AddVertex(vertices, v1, PATH_COLOR);
-                    AddVertex(vertices, v2, PATH_COLOR);
-                    AddVertex(vertices, v3, PATH_COLOR);
+                    // Use color of the body for color of orbit path
+                    vec3 color = Bodies::GetBody(pair.first).GetColor();
 
-                    AddVertex(vertices, v2, PATH_COLOR);
-                    AddVertex(vertices, v3, PATH_COLOR);
-                    AddVertex(vertices, v4, PATH_COLOR);
+                    // Add new vertices (two triangles to form a quadrilateral)
+                    AddVertex(vertices, v1, color);
+                    AddVertex(vertices, v2, color);
+                    AddVertex(vertices, v3, color);
+
+                    AddVertex(vertices, v2, color);
+                    AddVertex(vertices, v3, color);
+                    AddVertex(vertices, v4, color);
                 }
             }
         }

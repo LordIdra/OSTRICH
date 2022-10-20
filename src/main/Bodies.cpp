@@ -133,6 +133,15 @@ namespace Bodies {
         return masslessBodies.at(id);
     }
 
+    auto GetBody(const string &id) -> Body {
+        if (massiveBodies.find(id) != massiveBodies.end()) {
+            return massiveBodies.at(id);
+        } else {
+            // Yes, technically the id may not exist, but this is REALLY unlikely unless some code is very obviously wrong in other ways
+            return masslessBodies.at(id);
+        }
+    }
+
     auto GetPositions() -> unordered_map<string, vector<dvec3>> {
         return positions;
     }

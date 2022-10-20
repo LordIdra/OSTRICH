@@ -23,6 +23,7 @@ namespace Bodies {
 
     auto GetMassiveBody(const string &id) -> Massive;
     auto GetMasslessBody(const string &id) -> Massless;
+    auto GetBody(const string &id) -> Body;
 
     auto GetPositions() -> unordered_map<string, vector<dvec3>>;
 }
