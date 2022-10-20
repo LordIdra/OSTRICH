@@ -29,6 +29,7 @@ set(FILES
     "src/rendering/interface/Interface.cpp"
     "src/rendering/interface/icons/Icon.cpp"
     "src/rendering/interface/icons/Icons.cpp"
+    "src/rendering/interface/OrbitPaths.cpp"
     "src/rendering/shaders/Program.cpp"
     "src/rendering/shaders/Shader.cpp"
     "src/rendering/shaders/Util.cpp"

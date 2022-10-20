@@ -13,12 +13,12 @@
 namespace Simulation {
 
     namespace {
-        const double SPEED_MULTIPLIER = 10;
+        const double SPEED_MULTIPLIER = 5;
         const double MIN_SPEED = 1.0/10000;
-        const double MAX_SPEED = 100000;
+        const double MAX_SPEED = 10000000;
 
-        const double INITIAL_TIME_STEP_SIZE = 1.0;
-        const double INITIAL_TIME_STEPS_PER_FRAME = 100;
+        const double INITIAL_TIME_STEP_SIZE = 100.0;
+        const double INITIAL_TIME_STEPS_PER_FRAME = 1000;
 
         double time_step_size = INITIAL_TIME_STEP_SIZE;
         double time_steps_per_frame = INITIAL_TIME_STEPS_PER_FRAME;
@@ -70,18 +70,18 @@ namespace Simulation {
         body.AddPosition(body.GetVelocity() * time_step_size);
     }
 
-    auto Integrate(unordered_map<string, Massive> massiveBodies, unordered_map<string, Massless> masslessBodies) -> unordered_map<string, vector<vec3>> {
-        unordered_map<string, vector<vec3>> positions;
+    auto Integrate(unordered_map<string, Massive> massiveBodies, unordered_map<string, Massless> masslessBodies) -> unordered_map<string, vector<dvec3>> {
+        unordered_map<string, vector<dvec3>> positions;
 
         // Fill the map with keys that correspond to all massive and massless bodies
         // Massive
         for (const auto &pair : massiveBodies) {
-            positions.insert(std::make_pair(pair.first, vector<vec3>()));
+            positions.insert(std::make_pair(pair.first, vector<dvec3>()));
         }
 
         // Massless
         for (const auto &pair : masslessBodies) {
-            positions.insert(std::make_pair(pair.first, vector<vec3>()));
+            positions.insert(std::make_pair(pair.first, vector<dvec3>()));
         }
 
         // Integrate for all bodies and add positions
@@ -89,14 +89,14 @@ namespace Simulation {
 
             // Massive
             for (auto &pair : massiveBodies) {
-                Integrate(massiveBodies, pair.second);
                 positions.at(pair.first).push_back(pair.second.GetPosition());
+                Integrate(massiveBodies, pair.second);
             }
 
             // Massless
             for (auto &pair : masslessBodies) {
-                Integrate(massiveBodies, pair.second);
                 positions.at(pair.first).push_back(pair.second.GetPosition());
+                Integrate(massiveBodies, pair.second);
             }
         }
 

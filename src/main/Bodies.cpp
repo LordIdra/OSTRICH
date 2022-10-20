@@ -25,7 +25,7 @@ namespace Bodies {
         unordered_map<string, Massive> massiveBodies;
         unordered_map<string, Massless> masslessBodies;
 
-        unordered_map<string, vector<vec3>> positions;
+        unordered_map<string, vector<dvec3>> positions;
 
         BodyType selectedType = NONE;
         string selected = "";
@@ -133,7 +133,7 @@ namespace Bodies {
         return masslessBodies.at(id);
     }
 
-    auto GetPositions() -> unordered_map<string, vector<vec3>> {
+    auto GetPositions() -> unordered_map<string, vector<dvec3>> {
         return positions;
     }
 }
