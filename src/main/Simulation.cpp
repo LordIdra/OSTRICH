@@ -2,9 +2,11 @@
 #include "util/Constants.h"
 #include "util/Log.h"
 #include <GLFW/glfw3.h>
+#include <algorithm>
 #include <glm/ext/quaternion_geometric.hpp>
 #include <main/Simulation.h>
 #include <unordered_map>
+#include <utility>
 
 
 
@@ -15,8 +17,8 @@ namespace Simulation {
         const double MIN_SPEED = 1.0/10000;
         const double MAX_SPEED = 100000;
 
-        const double INITIAL_TIME_STEP_SIZE = 1.0/10000;
-        const double INITIAL_TIME_STEPS_PER_FRAME = 10000;
+        const double INITIAL_TIME_STEP_SIZE = 1.0/100;
+        const double INITIAL_TIME_STEPS_PER_FRAME = 100;
 
         double time_step_size = INITIAL_TIME_STEP_SIZE;
         double time_steps_per_frame = INITIAL_TIME_STEPS_PER_FRAME;
@@ -68,23 +70,44 @@ namespace Simulation {
         body.AddPosition(body.GetVelocity() * time_step_size);
     }
 
-    auto Integrate(unordered_map<string, Massive> &massiveBodies, unordered_map<string, Massless> &masslessBodies) -> void {
+    auto Integrate(unordered_map<string, Massive> massiveBodies, unordered_map<string, Massless> masslessBodies) -> unordered_map<string, vector<vec3>> {
+        unordered_map<string, vector<vec3>> positions;
+
+        // Fill the map with keys that correspond to all massive and massless bodies
+        // Massive
+        for (const auto &pair : massiveBodies) {
+            positions.insert(std::make_pair(pair.first, vector<vec3>()));
+        }
+
+        // Massless
+        for (const auto &pair : masslessBodies) {
+            positions.insert(std::make_pair(pair.first, vector<vec3>()));
+        }
+
+        // Integrate for all bodies and add positions
         for (int i = 0; i < time_steps_per_frame; i++) {
+
+            // Massive
             for (auto &pair : massiveBodies) {
                 Integrate(massiveBodies, pair.second);
+                positions.at(pair.first).push_back(pair.second.GetPosition());
             }
 
+            // Massless
             for (auto &pair : masslessBodies) {
                 Integrate(massiveBodies, pair.second);
+                positions.at(pair.first).push_back(pair.second.GetPosition());
             }
         }
+
+        return positions;
     }
 
-    auto SetTimeStepSize(double size) -> void {
+    auto SetTimeStepSize(const double size) -> void {
         time_step_size = size;
     }
 
-    auto SetTimeStepsPerFrame(double size) -> void {
+    auto SetTimeStepsPerFrame(const double size) -> void {
         time_steps_per_frame = size;
     }
 }
