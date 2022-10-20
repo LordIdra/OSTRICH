@@ -31,19 +31,34 @@ namespace OrbitPaths {
             unordered_map<string, vector<vector<vec2>>> screenPositions;
             for (const auto pair : unscaledWorldPositions) {
 
-                // Transform all positions for that bodyto screen space and add them to a vector
+                // Transform all positions for that body to screen space and create 'sequences'
+                // These sequences are series of points that need to be connected with a line
+                // Why not just a continuous set of points? Well, part the orbit may go off camera, meaning it would be split
+                // in two and we'd need to render two separate segments
                 vector<vector<vec2>> bodyScreenPositions = vector<vector<vec2>>();
                 for (int i = 0; i < pair.second.size()-2;) {
+                    
+                    // If the coordinate is off camera, no reason to create a se
                     if (Rays::IsCoordinateOffCamera(pair.second.at(i) / SCALE_FACTOR)) {
                         i++;
                         continue;
                     }
+
+                    // Okay, we just found a coordinate that's on camera, let's start creating a sequence
                     vector<vec2> sequence;
+
+                    // Keep adding points to the sequence until the point is off-camera
                     while ((i < pair.second.size()-2) && (!Rays::IsCoordinateOffCamera(pair.second.at(i) / SCALE_FACTOR))) {
                         sequence.push_back(Rays::WorldToScreen(pair.second.at(i) / SCALE_FACTOR));
                         i++;
                     }
+
+                    // Now close off the sequence by adding the next point
+                    // This is done to make sure that lines actually appear to go off-screen, rather than
+                    // just terminating near the end of the screen
                     sequence.push_back(pair.second.at(i+1));
+
+                    // All done
                     bodyScreenPositions.push_back(sequence);
                 }
 
@@ -51,6 +66,14 @@ namespace OrbitPaths {
                 screenPositions.insert(std::make_pair(pair.first, bodyScreenPositions));
             }
             return screenPositions;
+        }
+
+        auto AddVertex(vector<VERTEX_DATA_TYPE> &vertices, const vec2 position, const vec3 color) -> void {
+            vertices.push_back(position.x);
+            vertices.push_back(position.y);
+            vertices.push_back(color.x);
+            vertices.push_back(color.y);
+            vertices.push_back(color.z);
         }
     }
 
@@ -112,63 +135,51 @@ namespace OrbitPaths {
 
         // Interpolate points that are too far apart
 
-        // Draw the remaining points
+        // Now we have a list of sequences, let's draw them
+        // Iterate through every body
         vector<VERTEX_DATA_TYPE> vertices;
         for (const auto &pair : screenPositions) {
-
+            
+            // Iterate through every sequence for the corresponding body
             for (const auto &sequence : pair.second) {
-                // This would cause a segmentation fault...
+
+                // This would cause a segmentation fault, we need at least 3 points to draw a sequence
+                // due to how we use the previous and next nodes to figure out the vertices for a node
                 if (sequence.size() < 2) {
                     continue;
                 }
+
+                // Initialise vertices
+                // v1/v2 are set in the loop body, v3/v4 can be set to the position of the node
+                // Yes this creates a triangle instead of a quadrilateral, but A) the initial point is likely to be
+                // hidden, and B) the paths are so thin that it's practically impossible to notice this
                 vec2 v1;
                 vec2 v2;
                 vec2 v3 = sequence[0];
                 vec2 v4 = sequence[0];
+
+                // Loop through everything in the sequence, starting one element late and terminating one element early
                 for (int i = 1; i < sequence.size()-1; i++) {
+
+                    // Set first pair of vertices to be the vertices from the previous node
                     v1 = v3;
                     v2 = v4;
+
+                    // Compute new vertices
                     vec2 unitVectorToPrevious = glm::normalize(sequence[i] - sequence[i-1]);
                     vec2 unitVectorToNext = glm::normalize(sequence[i] - sequence[i+1]);
                     vec2 direction = glm::normalize((unitVectorToPrevious + unitVectorToNext) / 2.0F);
                     v3 = sequence[i] + (direction * PATH_WIDTH);
                     v4 = sequence[i] - (direction * PATH_WIDTH);
 
-                    vertices.push_back(v1.x);
-                    vertices.push_back(v1.y);
-                    vertices.push_back(PATH_COLOR.x);
-                    vertices.push_back(PATH_COLOR.y);
-                    vertices.push_back(PATH_COLOR.z);
+                    // Add new vertices (two triangles to form a quadrilateral)
+                    AddVertex(vertices, v1, PATH_COLOR);
+                    AddVertex(vertices, v2, PATH_COLOR);
+                    AddVertex(vertices, v3, PATH_COLOR);
 
-                    vertices.push_back(v2.x);
-                    vertices.push_back(v2.y);
-                    vertices.push_back(PATH_COLOR.x);
-                    vertices.push_back(PATH_COLOR.y);
-                    vertices.push_back(PATH_COLOR.z);
-
-                    vertices.push_back(v3.x);
-                    vertices.push_back(v3.y);
-                    vertices.push_back(PATH_COLOR.x);
-                    vertices.push_back(PATH_COLOR.y);
-                    vertices.push_back(PATH_COLOR.z);
-
-                    vertices.push_back(v2.x);
-                    vertices.push_back(v2.y);
-                    vertices.push_back(PATH_COLOR.x);
-                    vertices.push_back(PATH_COLOR.y);
-                    vertices.push_back(PATH_COLOR.z);
-
-                    vertices.push_back(v3.x);
-                    vertices.push_back(v3.y);
-                    vertices.push_back(PATH_COLOR.x);
-                    vertices.push_back(PATH_COLOR.y);
-                    vertices.push_back(PATH_COLOR.z);
-
-                    vertices.push_back(v4.x);
-                    vertices.push_back(v4.y);
-                    vertices.push_back(PATH_COLOR.x);
-                    vertices.push_back(PATH_COLOR.y);
-                    vertices.push_back(PATH_COLOR.z);
+                    AddVertex(vertices, v2, PATH_COLOR);
+                    AddVertex(vertices, v3, PATH_COLOR);
+                    AddVertex(vertices, v4, PATH_COLOR);
                 }
             }
         }
