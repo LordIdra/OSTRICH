@@ -7,6 +7,9 @@
 
 namespace Rays {
     
+    auto Scale(const dvec3 coordinate) -> vec3;
+    auto Unscale(const vec3 coordinate) -> dvec3;
+    
     auto ScreenToWorld(const vec2 coords) -> vec3;
     auto WorldToScreen(const vec3 coords) -> vec2;
 

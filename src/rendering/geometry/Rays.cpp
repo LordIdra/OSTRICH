@@ -1,4 +1,5 @@
 #include "Rays.h"
+#include "util/Constants.h"
 
 #include <window/Window.h>
 #include <rendering/camera/Camera.h>
@@ -17,6 +18,14 @@ namespace Rays {
     
     namespace {
         vec3 UP_DIRECTION = vec3(0, 1, 0);
+    }
+
+    auto Scale(const dvec3 coordinate) -> vec3 {
+        return coordinate / SCALE_FACTOR;
+    }
+
+    auto Unscale(const vec3 coordinate) -> dvec3 {
+        return dvec3(coordinate) * SCALE_FACTOR;
     }
 
     auto ScreenToWorld(const vec2 coords) -> vec3 {

@@ -37,7 +37,7 @@ namespace OrbitPaths {
                 for (int i = 1; i < pair.second.size()-1; i++) {
 
                     // Find how close this point and the next point are in screen space
-                    float distance = glm::distance(pair.second.at(i).position / SCALE_FACTOR, pair.second.at(i-1).position / SCALE_FACTOR);
+                    float distance = glm::distance(Rays::Scale(pair.second.at(i).position), Rays::Scale(pair.second.at(i-1).position));
 
                     // If the points are close enough, interpolate them to create a new point in-between
                     // We also don't increment i because we want to check if this newly created point is sufficiently close to the previous one
@@ -55,11 +55,20 @@ namespace OrbitPaths {
             for (const auto pair : unscaledOrbitPoints) {
                 vector<vec2> positions;
                 for (const OrbitPoint worldPositions : pair.second) {
-                    positions.push_back(Rays::WorldToScreen(worldPositions.position / SCALE_FACTOR));
+
+                    // Check that the coordinate isn't actually BEHIND the camera
+                    // If we don't check this now, weird stuff will happen when we attempt
+                    // to map the coordinate to screen space, and it may actually end up on-screen in an unintended way
+                    if (!Rays::IsCoordinateOffCamera(Rays::Scale(worldPositions.position))) {
+                        positions.push_back(Rays::WorldToScreen(Rays::Scale(worldPositions.position)));
+                    }
                 }
 
                 // Add the sequence to the list of sequences, then add the list of sequences to the position map
-                positionMap.insert(std::make_pair(pair.first, positions));
+                // If the sequence can't be drawn (ie: less than 2 points can be drawn the camera), no need to add it
+                if (positions.size() >= 2) {
+                    positionMap.insert(std::make_pair(pair.first, positions));
+                }
             }
 
             return positionMap;
@@ -89,7 +98,6 @@ namespace OrbitPaths {
                     sequence.push_back(pair.second.at(i-1));
 
                     // Keep adding points to the sequence until the point is off-camera
-                    //  
                     while ((i < pair.second.size()-2) && (!Rays::IsCoordinateOffCamera(pair.second.at(i)))) {
                         sequence.push_back(pair.second.at(i));
                         i++;
@@ -164,7 +172,7 @@ namespace OrbitPaths {
             // Iterate through every sequence for the corresponding body
             for (const auto &sequence : pair.second) {
 
-                // This would cause a segmentation fault, we need at least 3 points to draw a sequence
+                // This would cause a segmentation fault, we need at least 2 points to draw a sequence
                 // due to how we use the previous and next nodes to figure out the vertices for a node
                 if (sequence.size() < 2) {
                     continue;
