@@ -1,5 +1,6 @@
 #pragma once
 
+#include "main/OrbitPoint.h"
 #include <bodies/Massless.h>
 #include <bodies/Massive.h>
 #include <util/Types.h>
@@ -25,5 +26,5 @@ namespace Bodies {
     auto GetMasslessBody(const string &id) -> Massless;
     auto GetBody(const string &id) -> Body;
 
-    auto GetPositions() -> unordered_map<string, vector<dvec3>>;
+    auto GetPositions() -> unordered_map<string, vector<OrbitPoint>>;
 }

@@ -1,12 +1,16 @@
 #include "OrbitPaths.h"
+#include "main/OrbitPoint.h"
+#include "main/Simulation.h"
 #include "rendering/VAO.h"
 #include "util/Constants.h"
 #include "util/Log.h"
 
 #include <glm/geometric.hpp>
+#include <glm/gtx/string_cast.hpp>
 #include <memory>
 #include <rendering/shaders/Program.h>
 #include <rendering/geometry/Rays.h>
+#include <unordered_map>
 #include <util/Types.h>
 #include <main/Bodies.h>
 
@@ -23,23 +27,56 @@ namespace OrbitPaths {
         const int STRIDE = 5;
         const float PATH_WIDTH = 0.001;
         const vec3 PATH_COLOR = vec3(0.0, 0.0, 0.9);
+        const float DISTANCE_THRESHOLD = 0.05;
 
         unique_ptr<VAO> vao;
         unique_ptr<Program> program;
 
-        auto TransformCoordinatesToScreenSpace(const unordered_map<string, vector<dvec3>> &unscaledWorldPositions) -> unordered_map<string, vector<vector<vec2>>> {
-            unordered_map<string, vector<vector<vec2>>> screenPositions;
-            for (const auto pair : unscaledWorldPositions) {
+        auto InterpolatePoints(unordered_map<string, vector<OrbitPoint>> &unscaledOrbitPoints) -> void {
+            for (auto &pair : unscaledOrbitPoints) {
+                for (int i = 1; i < pair.second.size()-1; i++) {
 
-                // Transform all positions for that body to screen space and create 'sequences'
+                    // Find how close this point and the next point are in screen space
+                    float distance = glm::distance(pair.second.at(i).position / SCALE_FACTOR, pair.second.at(i-1).position / SCALE_FACTOR);
+
+                    // If the points are close enough, interpolate them to create a new point in-between
+                    // We also don't increment i because we want to check if this newly created point is sufficiently close to the previous one
+                    if (distance > DISTANCE_THRESHOLD) {
+                        pair.second.insert(pair.second.begin() + i  , Simulation::Integrate(Bodies::GetMassiveBodies(), pair.first, pair.second.at(i).timeToNextPoint / 2.0, pair.second.at(i)));
+                        continue;
+                    }
+                }
+            }
+        }
+
+        auto TransformCoordinatesToScreenSpace(unordered_map<string, vector<OrbitPoint>> &unscaledOrbitPoints) -> unordered_map<string, vector<vec2>> {
+            // Transform all positions for that body to screen space and put them into a 'sequence'
+            unordered_map<string, vector<vec2>> positionMap;
+            for (const auto pair : unscaledOrbitPoints) {
+                vector<vec2> positions;
+                for (const OrbitPoint worldPositions : pair.second) {
+                    positions.push_back(Rays::WorldToScreen(worldPositions.position / SCALE_FACTOR));
+                }
+
+                // Add the sequence to the list of sequences, then add the list of sequences to the position map
+                positionMap.insert(std::make_pair(pair.first, positions));
+            }
+
+            return positionMap;
+        }
+
+        auto RemoveOffScreenCoordinates(unordered_map<string, vector<vec2>> &unscaledPositionMap) -> unordered_map<string, vector<vector<vec2>>> {
+            unordered_map<string, vector<vector<vec2>>> sequenceMap;
+            for (auto pair : unscaledPositionMap) {
+
                 // These sequences are series of points that need to be connected with a line
                 // Why not just a continuous set of points? Well, part the orbit may go off camera, meaning it would be split
                 // in two and we'd need to render two separate segments
                 vector<vector<vec2>> bodyScreenPositions = vector<vector<vec2>>();
-                for (int i = 0; i < pair.second.size()-2;) {
+                for (int i = 1; i < pair.second.size()-2;) {
                     
-                    // If the coordinate is off camera, no reason to create a se
-                    if (Rays::IsCoordinateOffCamera(pair.second.at(i) / SCALE_FACTOR)) {
+                    // If the coordinate is off camera, no reason to create a sequence
+                    if (Rays::IsCoordinateOffCamera(pair.second.at(i))) {
                         i++;
                         continue;
                     }
@@ -47,25 +84,32 @@ namespace OrbitPaths {
                     // Okay, we just found a coordinate that's on camera, let's start creating a sequence
                     vector<vec2> sequence;
 
+                    // Add start of sequence - the first node might be on screen, so it'll look like the sequence
+                    // starts on-screen even if it may start off-screen in actuality
+                    sequence.push_back(pair.second.at(i-1));
+
                     // Keep adding points to the sequence until the point is off-camera
-                    while ((i < pair.second.size()-2) && (!Rays::IsCoordinateOffCamera(pair.second.at(i) / SCALE_FACTOR))) {
-                        sequence.push_back(Rays::WorldToScreen(pair.second.at(i) / SCALE_FACTOR));
+                    //  
+                    while ((i < pair.second.size()-2) && (!Rays::IsCoordinateOffCamera(pair.second.at(i)))) {
+                        sequence.push_back(pair.second.at(i));
                         i++;
                     }
 
                     // Now close off the sequence by adding the next point
                     // This is done to make sure that lines actually appear to go off-screen, rather than
                     // just terminating near the end of the screen
-                    sequence.push_back(pair.second.at(i+1));
+                    sequence.push_back(pair.second.at(i));
 
                     // All done
                     bodyScreenPositions.push_back(sequence);
+                    i++;
                 }
 
                 // Assign the final vector to the body ID in the map
-                screenPositions.insert(std::make_pair(pair.first, bodyScreenPositions));
+                sequenceMap.insert(std::make_pair(pair.first, bodyScreenPositions));
             }
-            return screenPositions;
+
+            return sequenceMap;
         }
 
         auto AddVertex(vector<VERTEX_DATA_TYPE> &vertices, const vec2 position, const vec3 color) -> void {
@@ -105,40 +149,17 @@ namespace OrbitPaths {
 
     auto Update() -> void {
         // Find positions that each body will be in the future
-        unordered_map<string, vector<dvec3>> worldPositions = Bodies::GetPositions();
-
-        // Transform the positions into screen space, this is much more efficient and easier to work with
-        unordered_map<string, vector<vector<vec2>>> screenPositions = TransformCoordinatesToScreenSpace(worldPositions);
-
-        // Remove positions outside of the screen
-        //unordered_map<string, vector<vector<vec2>>> screenPositions1;
-        //for (const auto &pair : screenPositions) {
-        //    int i = 0;
-        //    while (i < pair.second.size()-2) {
-        //        vector<vec2> positionSequence;
-        //        while (
-        //            (pair.second.at(i+1).x > -1) && (pair.second.at(i+1).x < 1) && 
-        //            (pair.second.at(i+1).y > -1) && (pair.second.at(i+1).x < 1) &&
-        //            (i < pair.second.size()-2)) {
-        //                Log(INFO, "bruh" + std::to_string(i));
-        //            positionSequence.push_back(pair.second.at(i));
-        //            i++;
-        //        }
-        //        if (i < pair.second.size()) {
-        //            positionSequence.push_back(pair.second.at(i+1));
-        //        }
-        //    }
-        //}
-        //Log(INFO, "bro");
-
-        // Remove positions occluded by massive bodies
+        unordered_map<string, vector<OrbitPoint>> unscaledPositionMap = Bodies::GetPositions();
+        unordered_map<string, vector<vec2>> positionMap = TransformCoordinatesToScreenSpace(unscaledPositionMap);
+        unordered_map<string, vector<vector<vec2>>> sequenceMap = RemoveOffScreenCoordinates(positionMap);
 
         // Interpolate points that are too far apart
+        //InterpolatePoints(points);
 
         // Now we have a list of sequences, let's draw them
         // Iterate through every body
         vector<VERTEX_DATA_TYPE> vertices;
-        for (const auto &pair : screenPositions) {
+        for (const auto &pair : sequenceMap) {
             
             // Iterate through every sequence for the corresponding body
             for (const auto &sequence : pair.second) {
@@ -159,16 +180,35 @@ namespace OrbitPaths {
                 vec2 v4 = sequence[0];
 
                 // Loop through everything in the sequence, starting one element late and terminating one element early
-                for (int i = 1; i < sequence.size()-1; i++) {
+                for (int i = 0; i < sequence.size(); i++) {
 
                     // Set first pair of vertices to be the vertices from the previous node
                     v1 = v3;
                     v2 = v4;
 
+                    vec2 direction;
+
+                    // If there's both a previous and next node, find the direction to each of them, and then average it
+                    if ((i != 0) && (i != (sequence.size() - 1))) {
+                        vec2 unitVectorToPrevious = glm::normalize(sequence[i] - sequence[i-1]);
+                        vec2 unitVectorToNext = glm::normalize(sequence[i] - sequence[i+1]);
+                        direction = glm::normalize((unitVectorToPrevious + unitVectorToNext) / 2.0F);
+                    }
+
+                    // If there's a next node but no previous node, find the perpendicular direction of the vector
+                    // from the current node to the next node by swapping the x and y of said vector
+                    else if (i == 0) {
+                        vec2 unitVectorToNext = glm::normalize(sequence[i] - sequence[i+1]);
+                        direction = vec2(unitVectorToNext.y, unitVectorToNext.x);
+                    }
+
+                    // And the same for if there's a previous node but no next node
+                    else if (i == (sequence.size() - 1)) {
+                        vec2 unitVectorToPrevious = glm::normalize(sequence[i] - sequence[i-1]);
+                        direction = vec2(unitVectorToPrevious.y, unitVectorToPrevious.x);
+                    }
+
                     // Compute new vertices
-                    vec2 unitVectorToPrevious = glm::normalize(sequence[i] - sequence[i-1]);
-                    vec2 unitVectorToNext = glm::normalize(sequence[i] - sequence[i+1]);
-                    vec2 direction = glm::normalize((unitVectorToPrevious + unitVectorToNext) / 2.0F);
                     v3 = sequence[i] + (direction * PATH_WIDTH);
                     v4 = sequence[i] - (direction * PATH_WIDTH);
 

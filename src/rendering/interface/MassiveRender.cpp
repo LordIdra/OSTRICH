@@ -12,7 +12,6 @@
 #include <util/Types.h>
 #include <input/Mouse.h>
 #include <input/Keys.h>
-#include <main/Materials.h>
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>

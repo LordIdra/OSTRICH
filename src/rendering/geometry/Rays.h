@@ -16,4 +16,5 @@ namespace Rays {
     auto RadiusOnScreen(const Massive &massive) -> double;
 
     auto IsCoordinateOffCamera(const vec3 &coordinate) -> bool;
+    auto IsCoordinateOffCamera(const vec2 &coordinate) -> bool;
 }

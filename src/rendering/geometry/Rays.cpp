@@ -105,4 +105,8 @@ namespace Rays {
         double angle = acos(glm::dot(cameraDirection, coordinateDirection));
         return glm::degrees(angle) > FIELD_OF_VIEW;
     }
+
+    auto IsCoordinateOffCamera(const vec2 &coordinate) -> bool {
+        return (coordinate.x < -1) || (coordinate.x > 1) || (coordinate.y < -1) || (coordinate.y > 1);
+    }
 }

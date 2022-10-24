@@ -1,4 +1,5 @@
 #include "input/Keys.h"
+#include "main/OrbitPoint.h"
 #include "util/Constants.h"
 #include "util/Log.h"
 #include <GLFW/glfw3.h>
@@ -13,12 +14,12 @@
 namespace Simulation {
 
     namespace {
-        const double SPEED_MULTIPLIER = 5;
+        const double SPEED_MULTIPLIER = 2;
         const double MIN_SPEED = 1.0/10000;
         const double MAX_SPEED = 10000000;
 
         const double INITIAL_TIME_STEP_SIZE = 100.0;
-        const double INITIAL_TIME_STEPS_PER_FRAME = 1000;
+        const double INITIAL_TIME_STEPS_PER_FRAME = 100;
 
         double time_step_size = INITIAL_TIME_STEP_SIZE;
         double time_steps_per_frame = INITIAL_TIME_STEPS_PER_FRAME;
@@ -38,6 +39,29 @@ namespace Simulation {
             }
             time_step_size /= SPEED_MULTIPLIER;
         }
+
+        auto CalculateAcceleration(const unordered_map<string, Massive> &massive_bodies, const string &id, const dvec3 &bodyPosition) -> dvec3 {
+            // Loop through every body - we only need the massive bodies since massless bodies will have no effect on the body's acceleration
+            dvec3 acceleration = dvec3(0, 0, 0);
+            for (const auto &pair : massive_bodies) {
+
+                // Check that the massive body is not the target body
+                // If this was the case, we would be trying to apply the body's gravitational force to itself...
+                if (pair.second.GetId() == id) {
+                    continue;
+                }
+
+                // Calculate force that the massive object is enacting on the body using Newton's Universal Law of Gravitation
+                // and add the force to the total force vector
+                dvec3 displacement = bodyPosition - pair.second.GetPosition();
+                dvec3 direction = glm::normalize(displacement);
+                double distance = glm::length(displacement);
+                double accelerationScalar = (GRAVITATIONAL_CONSTANT * pair.second.GetMass()) / glm::pow(distance, 2);
+                acceleration -= direction * accelerationScalar;
+            }
+
+            return acceleration;
+        }
     }
 
     auto Init() -> void {
@@ -45,43 +69,32 @@ namespace Simulation {
         Keys::BindFunctionToKeyPress(GLFW_KEY_PERIOD, IncreaseSimulationSpeed);
     }
 
-    auto Integrate(const unordered_map<string, Massive> &massive_bodies, Body &body) -> void {
-        // Loop through every body - we only need the massive bodies since massless bodies will have no effect on the body's acceleration
-        dvec3 acceleration = dvec3(0, 0, 0);
-        for (const auto &pair : massive_bodies) {
+    auto Integrate(const unordered_map<string, Massive> &massiveBodies, const string &id, const double time_step, const OrbitPoint &point) -> OrbitPoint {
+        dvec3 acceleration = CalculateAcceleration(massiveBodies, id, point.position);
+        OrbitPoint newPoint = point;
+        newPoint.velocity += acceleration * time_step;
+        newPoint.position += point.velocity * time_step;
+        return point;
+    }
 
-            // Check that the massive body is not the target body
-            // If this was the case, we would be trying to apply the body's gravitational force to itself...
-            if (pair.second.GetId() == body.GetId()) {
-                continue;
-            }
-
-            // Calculate force that the massive object is enacting on the body using Newton's Universal Law of Gravitation
-            // and add the force to the total force vector
-            dvec3 displacement = body.GetPosition() - pair.second.GetPosition();
-            dvec3 direction = glm::normalize(displacement);
-            double distance = glm::length(displacement);
-            double accelerationScalar = (GRAVITATIONAL_CONSTANT * pair.second.GetMass()) / glm::pow(distance, 2);
-            acceleration -= direction * accelerationScalar;
-        }
-
-        // Apply acceleration to velocity
+    auto Integrate(const unordered_map<string, Massive> &massiveBodies, Body &body) -> void {
+        dvec3 acceleration = CalculateAcceleration(massiveBodies, body.GetId(), body.GetPosition());
         body.AddVelocity(acceleration * time_step_size);
         body.AddPosition(body.GetVelocity() * time_step_size);
     }
 
-    auto Integrate(unordered_map<string, Massive> massiveBodies, unordered_map<string, Massless> masslessBodies) -> unordered_map<string, vector<dvec3>> {
-        unordered_map<string, vector<dvec3>> positions;
+    auto Integrate(unordered_map<string, Massive> massiveBodies, unordered_map<string, Massless> masslessBodies) -> unordered_map<string, vector<OrbitPoint>> {
+        unordered_map<string, vector<OrbitPoint>> points;
 
         // Fill the map with keys that correspond to all massive and massless bodies
         // Massive
         for (const auto &pair : massiveBodies) {
-            positions.insert(std::make_pair(pair.first, vector<dvec3>()));
+            points.insert(std::make_pair(pair.first, vector<OrbitPoint>()));
         }
 
         // Massless
         for (const auto &pair : masslessBodies) {
-            positions.insert(std::make_pair(pair.first, vector<dvec3>()));
+            points.insert(std::make_pair(pair.first, vector<OrbitPoint>()));
         }
 
         // Integrate for all bodies and add positions
@@ -89,18 +102,24 @@ namespace Simulation {
 
             // Massive
             for (auto &pair : massiveBodies) {
-                positions.at(pair.first).push_back(pair.second.GetPosition());
+                points.at(pair.first).push_back(OrbitPoint{
+                        .position=pair.second.GetPosition(), 
+                        .velocity=pair.second.GetVelocity(),
+                        .timeToNextPoint=time_step_size});
                 Integrate(massiveBodies, pair.second);
             }
 
             // Massless
             for (auto &pair : masslessBodies) {
-                positions.at(pair.first).push_back(pair.second.GetPosition());
+                points.at(pair.first).push_back(OrbitPoint{
+                    .position=pair.second.GetPosition(), 
+                    .velocity=pair.second.GetVelocity(),
+                    .timeToNextPoint=time_step_size});
                 Integrate(massiveBodies, pair.second);
             }
         }
 
-        return positions;
+        return points;
     }
 
     auto SetTimeStepSize(const double size) -> void {

@@ -6,7 +6,6 @@
 #include <bodies/Body.h>
 #include <bodies/Massive.h>
 #include <bodies/Massless.h>
-#include <glm/gtx/string_cast.hpp>
 #include <rendering/camera/Camera.h>
 #include <rendering/geometry/Rays.h>
 #include <rendering/shaders/Program.h>
@@ -14,8 +13,8 @@
 #include <input/Keys.h>
 #include <input/Mouse.h>
 #include <rendering/interface/MassiveRender.h>
-#include <main/Materials.h>
-#include <unordered_map>
+#include <main/OrbitPoint.h>
+
 
 
 
@@ -25,7 +24,7 @@ namespace Bodies {
         unordered_map<string, Massive> massiveBodies;
         unordered_map<string, Massless> masslessBodies;
 
-        unordered_map<string, vector<dvec3>> positions;
+        unordered_map<string, vector<OrbitPoint>> points;
 
         BodyType selectedType = NONE;
         string selected = "";
@@ -70,7 +69,7 @@ namespace Bodies {
 
     auto Update() -> void {
         // Integrate to get the future positions of all bodies
-        positions = Simulation::Integrate(massiveBodies, masslessBodies);
+        points = Simulation::Integrate(massiveBodies, masslessBodies);
 
         // Update transition target,so that the camera follows the target
         if (selectedType == MASSIVE) {
@@ -142,7 +141,7 @@ namespace Bodies {
         }
     }
 
-    auto GetPositions() -> unordered_map<string, vector<dvec3>> {
-        return positions;
+    auto GetPositions() -> unordered_map<string, vector<OrbitPoint>> {
+        return points;
     }
 }
