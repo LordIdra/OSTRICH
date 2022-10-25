@@ -82,7 +82,7 @@ namespace OrbitPaths {
                 // Why not just a continuous set of points? Well, part the orbit may go off camera, meaning it would be split
                 // in two and we'd need to render two separate segments
                 vector<vector<vec2>> bodyScreenPositions = vector<vector<vec2>>();
-                for (int i = 1; i < pair.second.size()-2;) {
+                for (int i = 1; i < pair.second.size()-1;) {
                     
                     // If the coordinate is off camera, no reason to create a sequence
                     if (Rays::IsCoordinateOffCamera(pair.second.at(i))) {
@@ -98,7 +98,7 @@ namespace OrbitPaths {
                     sequence.push_back(pair.second.at(i-1));
 
                     // Keep adding points to the sequence until the point is off-camera
-                    while ((i < pair.second.size()-2) && (!Rays::IsCoordinateOffCamera(pair.second.at(i)))) {
+                    while ((i < pair.second.size()-1) && (!Rays::IsCoordinateOffCamera(pair.second.at(i)))) {
                         sequence.push_back(pair.second.at(i));
                         i++;
                     }

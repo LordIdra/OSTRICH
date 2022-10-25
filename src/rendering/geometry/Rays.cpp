@@ -112,7 +112,7 @@ namespace Rays {
         vec3 cameraDirection = glm::normalize(Camera::GetPosition() - Camera::GetTarget());
         vec3 coordinateDirection = glm::normalize(Camera::GetPosition() - coordinate);
         double angle = acos(glm::dot(cameraDirection, coordinateDirection));
-        return glm::degrees(angle) > FIELD_OF_VIEW;
+        return glm::degrees(angle) > 80.0;
     }
 
     auto IsCoordinateOffCamera(const vec2 &coordinate) -> bool {

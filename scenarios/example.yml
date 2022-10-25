@@ -19,4 +19,4 @@ massless:
     name: "Spacecraft"
     color: [0.1, 0.9, 0.3]
     position: [-1.4055e+9, 0, 0]
-    velocity: [0, 0, -0.570e+3]
+    velocity: [-0.270e+3, 0.170e+3, -0.470e+3]
