@@ -10,6 +10,7 @@
 #include <memory>
 #include <rendering/shaders/Program.h>
 #include <rendering/geometry/Rays.h>
+#include <string>
 #include <unordered_map>
 #include <util/Types.h>
 #include <main/Bodies.h>
@@ -49,58 +50,54 @@ namespace OrbitPaths {
             }
         }
 
-        auto TransformCoordinatesToScreenSpace(unordered_map<string, vector<OrbitPoint>> &unscaledOrbitPoints) -> unordered_map<string, vector<vec2>> {
-            // Transform all positions for that body to screen space and put them into a 'sequence'
-            unordered_map<string, vector<vec2>> positionMap;
-            for (const auto pair : unscaledOrbitPoints) {
-                vector<vec2> positions;
-                for (const OrbitPoint worldPositions : pair.second) {
-
-                    // Check that the coordinate isn't actually BEHIND the camera
-                    // If we don't check this now, weird stuff will happen when we attempt
-                    // to map the coordinate to screen space, and it may actually end up on-screen in an unintended way
-                    if (!Rays::IsCoordinateOffCamera(Rays::Scale(worldPositions.position))) {
-                        positions.push_back(Rays::WorldToScreen(Rays::Scale(worldPositions.position)));
-                    }
-                }
-
-                // Add the sequence to the list of sequences, then add the list of sequences to the position map
-                // If the sequence can't be drawn (ie: less than 2 points can be drawn the camera), no need to add it
-                if (positions.size() >= 2) {
-                    positionMap.insert(std::make_pair(pair.first, positions));
-                }
-            }
-
-            return positionMap;
-        }
-
-        auto RemoveOffScreenCoordinates(unordered_map<string, vector<vec2>> &unscaledPositionMap) -> unordered_map<string, vector<vector<vec2>>> {
-            unordered_map<string, vector<vector<vec2>>> sequenceMap;
-            for (auto pair : unscaledPositionMap) {
+        auto ConvertToSequences(unordered_map<string, vector<OrbitPoint>> &unscaledOrbitPoints) -> unordered_map<string, vector<vector<OrbitPoint>>> {
+            unordered_map<string, vector<vector<OrbitPoint>>> sequenceMap;
+            for (auto pair : unscaledOrbitPoints) {
 
                 // These sequences are series of points that need to be connected with a line
                 // Why not just a continuous set of points? Well, part the orbit may go off camera, meaning it would be split
                 // in two and we'd need to render two separate segments
-                vector<vector<vec2>> bodyScreenPositions = vector<vector<vec2>>();
-                for (int i = 1; i < pair.second.size()-1;) {
+                vector<vector<OrbitPoint>> bodyScreenPositions = vector<vector<OrbitPoint>>();
+                for (int i = 0; i < pair.second.size()-1;) {
                     
                     // If the coordinate is off camera, no reason to create a sequence
-                    if (Rays::IsCoordinateOffCamera(pair.second.at(i))) {
+                    // Note that here we do checks. One check takes a vec3 and makes sure that the coordinate isn't actually BEHIND the camera
+                    // The second check takes a vec2 and makes sure it isn't off-screen
+                    vec3 scaledCoordinate = Rays::Scale(pair.second.at(i).position);
+                    bool isCoordinateBehindCamera = Rays::IsCoordinateOffCamera(scaledCoordinate);
+                    bool isCoordinateOffScreen = Rays::IsCoordinateOffCamera(Rays::WorldToScreen(scaledCoordinate));
+                    if (isCoordinateOffScreen || isCoordinateBehindCamera) {
                         i++;
                         continue;
                     }
 
+                    // The current index points to an on-screen node
+                    // We want to start off-screen so that the sequence doesn't terminate on-screen
+                    // Of course, if the index is 0, we can't decrement
+                    if (i != 0) {
+                        i--;
+                    }
+
                     // Okay, we just found a coordinate that's on camera, let's start creating a sequence
-                    vector<vec2> sequence;
+                    vector<OrbitPoint> sequence;
 
                     // Add start of sequence - the first node might be on screen, so it'll look like the sequence
                     // starts on-screen even if it may start off-screen in actuality
-                    sequence.push_back(pair.second.at(i-1));
+                    //sequence.push_back(pair.second.at(i-1));
 
                     // Keep adding points to the sequence until the point is off-camera
-                    while ((i < pair.second.size()-1) && (!Rays::IsCoordinateOffCamera(pair.second.at(i)))) {
+                    while (i < pair.second.size()-1) {
                         sequence.push_back(pair.second.at(i));
                         i++;
+                        
+                        // Note that here we do checks. One check takes a vec3 and makes sure that the coordinate isn't actually BEHIND the camera
+                        // The second check takes a vec2 and makes sure it isn't off-screen
+                        vec3 scaledCoordinate = Rays::Scale(pair.second.at(i).position);
+                        bool isCoordinateBehindCamera = Rays::IsCoordinateOffCamera(scaledCoordinate);
+                        bool isCoordinateOffScreen = Rays::IsCoordinateOffCamera(Rays::WorldToScreen(scaledCoordinate));
+                        if (isCoordinateOffScreen || isCoordinateBehindCamera) {
+                            break;
+                        }
                     }
 
                     // Now close off the sequence by adding the next point
@@ -118,6 +115,31 @@ namespace OrbitPaths {
             }
 
             return sequenceMap;
+        }
+
+        auto TransformSequencesToScreen(unordered_map<string, vector<vector<OrbitPoint>>> &worldSequenceMap) -> unordered_map<string, vector<vector<vec2>>> {
+            unordered_map<string, vector<vector<vec2>>> screenSequenceMap;
+
+            // For every body
+            for (auto &pair : worldSequenceMap) {
+                vector<vector<vec2>> newSequenceVector;
+
+                // For every sequence associated with that body
+                for (vector<OrbitPoint> &oldSequenceVector : pair.second) {
+                    vector<vec2> newSequence;
+
+                    // For every point on that sequence
+                    for (OrbitPoint &oldPoint : oldSequenceVector) {
+                        newSequence.push_back(Rays::WorldToScreen(Rays::Scale(oldPoint.position)));
+                    }
+
+                    newSequenceVector.push_back(newSequence);
+                }
+
+                screenSequenceMap.insert(std::make_pair(pair.first, newSequenceVector));
+            }
+
+            return screenSequenceMap;
         }
 
         auto AddVertex(vector<VERTEX_DATA_TYPE> &vertices, const vec2 position, const vec3 color) -> void {
@@ -156,18 +178,15 @@ namespace OrbitPaths {
     }
 
     auto Update() -> void {
-        // Find positions that each body will be in the future
         unordered_map<string, vector<OrbitPoint>> unscaledPositionMap = Bodies::GetPositions();
-        unordered_map<string, vector<vec2>> positionMap = TransformCoordinatesToScreenSpace(unscaledPositionMap);
-        unordered_map<string, vector<vector<vec2>>> sequenceMap = RemoveOffScreenCoordinates(positionMap);
-
-        // Interpolate points that are too far apart
-        //InterpolatePoints(points);
+        unordered_map<string, vector<vector<OrbitPoint>>> worldSequenceMap = ConvertToSequences(unscaledPositionMap);
+        //InterpolatePoints(worldSequenceMap);
+        unordered_map<string, vector<vector<vec2>>> screenSequenceMap = TransformSequencesToScreen(worldSequenceMap);
 
         // Now we have a list of sequences, let's draw them
         // Iterate through every body
         vector<VERTEX_DATA_TYPE> vertices;
-        for (const auto &pair : sequenceMap) {
+        for (const auto &pair : screenSequenceMap) {
             
             // Iterate through every sequence for the corresponding body
             for (const auto &sequence : pair.second) {

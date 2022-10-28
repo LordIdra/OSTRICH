@@ -19,7 +19,7 @@ namespace Simulation {
         const double MAX_SPEED = 10000000;
 
         const double INITIAL_TIME_STEP_SIZE = 100.0;
-        const double INITIAL_TIME_STEPS_PER_FRAME = 10000;
+        const double INITIAL_TIME_STEPS_PER_FRAME = 1000;
 
         double time_step_size = INITIAL_TIME_STEP_SIZE;
         double time_steps_per_frame = INITIAL_TIME_STEPS_PER_FRAME;

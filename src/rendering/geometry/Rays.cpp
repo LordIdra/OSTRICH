@@ -51,14 +51,11 @@ namespace Rays {
     }
 
     auto WorldToScreen(const vec3 coords) -> vec2 {
-        // Get model matrix
-        mat4 modelMatrix = glm::translate(mat4(1.0), coords);
-
         // Transform from world space to eye space
-        vec4 coords2 = Camera::GetMatrix() * modelMatrix * vec4(0, 0, 0, 1);
+        vec4 coords2 = Camera::GetMatrix() * vec4(coords, 1);
 
         // Rasterize 3D coordinates to screen
-        vec2 coords3 = vec2(coords2.x / coords2.z, coords2.y / coords2.z);
+        vec2 coords3 = vec2(coords2.x / coords2.w, coords2.y / coords2.w);
 
         return coords3;
     }
@@ -112,7 +109,7 @@ namespace Rays {
         vec3 cameraDirection = glm::normalize(Camera::GetPosition() - Camera::GetTarget());
         vec3 coordinateDirection = glm::normalize(Camera::GetPosition() - coordinate);
         double angle = acos(glm::dot(cameraDirection, coordinateDirection));
-        return glm::degrees(angle) > 80.0;
+        return (glm::degrees(angle) > 90) || (glm::degrees(angle) < -90);
     }
 
     auto IsCoordinateOffCamera(const vec2 &coordinate) -> bool {
