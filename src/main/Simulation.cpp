@@ -74,7 +74,7 @@ namespace Simulation {
         OrbitPoint newPoint = point;
         newPoint.velocity += acceleration * time_step;
         newPoint.position += point.velocity * time_step;
-        return point;
+        return newPoint;
     }
 
     auto Integrate(const unordered_map<string, Massive> &massiveBodies, Body &body) -> void {

@@ -26,9 +26,9 @@ namespace OrbitPaths {
     namespace {
 
         const int STRIDE = 5;
-        const float PATH_WIDTH = 0.001;
+        const float PATH_WIDTH = 0.005;
         const vec3 PATH_COLOR = vec3(0.0, 0.0, 0.9);
-        const float DISTANCE_THRESHOLD = 0.05;
+        const float DISTANCE_THRESHOLD = 0.01;
 
         unique_ptr<VAO> vao;
         unique_ptr<Program> program;
@@ -117,6 +117,32 @@ namespace OrbitPaths {
             return sequenceMap;
         }
 
+        auto InterpolateSequences(unordered_map<string, vector<vector<OrbitPoint>>> &sequences) -> void {
+            for (auto &pair : sequences) {
+                for (auto &sequence : pair.second) {
+                    for (int i = 0; i < sequence.size()-1; i++) {
+
+                        // Find how close this point and the previous point are in screen space
+                        float distance = glm::distance(Rays::WorldToScreen(sequence.at(i).position / SCALE_FACTOR), Rays::WorldToScreen(sequence.at(i+1).position / SCALE_FACTOR));
+
+                        // If the points are close enough, interpolate them to create a new point in-between
+                        if (distance > DISTANCE_THRESHOLD) {
+                            Log(INFO, glm::to_string(Rays::WorldToScreen(sequence.at(i+1).position / SCALE_FACTOR)));
+                            OrbitPoint newPoint = Simulation::Integrate(Bodies::GetMassiveBodies(), pair.first, sequence.at(i).timeToNextPoint / 2.0, sequence.at(i));
+                            sequence.insert(sequence.begin() + i + 1, newPoint);
+
+                            // Both the new and old OrbitPoints now have half the time to the next point
+                            sequence.at(i).timeToNextPoint /= 2;
+                            sequence.at(i+1).timeToNextPoint /= 2;
+
+                            // We keep i the same because we want to check if this newly created point is sufficiently close to the previous one
+                            i--;
+                        }
+                    }
+                }
+            }
+        }
+
         auto TransformSequencesToScreen(unordered_map<string, vector<vector<OrbitPoint>>> &worldSequenceMap) -> unordered_map<string, vector<vector<vec2>>> {
             unordered_map<string, vector<vector<vec2>>> screenSequenceMap;
 
@@ -180,7 +206,7 @@ namespace OrbitPaths {
     auto Update() -> void {
         unordered_map<string, vector<OrbitPoint>> unscaledPositionMap = Bodies::GetPositions();
         unordered_map<string, vector<vector<OrbitPoint>>> worldSequenceMap = ConvertToSequences(unscaledPositionMap);
-        //InterpolatePoints(worldSequenceMap);
+        InterpolateSequences(worldSequenceMap);
         unordered_map<string, vector<vector<vec2>>> screenSequenceMap = TransformSequencesToScreen(worldSequenceMap);
 
         // Now we have a list of sequences, let's draw them
@@ -233,6 +259,14 @@ namespace OrbitPaths {
                     else if (i == (sequence.size() - 1)) {
                         vec2 unitVectorToPrevious = glm::normalize(sequence[i] - sequence[i-1]);
                         direction = vec2(unitVectorToPrevious.y, unitVectorToPrevious.x);
+                    }
+
+                    // Make sure the direction is in the positive Y quadrant
+                    // If we don't do this, the order of v3 and v4 may be swapped relative to other nodes
+                    // which may cause the triangles to render improperly
+                    if (direction.y < 0) {
+                        direction.x = -direction.x;
+                        direction.y = -direction.y;
                     }
 
                     // Compute new vertices
