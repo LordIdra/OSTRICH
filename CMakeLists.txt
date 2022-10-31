@@ -38,8 +38,8 @@ set(FILES
 )
 
 # Enable clang tidy checks
-#find_program(CCACHE ccache)
-#set(CMAKE_CXX_CLANG_TIDY clang-tidy -checks=bugprone-*,clang-analyzer-*,concurrency-*,cppcoreguidelines-*,misc-*,modernize-*,performance-*,portability-*,readability-*,-misc-unused-using-decls,-cppcoreguidelines-pro-type-union-access,-readability-implicit-bool-conversion,-readability-magic-numbers,-bugprone-narrowing-conversions,-modernize-pass-by-value)
+find_program(CCACHE ccache)
+set(CMAKE_CXX_CLANG_TIDY clang-tidy -checks=bugprone-*,clang-analyzer-*,concurrency-*,cppcoreguidelines-*,misc-*,modernize-*,performance-*,portability-*,readability-*,-misc-unused-using-decls,-cppcoreguidelines-pro-type-union-access,-readability-implicit-bool-conversion,-readability-magic-numbers,-bugprone-narrowing-conversions,-modernize-pass-by-value)
 
 set(CMAKE_TOOLCHAIN_FILE "~/vcpkg/scripts/buildsystems/vcpkg.cmake")
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
@@ -51,11 +51,10 @@ include("~/vcpkg/scripts/buildsystems/vcpkg.cmake")
 find_package(glad CONFIG REQUIRED)
 find_package(glfw3 CONFIG REQUIRED)
 find_package(glm CONFIG REQUIRED)
-find_package(Boost REQUIRED)
 find_package(imgui REQUIRED)
 find_package(yaml-cpp CONFIG REQUIRED)
 
 add_executable(${PROJECT_NAME} ${FILES} ${DEPEND_FILES})
 
 target_include_directories(${PROJECT_NAME} PRIVATE "src")
-target_link_libraries (${PROJECT_NAME} PRIVATE glad::glad glfw Boost::boost imgui::imgui yaml-cpp)
+target_link_libraries (${PROJECT_NAME} PRIVATE glad::glad glfw imgui::imgui yaml-cpp)

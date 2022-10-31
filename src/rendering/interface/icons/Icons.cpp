@@ -212,6 +212,6 @@ namespace Icons {
         unsigned int vertexCount = data.size() / STRIDE;
         vao->Data(data, vertexCount, GL_STATIC_DRAW);
         program->Use();
-        vao->Render();
+        vao->Render(GL_TRIANGLES);
     }
 }

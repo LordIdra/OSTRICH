@@ -21,10 +21,7 @@ namespace Interface {
         // This of course causes some issues where the paths draw on top of icons, bodies, and just everything really
         // By disabling depth test, we force OpenGL to ignore the fact that the orbit paths are closer than the
         // other interface elements
-        glDisable(GL_DEPTH_TEST);
         OrbitPaths::Update();
-        glEnable(GL_DEPTH_TEST);
-
         MassiveRender::Update(deltaTime);
         Icons::DrawIcons();
     }

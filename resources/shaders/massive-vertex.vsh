@@ -10,7 +10,7 @@ out vec3 fragmentNormal;
 
 
 void main() {
-    gl_Position = cameraMatrix * modelMatrix * vec4(position.x, position.y, position.z, 1.0);
+    gl_Position = cameraMatrix * modelMatrix * vec4(position, 1.0);
     fragmentPosition = position;
     fragmentNormal = vertexNormal;
 }

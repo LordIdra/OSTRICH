@@ -86,7 +86,7 @@ namespace MassiveRender {
             const Massive &body = Bodies::GetMassiveBody(pair.first);
             program->Set("modelMatrix", body.GetMatrix());
             program->Set("material", body.GetMaterial());
-            vao.Render();
+            vao.Render(GL_TRIANGLES);
         }
     }
 

@@ -15,29 +15,29 @@ namespace Simulation {
 
     namespace {
         const double SPEED_MULTIPLIER = 2;
-        const double MIN_SPEED = 1.0/10000;
-        const double MAX_SPEED = 10000000;
+        const double MIN_SPEED = 1;
+        const double MAX_SPEED = 1000000;
 
-        const double INITIAL_TIME_STEP_SIZE = 100.0;
-        const double INITIAL_TIME_STEPS_PER_FRAME = 1000;
+        const double INITIAL_TIME_STEP_SIZE = 1000.0;
+        const double INITIAL_TIME_STEPS_PER_FRAME = 1;
 
         double time_step_size = INITIAL_TIME_STEP_SIZE;
         double time_steps_per_frame = INITIAL_TIME_STEPS_PER_FRAME;
 
         auto IncreaseSimulationSpeed() -> void {
             // Check that this action won't increase the simulation speed above the maximum speed
-            if ((time_step_size * SPEED_MULTIPLIER) > MAX_SPEED) {
+            if ((time_steps_per_frame * SPEED_MULTIPLIER) > MAX_SPEED) {
                 return;
             }
-            time_step_size *= SPEED_MULTIPLIER;
+            time_steps_per_frame *= SPEED_MULTIPLIER;
         }
 
         auto DecreaseSimulationSpeed() -> void {
             // Check that this action won't decrease the simulation speed below the minimum speed
-            if ((time_step_size / SPEED_MULTIPLIER) < MIN_SPEED) {
+            if ((time_steps_per_frame / SPEED_MULTIPLIER) < MIN_SPEED) {
                 return;
             }
-            time_step_size /= SPEED_MULTIPLIER;
+            time_steps_per_frame /= SPEED_MULTIPLIER;
         }
 
         auto CalculateAcceleration(const unordered_map<string, Massive> &massive_bodies, const string &id, const dvec3 &bodyPosition) -> dvec3 {

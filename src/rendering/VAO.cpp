@@ -48,8 +48,8 @@ auto VAO::Data(const vector<VERTEX_DATA_TYPE> &data, unsigned int vertexCount, u
     this->vertexCount = vertexCount;
 }
 
-auto VAO::Render() const -> void {
+auto VAO::Render(unsigned int geometryType) const -> void {
     Bind();
-    glDrawArrays(GL_TRIANGLES, 0, vertexCount);
+    glDrawArrays(geometryType, 0, vertexCount);
     Unbind();
 }

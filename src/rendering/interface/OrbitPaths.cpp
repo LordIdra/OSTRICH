@@ -10,6 +10,7 @@
 #include <memory>
 #include <rendering/shaders/Program.h>
 #include <rendering/geometry/Rays.h>
+#include <rendering/camera/Camera.h>
 #include <string>
 #include <unordered_map>
 #include <util/Types.h>
@@ -25,7 +26,7 @@ namespace OrbitPaths {
 
     namespace {
 
-        const int STRIDE = 5;
+        const int STRIDE = 6;
         const float PATH_WIDTH = 0.005;
         const vec3 PATH_COLOR = vec3(0.0, 0.0, 0.9);
         const float DISTANCE_THRESHOLD = 0.01;
@@ -143,34 +144,28 @@ namespace OrbitPaths {
             }
         }
 
-        auto TransformSequencesToScreen(unordered_map<string, vector<vector<OrbitPoint>>> &worldSequenceMap) -> unordered_map<string, vector<vector<vec2>>> {
-            unordered_map<string, vector<vector<vec2>>> screenSequenceMap;
+        auto TransformSequencesToScreen(unordered_map<string, vector<OrbitPoint>> &unscaledPointMap) -> unordered_map<string, vector<vec3>> {
+            unordered_map<string, vector<vec3>> worldPositionMap;
 
             // For every body
-            for (auto &pair : worldSequenceMap) {
-                vector<vector<vec2>> newSequenceVector;
+            for (auto &pair : unscaledPointMap) {
+                vector<vec3> newPositionVector;
 
                 // For every sequence associated with that body
-                for (vector<OrbitPoint> &oldSequenceVector : pair.second) {
-                    vector<vec2> newSequence;
-
-                    // For every point on that sequence
-                    for (OrbitPoint &oldPoint : oldSequenceVector) {
-                        newSequence.push_back(Rays::WorldToScreen(Rays::Scale(oldPoint.position)));
-                    }
-
-                    newSequenceVector.push_back(newSequence);
+                for (OrbitPoint &point : pair.second) {
+                    newPositionVector.push_back(Rays::Scale(point.position));
                 }
 
-                screenSequenceMap.insert(std::make_pair(pair.first, newSequenceVector));
+                worldPositionMap.insert(std::make_pair(pair.first, newPositionVector));
             }
 
-            return screenSequenceMap;
+            return worldPositionMap;
         }
 
-        auto AddVertex(vector<VERTEX_DATA_TYPE> &vertices, const vec2 position, const vec3 color) -> void {
+        auto AddVertex(vector<VERTEX_DATA_TYPE> &vertices, const vec3 position, const vec3 color) -> void {
             vertices.push_back(position.x);
             vertices.push_back(position.y);
+            vertices.push_back(position.z);
             vertices.push_back(color.x);
             vertices.push_back(color.y);
             vertices.push_back(color.z);
@@ -189,7 +184,7 @@ namespace OrbitPaths {
         vao->AddVertexAttribute(
             VertexAttribute{
             .index = 0,
-            .size = 2,
+            .size = 3,
             .type = GL_FLOAT,
             .normalised = GL_FALSE,
             .stride = STRIDE * sizeof(float),
@@ -200,96 +195,32 @@ namespace OrbitPaths {
             .type = GL_FLOAT,
             .normalised = GL_FALSE,
             .stride = STRIDE * sizeof(float),
-            .offset = (void*)(2 * sizeof(float))}); // NOLINT(cppcoreguidelines-pro-type-cstyle-cast)
+            .offset = (void*)(3 * sizeof(float))}); // NOLINT(cppcoreguidelines-pro-type-cstyle-cast)
     }
 
     auto Update() -> void {
-        unordered_map<string, vector<OrbitPoint>> unscaledPositionMap = Bodies::GetPositions();
-        unordered_map<string, vector<vector<OrbitPoint>>> worldSequenceMap = ConvertToSequences(unscaledPositionMap);
-        InterpolateSequences(worldSequenceMap);
-        unordered_map<string, vector<vector<vec2>>> screenSequenceMap = TransformSequencesToScreen(worldSequenceMap);
+        unordered_map<string, vector<OrbitPoint>> unscaledPointMap = Bodies::GetPositions();
+        unordered_map<string, vector<vec3>> worldPositionMap = TransformSequencesToScreen(unscaledPointMap);
 
         // Now we have a list of sequences, let's draw them
         // Iterate through every body
-        vector<VERTEX_DATA_TYPE> vertices;
-        for (const auto &pair : screenSequenceMap) {
+        for (const auto &pair : worldPositionMap) {
+            vector<VERTEX_DATA_TYPE> vertices;
+
+            // Use color of the body for color of orbit path
+            vec3 color = Bodies::GetBody(pair.first).GetColor();
             
             // Iterate through every sequence for the corresponding body
-            for (const auto &sequence : pair.second) {
+            for (const vec3 &position : pair.second) {
 
-                // This would cause a segmentation fault, we need at least 2 points to draw a sequence
-                // due to how we use the previous and next nodes to figure out the vertices for a node
-                if (sequence.size() < 2) {
-                    continue;
-                }
-
-                // Initialise vertices
-                // v1/v2 are set in the loop body, v3/v4 can be set to the position of the node
-                // Yes this creates a triangle instead of a quadrilateral, but A) the initial point is likely to be
-                // hidden, and B) the paths are so thin that it's practically impossible to notice this
-                vec2 v1;
-                vec2 v2;
-                vec2 v3 = sequence[0];
-                vec2 v4 = sequence[0];
-
-                // Loop through everything in the sequence, starting one element late and terminating one element early
-                for (int i = 0; i < sequence.size(); i++) {
-
-                    // Set first pair of vertices to be the vertices from the previous node
-                    v1 = v3;
-                    v2 = v4;
-
-                    vec2 direction;
-
-                    // If there's both a previous and next node, find the direction to each of them, and then average it
-                    if ((i != 0) && (i != (sequence.size() - 1))) {
-                        vec2 unitVectorToPrevious = glm::normalize(sequence[i] - sequence[i-1]);
-                        vec2 unitVectorToNext = glm::normalize(sequence[i] - sequence[i+1]);
-                        direction = glm::normalize((unitVectorToPrevious + unitVectorToNext) / 2.0F);
-                    }
-
-                    // If there's a next node but no previous node, find the perpendicular direction of the vector
-                    // from the current node to the next node by swapping the x and y of said vector
-                    else if (i == 0) {
-                        vec2 unitVectorToNext = glm::normalize(sequence[i] - sequence[i+1]);
-                        direction = vec2(unitVectorToNext.y, unitVectorToNext.x);
-                    }
-
-                    // And the same for if there's a previous node but no next node
-                    else if (i == (sequence.size() - 1)) {
-                        vec2 unitVectorToPrevious = glm::normalize(sequence[i] - sequence[i-1]);
-                        direction = vec2(unitVectorToPrevious.y, unitVectorToPrevious.x);
-                    }
-
-                    // Make sure the direction is in the positive Y quadrant
-                    // If we don't do this, the order of v3 and v4 may be swapped relative to other nodes
-                    // which may cause the triangles to render improperly
-                    if (direction.y < 0) {
-                        direction.x = -direction.x;
-                        direction.y = -direction.y;
-                    }
-
-                    // Compute new vertices
-                    v3 = sequence[i] + (direction * PATH_WIDTH);
-                    v4 = sequence[i] - (direction * PATH_WIDTH);
-
-                    // Use color of the body for color of orbit path
-                    vec3 color = Bodies::GetBody(pair.first).GetColor();
-
-                    // Add new vertices (two triangles to form a quadrilateral)
-                    AddVertex(vertices, v1, color);
-                    AddVertex(vertices, v2, color);
-                    AddVertex(vertices, v3, color);
-
-                    AddVertex(vertices, v2, color);
-                    AddVertex(vertices, v3, color);
-                    AddVertex(vertices, v4, color);
-                }
+                // Add new vertices (two triangles to form a quadrilateral)
+                AddVertex(vertices, position, color);
             }
-        }
 
-        program->Use();
-        vao->Data(vertices, vertices.size() / STRIDE, GL_DYNAMIC_DRAW);
-        vao->Render();
+            program->Use();
+            program->Set("cameraMatrix", Camera::GetMatrix());
+            vao->Data(vertices, vertices.size() / STRIDE, GL_DYNAMIC_DRAW);
+            vao->Render(GL_LINE_STRIP);
+        }
     }
 }

@@ -6,8 +6,6 @@
 
 #include <glm/glm.hpp>
 
-#include <boost/multiprecision/cpp_dec_float.hpp>
-
 
 
 typedef float ELEMENT_DATA_TYPE;
