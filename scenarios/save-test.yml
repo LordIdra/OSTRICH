@@ -32,6 +32,34 @@ massive:
       - 0
       - 0
   massless:
+    mr-boniface:
+      name: Mr Boniface
+      color:
+        - 0.100000001
+        - 0.899999976
+        - 0.899999976
+      position:
+        - 0
+        - 1.40550003e+09
+        - 1.40550003e+09
+      velocity:
+        - 27000
+        - -1700
+        - -1700
+    spacecraft-2:
+      name: Another Spacecraft
+      color:
+        - 0.100000001
+        - 0.899999976
+        - 0.899999976
+      position:
+        - 0
+        - 1.40550003e+09
+        - 1.40550003e+09
+      velocity:
+        - 270
+        - 190
+        - 190
     spacecraft:
       name: Spacecraft
       color:

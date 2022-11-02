@@ -12,7 +12,7 @@ massive:
     radius: 1737.4e+3
     mass: 0.07346e+24
     position: [1.4055e+9, 0, 0]
-    velocity: [0, 0, 0.570e+3]
+    velocity: [0, -1.0e+2, 0.570e+3]
   
 massless:
   spacecraft:
@@ -20,3 +20,13 @@ massless:
     color: [0.1, 0.9, 0.3]
     position: [-1.4055e+9, 0, 0]
     velocity: [-0.270e+3, 0.170e+3, -0.470e+3]
+  spacecraft-2:
+    name: "Another Spacecraft"
+    color: [0.9, 0.9, 0.3]
+    position: [0, 1.4055e+8, 0]
+    velocity: [0.270e+3, 0.190e+3, -0.170e+4]
+  mr-boniface:
+    name: "Mr Boniface"
+    color: [1.0, 0.0, 0.0]
+    position: [0, 1.4055e+9, 0]
+    velocity: [0.270e+5, -0.170e+4, 0]
