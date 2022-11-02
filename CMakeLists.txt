@@ -30,6 +30,7 @@ set(FILES
     "src/rendering/interface/icons/Icon.cpp"
     "src/rendering/interface/icons/Icons.cpp"
     "src/rendering/interface/OrbitPaths.cpp"
+    "src/rendering/interface/Explorer.cpp"
     "src/rendering/shaders/Program.cpp"
     "src/rendering/shaders/Shader.cpp"
     "src/rendering/shaders/Util.cpp"
@@ -38,8 +39,7 @@ set(FILES
 )
 
 # Enable clang tidy checks
-find_program(CCACHE ccache)
-set(CMAKE_CXX_CLANG_TIDY clang-tidy -checks=bugprone-*,clang-analyzer-*,concurrency-*,cppcoreguidelines-*,misc-*,modernize-*,performance-*,portability-*,readability-*,-misc-unused-using-decls,-cppcoreguidelines-pro-type-union-access,-readability-implicit-bool-conversion,-readability-magic-numbers,-bugprone-narrowing-conversions,-modernize-pass-by-value)
+set(CMAKE_CXX_CLANG_TIDY clang-tidy -checks=bugprone-*,clang-analyzer-*,concurrency-*,cppcoreguidelines-*,misc-*,modernize-*,performance-*,portability-*,readability-*,-misc-unused-using-decls,-cppcoreguidelines-pro-type-union-access,-readability-implicit-bool-conversion,-readability-magic-numbers,-bugprone-narrowing-conversions,-modernize-pass-by-value,-cppcoreguidelines-pro-type-vararg)
 
 set(CMAKE_TOOLCHAIN_FILE "~/vcpkg/scripts/buildsystems/vcpkg.cmake")
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)

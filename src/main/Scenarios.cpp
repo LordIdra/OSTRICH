@@ -110,6 +110,16 @@ namespace Scenarios {
             SetVec3(emitter, "velocity", body.GetVelocity());
             emitter << YAML::EndMap;
         }
+
+        auto SaveMassless(const string &id, YAML::Emitter &emitter, const Massless &body) -> void {
+            emitter << id;
+            emitter << YAML::BeginMap;
+            SetString(emitter, "name", body.GetName());
+            SetVec3(emitter, "color", body.GetColor());
+            SetVec3(emitter, "position", body.GetPosition());
+            SetVec3(emitter, "velocity", body.GetVelocity());
+            emitter << YAML::EndMap;
+        }
     }
 
     auto LoadScenario(const string &path) -> void{
@@ -172,10 +182,10 @@ namespace Scenarios {
         // Save massless bodies
         scenario << YAML::Key << "massless" << YAML::Value;
         scenario << YAML::BeginMap;
-        for (const auto &pair : Bodies::GetMassiveBodies()) {
+        for (const auto &pair : Bodies::GetMasslessBodies()) {
             string id = pair.first;
-            Massive body = pair.second;
-            SaveMassive(id, scenario, body);
+            Massless body = pair.second;
+            SaveMassless(id, scenario, body);
         }
         scenario << YAML::EndMap;
 

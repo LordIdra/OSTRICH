@@ -100,11 +100,6 @@ namespace Control {
 
     auto Mainloop() -> void {
         while (!Window::ShouldClose()) {
-
-            ImGui_ImplOpenGL3_NewFrame();
-            ImGui_ImplGlfw_NewFrame();
-            ImGui::NewFrame();
-
             deltaTime = glfwGetTime() - previousTime;
             previousTime = glfwGetTime();
 
@@ -120,9 +115,6 @@ namespace Control {
             Bodies::Update();
             Camera::Update(Bodies::GetMinZoom());
             Interface::Update(deltaTime);
-
-            ImGui::Render();
-            ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
             Mouse::Update();
             Keys::Update();

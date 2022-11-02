@@ -32,35 +32,17 @@ massive:
       - 0
       - 0
   massless:
-    moon:
-      name: The Moon
-      color:
-        - 0.600000024
-        - 0.600000024
-        - 0.600000024
-      radius: 1737400
-      mass: 7.3460000000000003e+22
-      position:
-        - 1.40550003e+09
-        - 0
-        - 0
-      velocity:
-        - 0
-        - 0
-        - 0
-    earth:
-      name: The Earth
+    spacecraft:
+      name: Spacecraft
       color:
         - 0.100000001
-        - 0.400000006
-        - 0.400000006
-      radius: 63710000
-      mass: 5.9722000000000002e+24
+        - 0.899999976
+        - 0.899999976
       position:
-        - 0
+        - -1.40550003e+09
         - 0
         - 0
       velocity:
-        - 0
-        - 0
-        - 0
+        - -270
+        - 170
+        - 170

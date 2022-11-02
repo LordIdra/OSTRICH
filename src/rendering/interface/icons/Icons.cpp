@@ -1,5 +1,6 @@
 #include "Icons.h"
 #include <input/Mouse.h>
+#include <memory>
 #include <rendering/interface/icons/IconVertex.h>
 #include <window/Window.h>
 #include <glm/gtx/string_cast.hpp>

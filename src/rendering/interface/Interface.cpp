@@ -1,5 +1,8 @@
 #include "Interface.h"
 
+#include <imgui_impl_glfw.h>
+#include <imgui_impl_opengl3.h>
+#include <rendering/interface/Explorer.h>
 #include <rendering/interface/OrbitPaths.h>
 #include <rendering/interface/MassiveRender.h>
 #include <rendering/interface/icons/Icons.h>
@@ -13,16 +16,21 @@ namespace Interface {
         MassiveRender::Init();
         OrbitPaths::Init();
         Icons::Init();
+        ScenarioExplorer::Init();
     }
     
     auto Update(const double deltaTime) -> void {
-        // WTF are you doing??? Why disable depth testing?!?!?!
-        // The reason is that otherwise, the paths are invariably closer to the camera due to being in screen space
-        // This of course causes some issues where the paths draw on top of icons, bodies, and just everything really
-        // By disabling depth test, we force OpenGL to ignore the fact that the orbit paths are closer than the
-        // other interface elements
         OrbitPaths::Update();
         MassiveRender::Update(deltaTime);
         Icons::DrawIcons();
+
+        ImGui_ImplOpenGL3_NewFrame();
+        ImGui_ImplGlfw_NewFrame();
+        ImGui::NewFrame();
+
+        ScenarioExplorer::Update();
+
+        ImGui::Render();
+        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
     }
 }
