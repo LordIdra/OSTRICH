@@ -6,7 +6,7 @@
 
 
 Body::Body(const string &id, const string &name, const vec3 &color, const double mass, const dvec3 &position, const dvec3 &velocity)
-    : id(std::move(id)), name(std::move(name)), color(color), mass(mass), position(position), velocity(velocity) {}
+    : id(id), name(name), color(color), mass(mass), position(position), velocity(velocity) {}
 
 auto Body::GetId() const -> string {
     return id;

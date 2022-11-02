@@ -44,7 +44,7 @@ namespace OrbitPaths {
                     // If the points are close enough, interpolate them to create a new point in-between
                     // We also don't increment i because we want to check if this newly created point is sufficiently close to the previous one
                     if (distance > DISTANCE_THRESHOLD) {
-                        pair.second.insert(pair.second.begin() + i  , Simulation::Integrate(Bodies::GetMassiveBodies(), pair.first, pair.second.at(i).timeToNextPoint / 2.0, pair.second.at(i)));
+                        pair.second.insert(pair.second.begin() + i  , Simulation::Integrate(Bodies::GetMassiveBodies(), pair.first, pair.second.at(i).timeToNextPoint / 2, pair.second.at(i)));
                         continue;
                     }
                 }
@@ -129,7 +129,7 @@ namespace OrbitPaths {
                         // If the points are close enough, interpolate them to create a new point in-between
                         if (distance > DISTANCE_THRESHOLD) {
                             Log(INFO, glm::to_string(Rays::WorldToScreen(sequence.at(i+1).position / SCALE_FACTOR)));
-                            OrbitPoint newPoint = Simulation::Integrate(Bodies::GetMassiveBodies(), pair.first, sequence.at(i).timeToNextPoint / 2.0, sequence.at(i));
+                            OrbitPoint newPoint = Simulation::Integrate(Bodies::GetMassiveBodies(), pair.first, sequence.at(i).timeToNextPoint / 2, sequence.at(i));
                             sequence.insert(sequence.begin() + i + 1, newPoint);
 
                             // Both the new and old OrbitPoints now have half the time to the next point

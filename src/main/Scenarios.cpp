@@ -80,7 +80,7 @@ namespace Scenarios {
                 .shine = SHINE};
         }
 
-        auto LoadMassive(const string &id, const YAML::Node node, const string &path) -> Massive {
+        auto LoadMassive(const string &id, const YAML::Node &node, const string &path) -> Massive {
             string name = GetString(node, path, "massive", "name");
             vec3 color = GetVec3(node, path, "massive", "color");
             double radius = GetDouble(node, path, "massive", "radius");
@@ -91,7 +91,7 @@ namespace Scenarios {
             return Massive(id, name, color, position, velocity, material, mass, radius);
         }
 
-        auto LoadMassless(const string &id, const YAML::Node node, const string &path) -> Massless {
+        auto LoadMassless(const string &id, const YAML::Node &node, const string &path) -> Massless {
             string name = GetString(node, path, "massive", "name");
             vec3 color = GetVec3(node, path, "massive", "color");
             vec3 position = GetVec3(node, path, "massive", "position");

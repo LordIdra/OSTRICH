@@ -20,5 +20,5 @@ namespace Camera {
     auto AddZoomDelta(const float zoomDelta_) -> void;
 
     auto SetTarget(const vec3 target_) -> void;
-    auto SetZoom(const float target_) -> void;
+    auto SetZoom(const float zoom_) -> void;
 };

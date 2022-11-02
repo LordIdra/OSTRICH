@@ -83,17 +83,17 @@ namespace Icons {
             const vec2 c = icon2.GetScreenCoordinates();
 
             // Check if both the X and Y conditions for the rhombus intersection are true
-            bool conditionY = abs(c.y - k.y) <  (Icon::MERGE_THRESHOLD);
-            bool conditionX = abs(c.x - k.x) < ((Icon::MERGE_THRESHOLD) - abs(c.y -  k.y));
+            bool conditionY = std::abs(c.y - k.y) <  (Icon::MERGE_THRESHOLD);
+            bool conditionX = std::abs(c.x - k.x) < ((Icon::MERGE_THRESHOLD) - std::abs(c.y -  k.y));
             return conditionX && conditionY;
         }
 
-        auto MergeIconIntoIcon(unordered_map<string, Icon> &icons, string from, string to) -> void {
+        auto MergeIconIntoIcon(unordered_map<string, Icon> &icons, const string &from, const string &to) -> void {
             icons.at(to).AddChild(from);
             icons.erase(from);
         }
 
-        auto MergeIcon(unordered_map<string, Icon> &icons, string icon1, string icon2) -> void {
+        auto MergeIcon(unordered_map<string, Icon> &icons, const string &icon1, const string &icon2) -> void {
             // If i is the selected icon, merge j into i
             if (Bodies::GetSelectedBody() == icons.at(icon1).GetId()) {
                 MergeIconIntoIcon(icons, icon2, icon1);

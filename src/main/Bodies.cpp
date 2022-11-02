@@ -27,9 +27,10 @@ namespace Bodies {
         unordered_map<string, vector<OrbitPoint>> points;
 
         BodyType selectedType = NONE;
-        string selected = "";
+        string selected;
 
-        float MASSLESS_MIN_ZOOM = 0.01;
+        const float INITIAL_MASSLESS_MIN_ZOOM = 0.01;
+        float masslessMinZoom = INITIAL_MASSLESS_MIN_ZOOM;
 
         auto SwitchSelectedBodyWhenSphereClicked() -> void {
             // This function only cares about the spheres representing massive bodies
@@ -61,7 +62,7 @@ namespace Bodies {
         Mouse::SetCallbackLeftDouble(SwitchSelectedBodyWhenSphereClicked);
 
         // Initial camera lock
-        if (massiveBodies.size() != 0) {
+        if (!massiveBodies.empty()) {
             selectedType = MASSIVE;
             selected = massiveBodies.begin()->first;
         }
@@ -96,9 +97,8 @@ namespace Bodies {
     auto GetMinZoom() -> float {
         if (selectedType == MASSIVE) {
             return Bodies::GetMassiveBody(Bodies::GetSelectedBody()).GetScaledRadius() * ZOOM_RADIUS_MULTIPLIER;
-        } else {
-            return MASSLESS_MIN_ZOOM;
         }
+        return masslessMinZoom;
     }
 
     auto SetSelectedBody(const string &id) -> void {
@@ -135,10 +135,9 @@ namespace Bodies {
     auto GetBody(const string &id) -> Body {
         if (massiveBodies.find(id) != massiveBodies.end()) {
             return massiveBodies.at(id);
-        } else {
-            // Yes, technically the id may not exist, but this is REALLY unlikely unless some code is very obviously wrong in other ways
-            return masslessBodies.at(id);
         }
+        // Yes, technically the id may not exist, but this is REALLY unlikely unless some code is very obviously wrong in other ways
+        return masslessBodies.at(id);
     }
 
     auto GetPositions() -> unordered_map<string, vector<OrbitPoint>> {

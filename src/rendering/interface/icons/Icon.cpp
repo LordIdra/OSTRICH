@@ -25,7 +25,7 @@ const float Icon::SELECT_THRESHOLD = 20;
 
 
 
-auto Icon::AddVertex(vector<float> &vertices, IconVertex vertex) const -> void {
+auto Icon::AddVertex(vector<float> &vertices, IconVertex vertex) -> void {
     // Vertex position
     vertices.push_back(vertex.x);
     vertices.push_back(vertex.y);
@@ -36,7 +36,7 @@ auto Icon::AddVertex(vector<float> &vertices, IconVertex vertex) const -> void {
     vertices.push_back(vertex.b);
 }
 
-auto Icon::AddQuad(vector<float> &vertices, IconVertex v1, IconVertex v2, IconVertex v3, IconVertex v4) const -> void {
+auto Icon::AddQuad(vector<float> &vertices, IconVertex v1, IconVertex v2, IconVertex v3, IconVertex v4) -> void {
     AddVertex(vertices, v1);
     AddVertex(vertices, v2);
     AddVertex(vertices, v3);
@@ -150,8 +150,8 @@ auto Icon::MouseOnIcon(const float threshold) const -> bool {
 
     const vec2 k = GetScreenCoordinates();
 
-    bool conditionY = abs(c.y - k.y) <  threshold;
-    bool conditionX = abs(c.x - k.x) < (threshold - abs(c.y -  k.y));
+    bool conditionY = std::abs(c.y - k.y) <  threshold;
+    bool conditionX = std::abs(c.x - k.x) < (threshold - std::abs(c.y -  k.y));
 
     return conditionX && conditionY;
 }

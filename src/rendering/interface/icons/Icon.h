@@ -23,8 +23,8 @@ private:
 
     vector<string> children;
 
-    auto AddVertex(vector<float> &vertices, IconVertex vertex) const -> void;
-    auto AddQuad(vector<float> &vertices, IconVertex v1, IconVertex v2, IconVertex v3, IconVertex v4) const -> void;
+    static auto AddVertex(vector<float> &vertices, IconVertex vertex) -> void;
+    static auto AddQuad(vector<float> &vertices, IconVertex v1, IconVertex v2, IconVertex v3, IconVertex v4) -> void;
 
     auto AddIconCentre(vector<float> &vertices) const -> void;
     auto AddIconBorder(vector<float> &vertices) const -> void;
