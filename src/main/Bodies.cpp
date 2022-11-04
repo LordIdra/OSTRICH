@@ -2,7 +2,6 @@
 #include "main/Simulation.h"
 #include "util/Log.h"
 
-#include <bodies/BodyType.h>
 #include <bodies/Body.h>
 #include <bodies/Massive.h>
 #include <bodies/Massless.h>
@@ -26,7 +25,7 @@ namespace Bodies {
 
         unordered_map<string, vector<OrbitPoint>> points;
 
-        BodyType selectedType = NONE;
+        BodyType selectedType = BODY_TYPE_NONE;
         string selected;
 
         const float INITIAL_MASSLESS_MIN_ZOOM = 0.01;
@@ -49,7 +48,7 @@ namespace Bodies {
                     pair.second.GetScaledRadius())) {
 
                         // If so, update the selected body and start a transition
-                        selectedType = MASSIVE;
+                        selectedType = BODY_TYPE_MASSIVE;
                         selected = pair.first;
                         MassiveRender::StartTransition(pair.second);
                 }
@@ -63,19 +62,19 @@ namespace Bodies {
 
         // Initial camera lock
         if (!massiveBodies.empty()) {
-            selectedType = MASSIVE;
+            selectedType = BODY_TYPE_MASSIVE;
             selected = massiveBodies.begin()->first;
         }
     }
 
     auto Update() -> void {
         // Integrate to get the future positions of all bodies
-        points = Simulation::Integrate(massiveBodies, masslessBodies);
+        points = Simulation::Integrate();
 
         // Update transition target,so that the camera follows the target
-        if (selectedType == MASSIVE) {
+        if (selectedType == BODY_TYPE_MASSIVE) {
             MassiveRender::UpdateTransitionTarget(massiveBodies.at(selected));
-        } else if (selectedType == MASSLESS) {
+        } else if (selectedType == BODY_TYPE_MASSLESS) {
             MassiveRender::UpdateTransitionTarget(masslessBodies.at(selected));
         }
     }
@@ -94,8 +93,12 @@ namespace Bodies {
         return selected;
     }
 
+    auto GetSelectedType() -> BodyType {
+        return selectedType;
+    }
+
     auto GetMinZoom() -> float {
-        if (selectedType == MASSIVE) {
+        if (selectedType == BODY_TYPE_MASSIVE) {
             return Bodies::GetMassiveBody(Bodies::GetSelectedBody()).GetScaledRadius() * ZOOM_RADIUS_MULTIPLIER;
         }
         return masslessMinZoom;
@@ -106,12 +109,12 @@ namespace Bodies {
 
         // If the id corresponds to a massive body
         if (massiveBodies.find(id) != massiveBodies.end()) {
-            selectedType = MASSIVE;
+            selectedType = BODY_TYPE_MASSIVE;
             MassiveRender::StartTransition(massiveBodies.at(id));
         
         // If the id corresponds to a massless body
         } else if (masslessBodies.find(id) != masslessBodies.end()) {
-            selectedType = MASSLESS;
+            selectedType = BODY_TYPE_MASSLESS;
             MassiveRender::StartTransition(masslessBodies.at(id));
         }
     }

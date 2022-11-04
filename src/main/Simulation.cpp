@@ -1,4 +1,5 @@
 #include "input/Keys.h"
+#include "main/Bodies.h"
 #include "main/OrbitPoint.h"
 #include "util/Constants.h"
 #include "util/Log.h"
@@ -39,34 +40,36 @@ namespace Simulation {
             }
             time_steps_per_frame /= SPEED_MULTIPLIER;
         }
-
-        auto CalculateAcceleration(const unordered_map<string, Massive> &massive_bodies, const string &id, const dvec3 &bodyPosition) -> dvec3 {
-            // Loop through every body - we only need the massive bodies since massless bodies will have no effect on the body's acceleration
-            dvec3 acceleration = dvec3(0, 0, 0);
-            for (const auto &pair : massive_bodies) {
-
-                // Check that the massive body is not the target body
-                // If this was the case, we would be trying to apply the body's gravitational force to itself...
-                if (pair.second.GetId() == id) {
-                    continue;
-                }
-
-                // Calculate force that the massive object is enacting on the body using Newton's Universal Law of Gravitation
-                // and add the force to the total force vector
-                dvec3 displacement = bodyPosition - pair.second.GetPosition();
-                dvec3 direction = glm::normalize(displacement);
-                double distance = glm::length(displacement);
-                double accelerationScalar = (GRAVITATIONAL_CONSTANT * pair.second.GetMass()) / glm::pow(distance, 2);
-                acceleration -= direction * accelerationScalar;
-            }
-
-            return acceleration;
-        }
     }
+
 
     auto Init() -> void {
         Keys::BindFunctionToKeyPress(GLFW_KEY_COMMA, DecreaseSimulationSpeed);
         Keys::BindFunctionToKeyPress(GLFW_KEY_PERIOD, IncreaseSimulationSpeed);
+    }
+
+    auto CalculateAcceleration(const unordered_map<string, Massive> &massiveBodies, const string &id, const dvec3 &position) -> dvec3 {
+
+        // Loop through every body - we only need the massive bodies since massless bodies will have no effect on the body's acceleration
+        dvec3 acceleration = dvec3(0, 0, 0);
+        for (const auto &pair : massiveBodies) {
+
+            // Check that the massive body is not the target body
+            // If this was the case, we would be trying to apply the body's gravitational force to itself...
+            if (pair.second.GetId() == id) {
+                continue;
+            }
+
+            // Calculate force that the massive object is enacting on the body using Newton's Universal Law of Gravitation
+            // and add the force to the total force vector
+            dvec3 displacement = position - pair.second.GetPosition();
+            dvec3 direction = glm::normalize(displacement);
+            double distance = glm::length(displacement);
+            double accelerationScalar = (GRAVITATIONAL_CONSTANT * pair.second.GetMass()) / glm::pow(distance, 2);
+            acceleration -= direction * accelerationScalar;
+        }
+
+        return acceleration;
     }
 
     auto Integrate(const unordered_map<string, Massive> &massiveBodies, const string &id, const double time_step, const OrbitPoint &point) -> OrbitPoint {
@@ -83,7 +86,9 @@ namespace Simulation {
         body.AddPosition(body.GetVelocity() * time_step_size);
     }
 
-    auto Integrate(unordered_map<string, Massive> massiveBodies, unordered_map<string, Massless> masslessBodies) -> unordered_map<string, vector<OrbitPoint>> {
+    auto Integrate() -> unordered_map<string, vector<OrbitPoint>> {
+        unordered_map<string, Massive> massiveBodies = Bodies::GetMassiveBodies();
+        unordered_map<string, Massless> masslessBodies = Bodies::GetMasslessBodies();
         unordered_map<string, vector<OrbitPoint>> points;
 
         // Fill the map with keys that correspond to all massive and massless bodies

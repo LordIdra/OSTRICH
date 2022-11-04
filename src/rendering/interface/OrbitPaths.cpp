@@ -30,26 +30,10 @@ namespace OrbitPaths {
         const float PATH_WIDTH = 0.005;
         const vec3 PATH_COLOR = vec3(0.0, 0.0, 0.9);
         const float DISTANCE_THRESHOLD = 0.01;
+        const float RATIO_OF_POINTS_TO_FADE_OVER = 0.2;
 
         unique_ptr<VAO> vao;
         unique_ptr<Program> program;
-
-        auto InterpolatePoints(unordered_map<string, vector<OrbitPoint>> &unscaledOrbitPoints) -> void {
-            for (auto &pair : unscaledOrbitPoints) {
-                for (int i = 1; i < pair.second.size()-1; i++) {
-
-                    // Find how close this point and the next point are in screen space
-                    float distance = glm::distance(Rays::Scale(pair.second.at(i).position), Rays::Scale(pair.second.at(i-1).position));
-
-                    // If the points are close enough, interpolate them to create a new point in-between
-                    // We also don't increment i because we want to check if this newly created point is sufficiently close to the previous one
-                    if (distance > DISTANCE_THRESHOLD) {
-                        pair.second.insert(pair.second.begin() + i  , Simulation::Integrate(Bodies::GetMassiveBodies(), pair.first, pair.second.at(i).timeToNextPoint / 2, pair.second.at(i)));
-                        continue;
-                    }
-                }
-            }
-        }
 
         auto ConvertToSequences(unordered_map<string, vector<OrbitPoint>> &unscaledOrbitPoints) -> unordered_map<string, vector<vector<OrbitPoint>>> {
             unordered_map<string, vector<vector<OrbitPoint>>> sequenceMap;
@@ -118,32 +102,6 @@ namespace OrbitPaths {
             return sequenceMap;
         }
 
-        auto InterpolateSequences(unordered_map<string, vector<vector<OrbitPoint>>> &sequences) -> void {
-            for (auto &pair : sequences) {
-                for (auto &sequence : pair.second) {
-                    for (int i = 0; i < sequence.size()-1; i++) {
-
-                        // Find how close this point and the previous point are in screen space
-                        float distance = glm::distance(Rays::WorldToScreen(sequence.at(i).position / SCALE_FACTOR), Rays::WorldToScreen(sequence.at(i+1).position / SCALE_FACTOR));
-
-                        // If the points are close enough, interpolate them to create a new point in-between
-                        if (distance > DISTANCE_THRESHOLD) {
-                            Log(INFO, glm::to_string(Rays::WorldToScreen(sequence.at(i+1).position / SCALE_FACTOR)));
-                            OrbitPoint newPoint = Simulation::Integrate(Bodies::GetMassiveBodies(), pair.first, sequence.at(i).timeToNextPoint / 2, sequence.at(i));
-                            sequence.insert(sequence.begin() + i + 1, newPoint);
-
-                            // Both the new and old OrbitPoints now have half the time to the next point
-                            sequence.at(i).timeToNextPoint /= 2;
-                            sequence.at(i+1).timeToNextPoint /= 2;
-
-                            // We keep i the same because we want to check if this newly created point is sufficiently close to the previous one
-                            i--;
-                        }
-                    }
-                }
-            }
-        }
-
         auto TransformSequencesToScreen(unordered_map<string, vector<OrbitPoint>> &unscaledPointMap) -> unordered_map<string, vector<vec3>> {
             unordered_map<string, vector<vec3>> worldPositionMap;
 
@@ -209,12 +167,24 @@ namespace OrbitPaths {
 
             // Use color of the body for color of orbit path
             vec3 color = Bodies::GetBody(pair.first).GetColor();
+
+            int numberOfPointsToFadeOver = pair.second.size() * RATIO_OF_POINTS_TO_FADE_OVER;
             
             // Iterate through every sequence for the corresponding body
+            int i = 0;
             for (const vec3 &position : pair.second) {
 
+                // Figure out the color of this vertex
+                vec3 vertexColor = color;
+                if (pair.second.size() - i < numberOfPointsToFadeOver) {
+                    float brightness = (float(pair.second.size() - i) / numberOfPointsToFadeOver);
+                    vertexColor *= brightness;
+                }
+
+                i++;
+
                 // Add new vertices (two triangles to form a quadrilateral)
-                AddVertex(vertices, position, color);
+                AddVertex(vertices, position, vertexColor);
             }
 
             program->Use();

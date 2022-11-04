@@ -1,6 +1,7 @@
 #pragma once
 
-#include "main/OrbitPoint.h"
+#include <main/OrbitPoint.h>
+#include <bodies/BodyType.h>
 #include <bodies/Massless.h>
 #include <bodies/Massive.h>
 #include <util/Types.h>
@@ -16,6 +17,7 @@ namespace Bodies {
 
     auto SetSelectedBody(const string &id) -> void;
     auto GetSelectedBody() -> string;
+    auto GetSelectedType() -> BodyType;
 
     auto GetMinZoom() -> float;
 
