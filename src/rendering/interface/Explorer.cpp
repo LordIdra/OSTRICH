@@ -112,21 +112,12 @@ namespace ScenarioExplorer {
             ImGui::Text("%.2e %s", mass, "kg");
         }
 
-        auto AddMasslessMassText() -> void {
-            ImGui::TableNextColumn();
-            ImGui::Text("%s", "-----------");
-        }
-
         auto AddBodiesToTable(const vector<string> &bodyIds) -> void {
             ImGui::PushFont(dataFont);
             for (const string &id : bodyIds) {
                 Body body = Bodies::GetBody(id);
                 AddNameSelectable(id, body.GetName());
-                if (body.GetMass() == 0) {
-                    AddMasslessMassText();
-                } else {
-                    AddMassiveMassText(body.GetMass());
-                }
+                AddMassiveMassText(body.GetMass());
             }
             ImGui::PopFont();
         }
@@ -193,7 +184,7 @@ namespace ScenarioExplorer {
             ImGui::PopFont();
         }
 
-        auto AddBodyDataRadius(const Massive &body) -> void {
+        auto AddBodyDataRadius(const Body &body) -> void {
             ImGui::PushFont(mainFont);
             ImGui::TableNextColumn();
             ImGui::Text("%s", RADIUS_TEXT.c_str());
@@ -257,19 +248,14 @@ namespace ScenarioExplorer {
             ImGui::Text("%s", selectedBody.GetName().c_str());
             ImGui::PopFont();
 
-
             // Begin
             ImGui::BeginTable("scenario-explorer", 2, BODY_DATA_FLAGS, BODY_DATA_SIZE);
 
             ImGui::TableSetupColumn("", 0, 150);
             ImGui::TableSetupColumn("", 0, 200);
 
-            if (Bodies::GetSelectedType() == BODY_TYPE_MASSIVE) {
-                Massive selectedMassive = Bodies::GetMassiveBody(Bodies::GetSelectedBody());
-                AddBodyDataMass(selectedBody);
-                AddBodyDataRadius(selectedMassive);
-            }
-
+            AddBodyDataMass(selectedBody);
+            AddBodyDataRadius(selectedBody);
             AddBodyDataColor(selectedBody);
             AddBodyDataSpeed(selectedBody);
             AddBodyDataAcceleration(selectedBody);

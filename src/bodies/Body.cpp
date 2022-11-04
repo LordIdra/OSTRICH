@@ -5,8 +5,8 @@
 
 
 
-Body::Body(const string &id, const string &name, const vec3 &color, const double mass, const dvec3 &position, const dvec3 &velocity)
-    : id(id), name(name), color(color), mass(mass), position(position), velocity(velocity) {}
+Body::Body(const string &id, const string &name, const vec3 &color, const double mass, const double radius, const dvec3 &position, const dvec3 &velocity)
+    : id(id), name(name), color(color), mass(mass), radius(radius), position(position), velocity(velocity) {}
 
 auto Body::GetId() const -> string {
     return id;
@@ -22,6 +22,10 @@ auto Body::GetColor() const -> vec3 {
 
 auto Body::GetMass() const -> double {
     return mass;
+}
+
+auto Body::GetRadius() const -> double {
+    return radius;
 }
 
 auto Body::GetVelocity() const -> dvec3 {

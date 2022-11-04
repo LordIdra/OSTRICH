@@ -10,16 +10,18 @@ protected:
     string name;
     vec3 color;
     double mass;
+    double radius;
     dvec3 position; // m
     dvec3 velocity; // m/s
 
 public:
-    Body(const string &id, const string &name, const vec3 &color, const double mass, const dvec3 &position, const dvec3 &velocity);
+    Body(const string &id, const string &name, const vec3 &color, const double mass, const double radius, const dvec3 &position, const dvec3 &velocity);
 
     auto GetId() const -> string;
     auto GetName() const -> string;
     auto GetColor() const -> vec3;
     auto GetMass() const -> double;
+    auto GetRadius() const -> double;
     auto GetVelocity() const -> dvec3;
     auto GetPosition() const -> dvec3;
     

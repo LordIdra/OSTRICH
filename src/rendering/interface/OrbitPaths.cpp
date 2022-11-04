@@ -190,7 +190,7 @@ namespace OrbitPaths {
             program->Use();
             program->Set("cameraMatrix", Camera::GetMatrix());
             vao->Data(vertices, vertices.size() / STRIDE, GL_DYNAMIC_DRAW);
-            vao->Render(GL_LINE_STRIP);
+            vao->Render(GL_LINES);
         }
     }
 }
