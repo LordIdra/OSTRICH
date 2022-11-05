@@ -35,8 +35,9 @@ namespace ScenarioExplorer {
         const string POTENTIAL_ENERGY_TEXT = ICON_MDI_ATOM + string(" Potential Energy");
         const string TOTAL_ENERGY_TEXT = ICON_MDI_LIGHTNING_BOLT + string(" Total Energy");
 
-        const int NAME_WIDTH = 180;
-        const int MASS_WIDTH = 40;
+        const int NAME_WEIGHT = 180;
+        const int NAME_WIDTH = 260;
+        const int MASS_WEIGHT = 30;
         const int DATA_KEY_COLUMN_WIDTH = 170;
         const int DATA_VALUE_COLUMN_WIDTH =  130;
 
@@ -61,13 +62,26 @@ namespace ScenarioExplorer {
         
         bool windowOpen = true;
 
-        auto NormalizeString(ImFont* font, string &str, const float maxWidth) -> void {
+        auto NormalizeString(ImFont* font, const string &str, const float maxWidth) -> string {
+            string newString = str;
+
             ImGui::PushFont(font);
-            float text_width = ImGui::CalcTextSize(str.c_str()).x;
-            ImGui::PopFont();
-            if (text_width > maxWidth) {
-                str = str.substr(0, str.length() - 3) + "...";
+
+            bool atLeastOneCharacterRemoved = false;
+
+            // While the text width is greater than the max width, remove the last character
+            while (ImGui::CalcTextSize(newString.c_str()).x > maxWidth) {
+                newString = newString.substr(0, newString.length() - 2);
+                atLeastOneCharacterRemoved = true;
             }
+
+            if (atLeastOneCharacterRemoved) {
+                newString += "...";
+            }
+
+            ImGui::PopFont();
+
+            return newString;
         }
 
         auto LoadFonts() -> void {
@@ -98,10 +112,10 @@ namespace ScenarioExplorer {
             ImGui::TableSetupScrollFreeze(0, 1);
             
             // Add name header
-            ImGui::TableSetupColumn(NAME_TEXT.c_str(), ImGuiTableColumnFlags_WidthFixed | ImGuiTableColumnFlags_DefaultSort, NAME_WIDTH, NAME_COLUMN_ID);
+            ImGui::TableSetupColumn(NAME_TEXT.c_str(), ImGuiTableColumnFlags_WidthFixed | ImGuiTableColumnFlags_DefaultSort, NAME_WEIGHT, NAME_COLUMN_ID);
 
             // Add mass header
-            ImGui::TableSetupColumn(MASS_TEXT.c_str(), ImGuiTableColumnFlags_WidthStretch | ImGuiTableColumnFlags_PreferSortDescending, MASS_WIDTH, MASS_COLUMN_ID);
+            ImGui::TableSetupColumn(MASS_TEXT.c_str(), ImGuiTableColumnFlags_WidthStretch | ImGuiTableColumnFlags_PreferSortDescending, MASS_WEIGHT, MASS_COLUMN_ID);
 
             // Indicate to imgui that this is a header row
             ImGui::TableHeadersRow();
@@ -117,7 +131,7 @@ namespace ScenarioExplorer {
 
         auto AddNameSelectable(const string &id, const string &name) -> void {
             ImGui::TableNextColumn();
-            if (ImGui::Selectable(name.c_str(), id == Bodies::GetSelectedBody(), ImGuiSelectableFlags_SpanAllColumns)) {
+            if (ImGui::Selectable(NormalizeString(mainFontBig, name, NAME_WIDTH).c_str(), id == Bodies::GetSelectedBody(), ImGuiSelectableFlags_SpanAllColumns)) {
                 Bodies::SetSelectedBody(id);
             }
         }
@@ -296,7 +310,7 @@ namespace ScenarioExplorer {
 
             // Title text
             ImGui::PushFont(mainFontBig);
-            ImGui::Text("%s", selectedBody.GetName().c_str());
+            ImGui::Text("%s", NormalizeString(mainFontBig, selectedBody.GetName(), BODY_DATA_SIZE.x).c_str());
             ImGui::PopFont();
 
             // Begin
