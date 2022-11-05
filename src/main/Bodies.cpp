@@ -30,36 +30,9 @@ namespace Bodies {
 
         const float INITIAL_MASSLESS_MIN_ZOOM = 0.01;
         float masslessMinZoom = INITIAL_MASSLESS_MIN_ZOOM;
-
-        auto SwitchSelectedBodyWhenSphereClicked() -> void {
-            // This function only cares about the spheres representing massive bodies
-            // Seletcing via icons is handles in the Icons namespace
-            // Find the camera direction
-            vec3 direction = Rays::ScreenToWorld(Mouse::GetScreenPosition());
-
-            // Loop through every body
-            for (auto &pair : massiveBodies) {
-
-                // Check if the camera direction intersects the body
-                if (Rays::IntersectsSphere(
-                    Camera::GetPosition(), 
-                    direction, 
-                    pair.second.GetScaledPosition(), 
-                    pair.second.GetScaledRadius())) {
-
-                        // If so, update the selected body and start a transition
-                        selectedType = BODY_TYPE_MASSIVE;
-                        selected = pair.first;
-                        MassiveRender::StartTransition(pair.second);
-                }
-            }
-        }
     }
 
     auto Init() -> void {
-        // Input
-        Mouse::SetCallbackLeftDouble(SwitchSelectedBodyWhenSphereClicked);
-
         // Initial camera lock
         if (!massiveBodies.empty()) {
             selectedType = BODY_TYPE_MASSIVE;
@@ -76,6 +49,30 @@ namespace Bodies {
             MassiveRender::UpdateTransitionTarget(massiveBodies.at(selected));
         } else if (selectedType == BODY_TYPE_MASSLESS) {
             MassiveRender::UpdateTransitionTarget(masslessBodies.at(selected));
+        }
+    }
+
+    auto SwitchSelectedBodyWhenSphereClicked() -> void {
+        // This function only cares about the spheres representing massive bodies
+        // Seletcing via icons is handles in the Icons namespace
+        // Find the camera direction
+        vec3 direction = Rays::ScreenToWorld(Mouse::GetScreenPosition());
+
+        // Loop through every body
+        for (auto &pair : massiveBodies) {
+
+            // Check if the camera direction intersects the body
+            if (Rays::IntersectsSphere(
+                Camera::GetPosition(), 
+                direction, 
+                pair.second.GetScaledPosition(), 
+                pair.second.GetScaledRadius())) {
+
+                    // If so, update the selected body and start a transition
+                    selectedType = BODY_TYPE_MASSIVE;
+                    selected = pair.first;
+                    MassiveRender::StartTransition(pair.second);
+            }
         }
     }
 

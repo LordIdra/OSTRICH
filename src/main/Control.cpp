@@ -6,13 +6,15 @@
 #include <input/Mouse.h>
 #include <rendering/camera/Camera.h>
 #include <rendering/interface/Interface.h>
-#include <string>
+#include <rendering/interface/icons/Icons.h>
+#include <rendering/geometry/Rays.h>
+
 #include <util/Log.h>
 #include <window/Window.h>
 #include <main/Bodies.h>
 #include <main/Simulation.h>
 
-#include <rendering/geometry/Rays.h>
+#include <string>
 
 #include <imgui.h>
 #include <imgui_impl_glfw.h>
@@ -93,6 +95,9 @@ namespace Control {
         Camera::Init();
         Bodies::Init();
         Simulation::Init();
+
+        Mouse::SetCallbackLeftDouble(Bodies::SwitchSelectedBodyWhenSphereClicked);
+        Mouse::SetCallbackLeftDouble(Icons::SwitchBodyBasedOnIcon);
         
         Scenarios::LoadScenario("../scenarios/example.yml");
         Scenarios::SaveScenario("../scenarios/save-test.yml");

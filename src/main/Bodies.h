@@ -12,6 +12,8 @@ namespace Bodies {
     auto Init() -> void;
     auto Update() -> void;
 
+    auto SwitchSelectedBodyWhenSphereClicked() -> void;
+
     auto AddBody(const Massive &body) -> void;
     auto AddBody(const Massless &body) -> void;
 

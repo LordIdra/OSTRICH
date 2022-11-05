@@ -156,20 +156,9 @@ namespace Icons {
 
             return icons;
         }
-
-        auto SwitchBodyBasedOnIcon() -> void {
-            for (const auto &pair : GenerateIcons()) {
-                if (pair.second.MouseOnIcon(Icon::SELECT_THRESHOLD)) {
-                    Bodies::SetSelectedBody(pair.first);
-                }
-            }
-        }
     }
 
     auto Init() -> void {
-        // Register body switch function
-        Mouse::SetCallbackLeftDouble(SwitchBodyBasedOnIcon);
-
         // Create VAO
         vao = make_unique<VAO>();
         vao->Init();
@@ -214,5 +203,13 @@ namespace Icons {
         vao->Data(data, vertexCount, GL_STATIC_DRAW);
         program->Use();
         vao->Render(GL_TRIANGLES);
+    }
+
+    auto SwitchBodyBasedOnIcon() -> void {
+        for (const auto &pair : GenerateIcons()) {
+            if (pair.second.MouseOnIcon(Icon::SELECT_THRESHOLD)) {
+                Bodies::SetSelectedBody(pair.first);
+            }
+        }
     }
 }
