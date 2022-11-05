@@ -117,6 +117,7 @@ namespace ScenarioExplorer {
 
         // Explorer header
         AddHeader();
+        //ImGui::Separator();
 
         // Sort body ids according to the columns the user has selected
         sortSpecs = ImGui::TableGetSortSpecs();

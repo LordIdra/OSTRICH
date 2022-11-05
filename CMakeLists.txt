@@ -41,6 +41,7 @@ set(FILES
 
     "src/rendering/interface/Fonts.cpp"
     "src/rendering/interface/Interface.cpp"
+    "src/rendering/interface/Style.cpp"
 
     "src/rendering/shaders/Program.cpp"
     "src/rendering/shaders/Shader.cpp"

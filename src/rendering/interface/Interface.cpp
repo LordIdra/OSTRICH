@@ -1,4 +1,5 @@
 #include "Interface.h"
+#include "rendering/interface/Style.h"
 
 #include <rendering/interface/Fonts.h>
 #include <rendering/interface/BottomRightWindow/BottomRightWindow.h>
@@ -16,6 +17,7 @@
 namespace Interface {
 
     auto Init() -> void {
+        Style::Init();
         Fonts::Init();
         Icons::Init();
         MassiveRender::Init();
