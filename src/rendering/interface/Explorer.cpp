@@ -19,35 +19,19 @@ namespace ScenarioExplorer {
     namespace {
         const string NAME_TEXT = ICON_MDI_FORMAT_TEXT + string(" Name");
         const string MASS_TEXT = ICON_MDI_WEIGHT + string(" Mass");
-        const string RADIUS_TEXT = ICON_MDI_RADIUS + string(" Radius");
-        const string COLOR_TEXT = ICON_MDI_BRUSH + string(" Color");
-        const string SPEED_TEXT = ICON_MDI_SPEEDOMETER_SLOW + string(" Velocity");
-        const string ACCELERATION_TEXT = ICON_MDI_CHEVRON_DOUBLE_UP + string(" Acceleration");
-        const string KINETIC_ENERGY_TEXT = ICON_MDI_CUBE_SEND + string(" Kinetic Energy");
-        const string POTENTIAL_ENERGY_TEXT = ICON_MDI_ATOM + string(" Potential Energy");
-        const string TOTAL_ENERGY_TEXT = ICON_MDI_LIGHTNING_BOLT + string(" Total Energy");
 
         const int NAME_WEIGHT = 180;
         const int NAME_WIDTH = 260;
         const int MASS_WEIGHT = 30;
-        const int DATA_KEY_COLUMN_WIDTH = 170;
-        const int DATA_VALUE_COLUMN_WIDTH =  130;
 
         const unsigned int NAME_COLUMN_ID = 0;
         const unsigned int MASS_COLUMN_ID = 1;
 
-        const ImVec2 WINDOW_SIZE = ImVec2(330, 1000);
-        const ImVec2 WINDOW_POSITION = ImVec2(0, 0);
-        const ImVec2 EXPLORER_SIZE = ImVec2(300, 730);
-        const ImVec2 BODY_DATA_SIZE = ImVec2(300, 100);
+        const ImVec2 TABLE_SIZE = ImVec2(300, 730);
 
-        const ImGuiWindowFlags WINDOW_FLAGS = ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
         const ImGuiTableFlags EXPLORER_FLAGS = ImGuiTableFlags_SizingFixedFit | ImGuiTableFlags_Sortable | ImGuiTableFlags_ScrollY | ImGuiTableFlags_NoPadOuterX | ImGuiTableFlags_NoPadInnerX;
-        const ImGuiTableFlags BODY_DATA_FLAGS = ImGuiTableFlags_SizingFixedFit | ImGuiTableFlags_NoPadOuterX | ImGuiTableFlags_NoPadInnerX | ImGuiTableFlags_SizingFixedFit;
 
         ImGuiTableSortSpecs* sortSpecs;
-        
-        bool windowOpen = true;
 
         auto AddHeader() -> void {
             // Use main font
@@ -122,173 +106,28 @@ namespace ScenarioExplorer {
             }
             return CompareBodyMasses(id1, id2);
         }
-
-        auto AddExplorer() -> void {
-            // Begin
-            ImGui::BeginTable("scenario-explorer", 2, EXPLORER_FLAGS, EXPLORER_SIZE);
-
-            // For debugging purposes, will be removed later
-            ImGui::ShowDemoWindow();
-
-            // Explorer header
-            AddHeader();
-
-            // Sort body ids according to the columns the user has selected
-            sortSpecs = ImGui::TableGetSortSpecs();
-            vector<string> bodyIds;
-            AddAllBodies(bodyIds);
-            std::sort(bodyIds.begin(), bodyIds.end(), CompareBodies);
-
-            // Add said body ids to the table
-            AddBodiesToTable(bodyIds);
-
-            // End
-            ImGui::EndTable();
-        }
-
-        auto AddBodyDataMass(const Body &body) -> void {
-            ImGui::PushFont(Fonts::Main());
-            ImGui::TableNextColumn();
-            ImGui::Text("%s", MASS_TEXT.c_str());
-            ImGui::PopFont();
-
-            ImGui::PushFont(Fonts::Data());
-            ImGui::TableNextColumn();
-            ImGui::Text("%.2e %s", body.GetMass(), "kg");
-            ImGui::PopFont();
-        }
-
-        auto AddBodyDataRadius(const Body &body) -> void {
-            ImGui::PushFont(Fonts::Main());
-            ImGui::TableNextColumn();
-            ImGui::Text("%s", RADIUS_TEXT.c_str());
-            ImGui::PopFont();
-
-            ImGui::PushFont(Fonts::Data());
-            ImGui::TableNextColumn();
-            ImGui::Text("%.2e %s", body.GetRadius(), "m");
-            ImGui::PopFont();
-        }
-
-        auto AddBodyDataColor(const Body &body) -> void {
-            ImGui::PushFont(Fonts::Main());
-            ImGui::TableNextColumn();
-            ImGui::Text("%s", COLOR_TEXT.c_str());
-            ImGui::PopFont();
-
-            ImGui::PushFont(Fonts::Data());
-            ImGui::TableNextColumn();
-            ImVec4 color = ImVec4(body.GetColor().r, body.GetColor().g, body.GetColor().b, 1.0F);
-            ImGui::ColorEdit3("Body Colour", (float*)&color, ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel);
-            ImGui::PopFont();
-        }
-
-        auto AddBodyDataSpeed(const Body &body) -> void {
-            ImGui::PushFont(Fonts::Main());
-            ImGui::TableNextColumn();
-            ImGui::Text("%s", SPEED_TEXT.c_str());
-            ImGui::PopFont();
-
-            ImGui::PushFont(Fonts::Data());
-            ImGui::TableNextColumn();
-            ImGui::Text("%.2e %s", glm::length(body.GetVelocity()), "m/s");
-            ImGui::PopFont();
-        }
-
-        auto AddBodyDataAcceleration(const Body &body) -> void {
-            ImGui::PushFont(Fonts::Main());
-            ImGui::TableNextColumn();
-            ImGui::Text("%s", ACCELERATION_TEXT.c_str());
-            ImGui::PopFont();
-
-            ImGui::PushFont(Fonts::Data());
-            ImGui::TableNextColumn();
-            ImGui::Text("%.2e %s", glm::length(Simulation::CalculateAcceleration(Bodies::GetMassiveBodies(), body.GetId(), body.GetPosition())), "m/s\u00B2");
-            ImGui::PopFont();
-        }
-
-       auto AddBodyDataKineticEnergy(const Body &body) -> void {
-           ImGui::PushFont(Fonts::Main());
-           ImGui::TableNextColumn();
-           ImGui::Text("%s", KINETIC_ENERGY_TEXT.c_str());
-           ImGui::PopFont();
-
-           ImGui::PushFont(Fonts::Data());
-           ImGui::TableNextColumn();
-           ImGui::Text("%.2e %s", Simulation::GetKineticEnergy(body), "J");
-           ImGui::PopFont();
-       }
-
-       auto AddBodyDataPotentialEnergy(const Body &body) -> void {
-           ImGui::PushFont(Fonts::Main());
-           ImGui::TableNextColumn();
-           ImGui::Text("%s", POTENTIAL_ENERGY_TEXT.c_str());
-           ImGui::PopFont();
-
-           ImGui::PushFont(Fonts::Data());
-           ImGui::TableNextColumn();
-           ImGui::Text("%.2e %s", Simulation::GetPotentialEnergy(body), "J");
-           ImGui::PopFont();
-       }
-
-       auto AddBodyDataTotalEnergy(const Body &body) -> void {
-           ImGui::PushFont(Fonts::Main());
-           ImGui::TableNextColumn();
-           ImGui::Text("%s", TOTAL_ENERGY_TEXT.c_str());
-           ImGui::PopFont();
-
-           ImGui::PushFont(Fonts::Data());
-           ImGui::TableNextColumn();
-           ImGui::Text("%.2e %s", Simulation::GetKineticEnergy(body) + Simulation::GetPotentialEnergy(body), "J");
-           ImGui::PopFont();
-       }
-
-        auto AddBodyData() -> void {
-            ImGui::Separator();
-
-            // If no body is selected, we don't need to add anything for this section
-            if (Bodies::GetSelectedType() == BODY_TYPE_NONE) {
-                return;
-            }
-
-            Body selectedBody = Bodies::GetBody(Bodies::GetSelectedBody());
-
-            // Title text
-            ImGui::PushFont(Fonts::MainBig());
-            ImGui::Text("%s", Fonts::NormalizeString(Fonts::MainBig(), selectedBody.GetName(), BODY_DATA_SIZE.x).c_str());
-            ImGui::PopFont();
-
-            // Begin
-            ImGui::BeginTable("scenario-explorer", 2, BODY_DATA_FLAGS, BODY_DATA_SIZE);
-
-            ImGui::TableSetupColumn("", 0, DATA_KEY_COLUMN_WIDTH);
-            ImGui::TableSetupColumn("", 0, DATA_VALUE_COLUMN_WIDTH);
-
-            AddBodyDataMass(selectedBody);
-            AddBodyDataRadius(selectedBody);
-            AddBodyDataColor(selectedBody);
-            AddBodyDataSpeed(selectedBody);
-            AddBodyDataAcceleration(selectedBody);
-            AddBodyDataKineticEnergy(selectedBody);
-            AddBodyDataPotentialEnergy(selectedBody);
-            AddBodyDataTotalEnergy(selectedBody);
-
-            // End
-            ImGui::EndTable();
-        }
     }
 
-    auto Update() -> void {
-        // Begin window
-        ImGui::Begin("Scenario Explorer", &windowOpen, WINDOW_FLAGS);
-        ImGui::SetWindowSize(WINDOW_SIZE);
-        ImGui::SetWindowPos(WINDOW_POSITION);
+    auto Draw() -> void {
+        // Begin
+        ImGui::BeginTable("scenario-explorer", 2, EXPLORER_FLAGS, TABLE_SIZE);
 
-        // Add window contents
-        AddExplorer();
-        AddBodyData();
+        // For debugging purposes, will be removed later
+        ImGui::ShowDemoWindow();
 
-        // End window
-        ImGui::End();
+        // Explorer header
+        AddHeader();
+
+        // Sort body ids according to the columns the user has selected
+        sortSpecs = ImGui::TableGetSortSpecs();
+        vector<string> bodyIds;
+        AddAllBodies(bodyIds);
+        std::sort(bodyIds.begin(), bodyIds.end(), CompareBodies);
+
+        // Add said body ids to the table
+        AddBodiesToTable(bodyIds);
+
+        // End
+        ImGui::EndTable();
     }
 }

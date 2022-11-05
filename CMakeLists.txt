@@ -25,6 +25,7 @@ set(FILES
     "src/rendering/geometry/Rays.cpp"
     "src/rendering/geometry/Transition.cpp"
     "src/rendering/geometry/Sphere.cpp"
+    "src/rendering/interface/BodyData.cpp"
     "src/rendering/interface/Explorer.cpp"
     "src/rendering/interface/Fonts.cpp"
     "src/rendering/interface/MassiveRender.cpp"

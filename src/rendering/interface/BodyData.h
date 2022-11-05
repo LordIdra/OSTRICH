@@ -2,6 +2,6 @@
 
 
 
-namespace ScenarioExplorer {
+namespace BodyData {
     auto Draw() -> void;
 }
