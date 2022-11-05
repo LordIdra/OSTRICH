@@ -1,11 +1,12 @@
 #include "Explorer.h"
+
+#include <rendering/interface/Fonts.h>
 #include "main/Simulation.h"
+#include <main/Bodies.h>
 
 #include <algorithm>
 #include <ios>
 #include <iostream>
-#include <main/Bodies.h>
-#include <depend/IconsMaterialDesignIcons_c.h>
 
 #include <imgui.h>
 #include <string>
@@ -16,15 +17,6 @@
 
 namespace ScenarioExplorer {
     namespace {
-        ImFont* mainFont;
-        ImFont* mainFontBig;
-        ImFont* dataFont;
-        ImFont* iconFont;
-
-        const string MAIN_FONT_PATH = "../resources/fonts/inter-light.ttf";
-        const string DATA_FONT_PATH = "../resources/fonts/source-code-pro-medium.otf";
-        const string ICON_FONT_PATH = "../resources/fonts/material-design-icons.ttf";
-
         const string NAME_TEXT = ICON_MDI_FORMAT_TEXT + string(" Name");
         const string MASS_TEXT = ICON_MDI_WEIGHT + string(" Mass");
         const string RADIUS_TEXT = ICON_MDI_RADIUS + string(" Radius");
@@ -41,9 +33,6 @@ namespace ScenarioExplorer {
         const int DATA_KEY_COLUMN_WIDTH = 170;
         const int DATA_VALUE_COLUMN_WIDTH =  130;
 
-        const float FONT_SIZE = 20.0F;
-        const float BIG_FONT_SIZE = 40.0F;
-
         const unsigned int NAME_COLUMN_ID = 0;
         const unsigned int MASS_COLUMN_ID = 1;
 
@@ -51,8 +40,6 @@ namespace ScenarioExplorer {
         const ImVec2 WINDOW_POSITION = ImVec2(0, 0);
         const ImVec2 EXPLORER_SIZE = ImVec2(300, 730);
         const ImVec2 BODY_DATA_SIZE = ImVec2(300, 100);
-        
-        const ImWchar ICON_RANGE[] = {ICON_MIN_MDI, ICON_MAX_MDI, 0}; // NOLINT (interfacing with C library)
 
         const ImGuiWindowFlags WINDOW_FLAGS = ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
         const ImGuiTableFlags EXPLORER_FLAGS = ImGuiTableFlags_SizingFixedFit | ImGuiTableFlags_Sortable | ImGuiTableFlags_ScrollY | ImGuiTableFlags_NoPadOuterX | ImGuiTableFlags_NoPadInnerX;
@@ -62,51 +49,9 @@ namespace ScenarioExplorer {
         
         bool windowOpen = true;
 
-        auto NormalizeString(ImFont* font, const string &str, const float maxWidth) -> string {
-            string newString = str;
-
-            ImGui::PushFont(font);
-
-            bool atLeastOneCharacterRemoved = false;
-
-            // While the text width is greater than the max width, remove the last character
-            while (ImGui::CalcTextSize(newString.c_str()).x > maxWidth) {
-                newString = newString.substr(0, newString.length() - 2);
-                atLeastOneCharacterRemoved = true;
-            }
-
-            if (atLeastOneCharacterRemoved) {
-                newString += "...";
-            }
-
-            ImGui::PopFont();
-
-            return newString;
-        }
-
-        auto LoadFonts() -> void {
-            // Load font config and set config options
-            ImGuiIO& io = ImGui::GetIO();
-            ImFontConfig config;
-            config.MergeMode = true;
-            config.GlyphMinAdvanceX = FONT_SIZE;
-
-            // Load 'main' font and merge icons
-            mainFont = io.Fonts->AddFontFromFileTTF(MAIN_FONT_PATH.c_str(), FONT_SIZE);
-            io.Fonts->AddFontFromFileTTF(ICON_FONT_PATH.c_str(), FONT_SIZE, &config, (const ImWchar*)ICON_RANGE);
-
-            // Load 'main' font (but bigger) and merge icons
-            mainFontBig = io.Fonts->AddFontFromFileTTF(MAIN_FONT_PATH.c_str(), BIG_FONT_SIZE);
-            io.Fonts->AddFontFromFileTTF(ICON_FONT_PATH.c_str(), BIG_FONT_SIZE, &config, (const ImWchar*)ICON_RANGE);
-            
-            // Load 'data' font and merge icons
-            dataFont = io.Fonts->AddFontFromFileTTF(DATA_FONT_PATH.c_str(), FONT_SIZE);
-            io.Fonts->AddFontFromFileTTF(ICON_FONT_PATH.c_str(), FONT_SIZE, &config, (const ImWchar*)ICON_RANGE);
-        }
-
         auto AddHeader() -> void {
             // Use main font
-            ImGui::PushFont(mainFont);
+            ImGui::PushFont(Fonts::Main());
 
             // Freeze the top row so it doesn't disappear when scrolling
             ImGui::TableSetupScrollFreeze(0, 1);
@@ -131,7 +76,7 @@ namespace ScenarioExplorer {
 
         auto AddNameSelectable(const string &id, const string &name) -> void {
             ImGui::TableNextColumn();
-            if (ImGui::Selectable(NormalizeString(mainFontBig, name, NAME_WIDTH).c_str(), id == Bodies::GetSelectedBody(), ImGuiSelectableFlags_SpanAllColumns)) {
+            if (ImGui::Selectable(Fonts::NormalizeString(Fonts::MainBig(), name, NAME_WIDTH).c_str(), id == Bodies::GetSelectedBody(), ImGuiSelectableFlags_SpanAllColumns)) {
                 Bodies::SetSelectedBody(id);
             }
         }
@@ -142,7 +87,7 @@ namespace ScenarioExplorer {
         }
 
         auto AddBodiesToTable(const vector<string> &bodyIds) -> void {
-            ImGui::PushFont(dataFont);
+            ImGui::PushFont(Fonts::Data());
             for (const string &id : bodyIds) {
                 Body body = Bodies::GetBody(id);
                 AddNameSelectable(id, body.GetName());
@@ -202,36 +147,36 @@ namespace ScenarioExplorer {
         }
 
         auto AddBodyDataMass(const Body &body) -> void {
-            ImGui::PushFont(mainFont);
+            ImGui::PushFont(Fonts::Main());
             ImGui::TableNextColumn();
             ImGui::Text("%s", MASS_TEXT.c_str());
             ImGui::PopFont();
 
-            ImGui::PushFont(dataFont);
+            ImGui::PushFont(Fonts::Data());
             ImGui::TableNextColumn();
             ImGui::Text("%.2e %s", body.GetMass(), "kg");
             ImGui::PopFont();
         }
 
         auto AddBodyDataRadius(const Body &body) -> void {
-            ImGui::PushFont(mainFont);
+            ImGui::PushFont(Fonts::Main());
             ImGui::TableNextColumn();
             ImGui::Text("%s", RADIUS_TEXT.c_str());
             ImGui::PopFont();
 
-            ImGui::PushFont(dataFont);
+            ImGui::PushFont(Fonts::Data());
             ImGui::TableNextColumn();
             ImGui::Text("%.2e %s", body.GetRadius(), "m");
             ImGui::PopFont();
         }
 
         auto AddBodyDataColor(const Body &body) -> void {
-            ImGui::PushFont(mainFont);
+            ImGui::PushFont(Fonts::Main());
             ImGui::TableNextColumn();
             ImGui::Text("%s", COLOR_TEXT.c_str());
             ImGui::PopFont();
 
-            ImGui::PushFont(dataFont);
+            ImGui::PushFont(Fonts::Data());
             ImGui::TableNextColumn();
             ImVec4 color = ImVec4(body.GetColor().r, body.GetColor().g, body.GetColor().b, 1.0F);
             ImGui::ColorEdit3("Body Colour", (float*)&color, ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel);
@@ -239,60 +184,60 @@ namespace ScenarioExplorer {
         }
 
         auto AddBodyDataSpeed(const Body &body) -> void {
-            ImGui::PushFont(mainFont);
+            ImGui::PushFont(Fonts::Main());
             ImGui::TableNextColumn();
             ImGui::Text("%s", SPEED_TEXT.c_str());
             ImGui::PopFont();
 
-            ImGui::PushFont(dataFont);
+            ImGui::PushFont(Fonts::Data());
             ImGui::TableNextColumn();
             ImGui::Text("%.2e %s", glm::length(body.GetVelocity()), "m/s");
             ImGui::PopFont();
         }
 
         auto AddBodyDataAcceleration(const Body &body) -> void {
-            ImGui::PushFont(mainFont);
+            ImGui::PushFont(Fonts::Main());
             ImGui::TableNextColumn();
             ImGui::Text("%s", ACCELERATION_TEXT.c_str());
             ImGui::PopFont();
 
-            ImGui::PushFont(dataFont);
+            ImGui::PushFont(Fonts::Data());
             ImGui::TableNextColumn();
             ImGui::Text("%.2e %s", glm::length(Simulation::CalculateAcceleration(Bodies::GetMassiveBodies(), body.GetId(), body.GetPosition())), "m/s\u00B2");
             ImGui::PopFont();
         }
 
        auto AddBodyDataKineticEnergy(const Body &body) -> void {
-           ImGui::PushFont(mainFont);
+           ImGui::PushFont(Fonts::Main());
            ImGui::TableNextColumn();
            ImGui::Text("%s", KINETIC_ENERGY_TEXT.c_str());
            ImGui::PopFont();
 
-           ImGui::PushFont(dataFont);
+           ImGui::PushFont(Fonts::Data());
            ImGui::TableNextColumn();
            ImGui::Text("%.2e %s", Simulation::GetKineticEnergy(body), "J");
            ImGui::PopFont();
        }
 
        auto AddBodyDataPotentialEnergy(const Body &body) -> void {
-           ImGui::PushFont(mainFont);
+           ImGui::PushFont(Fonts::Main());
            ImGui::TableNextColumn();
            ImGui::Text("%s", POTENTIAL_ENERGY_TEXT.c_str());
            ImGui::PopFont();
 
-           ImGui::PushFont(dataFont);
+           ImGui::PushFont(Fonts::Data());
            ImGui::TableNextColumn();
            ImGui::Text("%.2e %s", Simulation::GetPotentialEnergy(body), "J");
            ImGui::PopFont();
        }
 
        auto AddBodyDataTotalEnergy(const Body &body) -> void {
-           ImGui::PushFont(mainFont);
+           ImGui::PushFont(Fonts::Main());
            ImGui::TableNextColumn();
            ImGui::Text("%s", TOTAL_ENERGY_TEXT.c_str());
            ImGui::PopFont();
 
-           ImGui::PushFont(dataFont);
+           ImGui::PushFont(Fonts::Data());
            ImGui::TableNextColumn();
            ImGui::Text("%.2e %s", Simulation::GetKineticEnergy(body) + Simulation::GetPotentialEnergy(body), "J");
            ImGui::PopFont();
@@ -309,8 +254,8 @@ namespace ScenarioExplorer {
             Body selectedBody = Bodies::GetBody(Bodies::GetSelectedBody());
 
             // Title text
-            ImGui::PushFont(mainFontBig);
-            ImGui::Text("%s", NormalizeString(mainFontBig, selectedBody.GetName(), BODY_DATA_SIZE.x).c_str());
+            ImGui::PushFont(Fonts::MainBig());
+            ImGui::Text("%s", Fonts::NormalizeString(Fonts::MainBig(), selectedBody.GetName(), BODY_DATA_SIZE.x).c_str());
             ImGui::PopFont();
 
             // Begin
@@ -331,10 +276,6 @@ namespace ScenarioExplorer {
             // End
             ImGui::EndTable();
         }
-    }
-
-    auto Init() -> void {
-        LoadFonts();
     }
 
     auto Update() -> void {

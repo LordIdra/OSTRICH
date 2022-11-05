@@ -1,4 +1,5 @@
 #include "Interface.h"
+#include "rendering/interface/Fonts.h"
 
 #include <imgui_impl_glfw.h>
 #include <imgui_impl_opengl3.h>
@@ -13,10 +14,10 @@
 namespace Interface {
 
     auto Init() -> void {
+        Fonts::Init();
         MassiveRender::Init();
         OrbitPaths::Init();
         Icons::Init();
-        ScenarioExplorer::Init();
     }
     
     auto Update(const double deltaTime) -> void {
