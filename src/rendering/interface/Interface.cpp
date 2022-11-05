@@ -1,6 +1,7 @@
 #include "Interface.h"
 
 #include <rendering/interface/Fonts.h>
+#include <rendering/interface/BottomRightWindow/BottomRightWindow.h>
 #include <rendering/interface/LeftWindow/LeftWindow.h>
 #include <rendering/interface/Bodies/OrbitPaths.h>
 #include <rendering/interface/Bodies/MassiveRender.h>
@@ -32,6 +33,7 @@ namespace Interface {
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
+        BottomRightWindow::Draw();
         LeftWindow::Draw();
         
         ImGui::Render();

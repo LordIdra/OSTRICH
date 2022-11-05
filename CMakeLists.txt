@@ -33,6 +33,8 @@ set(FILES
     "src/rendering/interface/icons/Icon.cpp"
     "src/rendering/interface/icons/Icons.cpp"
 
+    "src/rendering/interface/BottomRightWindow/BottomRightWindow.cpp"
+
     "src/rendering/interface/LeftWindow/LeftWindow.cpp"
     "src/rendering/interface/LeftWindow/BodyData.cpp"
     "src/rendering/interface/LeftWindow/Explorer.cpp"

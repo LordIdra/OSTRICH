@@ -18,7 +18,7 @@ namespace LeftWindow {
     }
 
     auto Draw() -> void {
-        ImGui::Begin("Scenario Explorer", &windowOpen, WINDOW_FLAGS);
+        ImGui::Begin("Left Window", &windowOpen, WINDOW_FLAGS);
         ImGui::SetWindowSize(WINDOW_SIZE);
         ImGui::SetWindowPos(WINDOW_POSITION);
 
