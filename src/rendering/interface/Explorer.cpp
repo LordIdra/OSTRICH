@@ -31,9 +31,15 @@ namespace ScenarioExplorer {
         const string COLOR_TEXT = ICON_MDI_BRUSH + string(" Color");
         const string SPEED_TEXT = ICON_MDI_SPEEDOMETER_SLOW + string(" Velocity");
         const string ACCELERATION_TEXT = ICON_MDI_CHEVRON_DOUBLE_UP + string(" Acceleration");
+        const string KINETIC_ENERGY_TEXT = ICON_MDI_CUBE_SEND + string(" Kinetic Energy");
+        const string POTENTIAL_ENERGY_TEXT = ICON_MDI_ATOM + string(" Potential Energy");
+        const string TOTAL_ENERGY_TEXT = ICON_MDI_LIGHTNING_BOLT + string(" Total Energy");
 
         const int NAME_WIDTH = 180;
         const int MASS_WIDTH = 40;
+        const int DATA_KEY_COLUMN_WIDTH = 170;
+        const int DATA_VALUE_COLUMN_WIDTH =  130;
+
         const float FONT_SIZE = 20.0F;
         const float BIG_FONT_SIZE = 40.0F;
 
@@ -42,8 +48,8 @@ namespace ScenarioExplorer {
 
         const ImVec2 WINDOW_SIZE = ImVec2(330, 1000);
         const ImVec2 WINDOW_POSITION = ImVec2(0, 0);
-        const ImVec2 EXPLORER_SIZE = ImVec2(300, 600);
-        const ImVec2 BODY_DATA_SIZE = ImVec2(330, 300);
+        const ImVec2 EXPLORER_SIZE = ImVec2(300, 730);
+        const ImVec2 BODY_DATA_SIZE = ImVec2(300, 100);
         
         const ImWchar ICON_RANGE[] = {ICON_MIN_MDI, ICON_MAX_MDI, 0}; // NOLINT (interfacing with C library)
 
@@ -54,6 +60,15 @@ namespace ScenarioExplorer {
         ImGuiTableSortSpecs* sortSpecs;
         
         bool windowOpen = true;
+
+        auto NormalizeString(ImFont* font, string &str, const float maxWidth) -> void {
+            ImGui::PushFont(font);
+            float text_width = ImGui::CalcTextSize(str.c_str()).x;
+            ImGui::PopFont();
+            if (text_width > maxWidth) {
+                str = str.substr(0, str.length() - 3) + "...";
+            }
+        }
 
         auto LoadFonts() -> void {
             // Load font config and set config options
@@ -233,6 +248,42 @@ namespace ScenarioExplorer {
             ImGui::PopFont();
         }
 
+       auto AddBodyDataKineticEnergy(const Body &body) -> void {
+           ImGui::PushFont(mainFont);
+           ImGui::TableNextColumn();
+           ImGui::Text("%s", KINETIC_ENERGY_TEXT.c_str());
+           ImGui::PopFont();
+
+           ImGui::PushFont(dataFont);
+           ImGui::TableNextColumn();
+           ImGui::Text("%.2e %s", Simulation::GetKineticEnergy(body), "J");
+           ImGui::PopFont();
+       }
+
+       auto AddBodyDataPotentialEnergy(const Body &body) -> void {
+           ImGui::PushFont(mainFont);
+           ImGui::TableNextColumn();
+           ImGui::Text("%s", POTENTIAL_ENERGY_TEXT.c_str());
+           ImGui::PopFont();
+
+           ImGui::PushFont(dataFont);
+           ImGui::TableNextColumn();
+           ImGui::Text("%.2e %s", Simulation::GetPotentialEnergy(body), "J");
+           ImGui::PopFont();
+       }
+
+       auto AddBodyDataTotalEnergy(const Body &body) -> void {
+           ImGui::PushFont(mainFont);
+           ImGui::TableNextColumn();
+           ImGui::Text("%s", TOTAL_ENERGY_TEXT.c_str());
+           ImGui::PopFont();
+
+           ImGui::PushFont(dataFont);
+           ImGui::TableNextColumn();
+           ImGui::Text("%.2e %s", Simulation::GetKineticEnergy(body) + Simulation::GetPotentialEnergy(body), "J");
+           ImGui::PopFont();
+       }
+
         auto AddBodyData() -> void {
             ImGui::Separator();
 
@@ -251,14 +302,17 @@ namespace ScenarioExplorer {
             // Begin
             ImGui::BeginTable("scenario-explorer", 2, BODY_DATA_FLAGS, BODY_DATA_SIZE);
 
-            ImGui::TableSetupColumn("", 0, 150);
-            ImGui::TableSetupColumn("", 0, 200);
+            ImGui::TableSetupColumn("", 0, DATA_KEY_COLUMN_WIDTH);
+            ImGui::TableSetupColumn("", 0, DATA_VALUE_COLUMN_WIDTH);
 
             AddBodyDataMass(selectedBody);
             AddBodyDataRadius(selectedBody);
             AddBodyDataColor(selectedBody);
             AddBodyDataSpeed(selectedBody);
             AddBodyDataAcceleration(selectedBody);
+            AddBodyDataKineticEnergy(selectedBody);
+            AddBodyDataPotentialEnergy(selectedBody);
+            AddBodyDataTotalEnergy(selectedBody);
 
             // End
             ImGui::EndTable();

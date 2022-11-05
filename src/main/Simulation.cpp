@@ -6,6 +6,7 @@
 #include <GLFW/glfw3.h>
 #include <algorithm>
 #include <glm/ext/quaternion_geometric.hpp>
+#include <glm/geometric.hpp>
 #include <main/Simulation.h>
 #include <unordered_map>
 #include <utility>
@@ -125,6 +126,23 @@ namespace Simulation {
         }
 
         return points;
+    }
+
+    auto GetKineticEnergy(const Body &body) -> double {
+        return 0.5 * body.GetMass() * pow(glm::length(body.GetVelocity()), 2);
+    }
+
+    auto GetPotentialEnergy(const Body &body) -> double {
+        double energy = 0;
+        for (const auto &pair : Bodies::GetMassiveBodies()) {
+            if (pair.first == body.GetId()) {
+                continue;
+            }
+            double massProduct = body.GetMass() * pair.second.GetMass();
+            double distance = glm::distance(body.GetPosition(), pair.second.GetPosition());
+            energy += (GRAVITATIONAL_CONSTANT * massProduct) / distance;
+        }
+        return energy;
     }
 
     auto SetTimeStepSize(const double size) -> void {

@@ -21,7 +21,7 @@ massless:
     position: [-1.4055e+9, 0, 0]
     velocity: [-0.270e+3, 0.170e+3, -0.470e+3]
   spacecraft-2:
-    name: "Another Spacecraft"
+    name: "Another Spacecraft that is carrying nuclear warheads"
     color: [0.9, 0.9, 0.3]
     position: [0, 1.4055e+8, 0]
     velocity: [0.270e+3, 0.190e+3, -0.170e+4]

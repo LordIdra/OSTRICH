@@ -17,6 +17,9 @@ namespace Simulation {
     auto Integrate(const unordered_map<string, Massive> &massiveBodies, Body &body) -> void;
     auto Integrate() -> unordered_map<string, vector<OrbitPoint>>;
 
+    auto GetKineticEnergy(const Body &body) -> double;
+    auto GetPotentialEnergy(const Body &body) -> double;
+
     auto SetTimeStepSize(const double size) -> void;
     auto SetTimeStepsPerFrame(const double size) -> void;
 }

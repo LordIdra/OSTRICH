@@ -1,5 +1,6 @@
 #include "Body.h"
 
+#include <glm/geometric.hpp>
 #include <util/Constants.h>
 #include <util/Log.h>
 
