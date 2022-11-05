@@ -22,20 +22,28 @@ set(FILES
 
     "src/rendering/camera/Camera.cpp"
     "src/rendering/camera/Util.cpp"
+
     "src/rendering/geometry/Rays.cpp"
     "src/rendering/geometry/Transition.cpp"
     "src/rendering/geometry/Sphere.cpp"
-    "src/rendering/interface/BodyData.cpp"
-    "src/rendering/interface/Explorer.cpp"
-    "src/rendering/interface/Fonts.cpp"
-    "src/rendering/interface/MassiveRender.cpp"
-    "src/rendering/interface/Interface.cpp"
+
+    "src/rendering/interface/Bodies/MassiveRender.cpp"
+    "src/rendering/interface/Bodies/OrbitPaths.cpp"
+
     "src/rendering/interface/icons/Icon.cpp"
     "src/rendering/interface/icons/Icons.cpp"
-    "src/rendering/interface/OrbitPaths.cpp"
+
+    "src/rendering/interface/LeftWindow/LeftWindow.cpp"
+    "src/rendering/interface/LeftWindow/BodyData.cpp"
+    "src/rendering/interface/LeftWindow/Explorer.cpp"
+
+    "src/rendering/interface/Fonts.cpp"
+    "src/rendering/interface/Interface.cpp"
+
     "src/rendering/shaders/Program.cpp"
     "src/rendering/shaders/Shader.cpp"
     "src/rendering/shaders/Util.cpp"
+
     "src/rendering/Texture.cpp"
     "src/rendering/VAO.cpp"
 )

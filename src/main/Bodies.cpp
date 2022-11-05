@@ -11,7 +11,7 @@
 #include <rendering/geometry/Transition.h>
 #include <input/Keys.h>
 #include <input/Mouse.h>
-#include <rendering/interface/MassiveRender.h>
+#include <rendering/interface/Bodies/MassiveRender.h>
 #include <main/OrbitPoint.h>
 
 
