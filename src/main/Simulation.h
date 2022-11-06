@@ -9,6 +9,10 @@
 
 namespace Simulation {
 
+    const double SPEED_MULTIPLIER = 5;
+    const double MIN_MULTIPLIER = 1;
+    const double MAX_MULTIPLIER = 12;
+
     auto Init() -> void;
 
     auto CalculateAcceleration(const unordered_map<string, Massive> &massiveBodies, const string &id, const dvec3 &position) -> dvec3;
@@ -25,4 +29,5 @@ namespace Simulation {
 
     auto GetTimeStepSize() -> double;
     auto GetSimulationSpeed() -> double;
+    auto GetSimulationSpeedMultiplier() -> double;
 }

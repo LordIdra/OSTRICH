@@ -1,7 +1,8 @@
+#include "Simulation.h"
+
 #include "input/Keys.h"
 #include "main/Bodies.h"
 #include "main/OrbitPoint.h"
-#include <main/Simulation.h>
 #include "util/Constants.h"
 #include "util/Log.h"
 
@@ -17,10 +18,6 @@
 namespace Simulation {
 
     namespace {
-        const double SPEED_MULTIPLIER = 5;
-        const double MIN_SPEED = 1;
-        const double MAX_SPEED = 100000000;
-
         const double INITIAL_TIME_STEP_SIZE = 5000;
         const double INITIAL_TIME_STEP_COUNT = 10000;
         const double INITIAL_SIMULATION_SPEED = 1;
@@ -28,20 +25,23 @@ namespace Simulation {
         double timeStepSize = INITIAL_TIME_STEP_SIZE;
         double timeStepsPerFrame = INITIAL_TIME_STEP_COUNT;
         double simulationSpeed = INITIAL_SIMULATION_SPEED;
+        double simulationSpeedMultiplier = INITIAL_SIMULATION_SPEED;
 
         auto IncreaseSimulationSpeed() -> void {
             // Check that this action won't increase the simulation speed above the maximum speed
-            if ((simulationSpeed * SPEED_MULTIPLIER) > MAX_SPEED) {
+            if (simulationSpeedMultiplier >= MAX_MULTIPLIER) {
                 return;
             }
+            simulationSpeedMultiplier += 1;
             simulationSpeed *= SPEED_MULTIPLIER;
         }
 
         auto DecreaseSimulationSpeed() -> void {
             // Check that this action won't decrease the simulation speed below the minimum speed
-            if ((simulationSpeed / SPEED_MULTIPLIER) < MIN_SPEED) {
+            if (simulationSpeedMultiplier <= MIN_MULTIPLIER) {
                 return;
             }
+            simulationSpeedMultiplier -= 1;
             simulationSpeed /= SPEED_MULTIPLIER;
         }
     }
@@ -158,5 +158,9 @@ namespace Simulation {
 
     auto GetSimulationSpeed() -> double {
         return simulationSpeed;
+    }
+
+    auto GetSimulationSpeedMultiplier() -> double {
+        return simulationSpeedMultiplier;
     }
 }
