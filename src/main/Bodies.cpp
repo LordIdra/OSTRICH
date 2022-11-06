@@ -29,6 +29,8 @@ namespace Bodies {
         unordered_map<string, vector<OrbitPoint>> pastPoints;
         unordered_map<string, vector<OrbitPoint>> futurePoints;
 
+        const unsigned int MAX_PAST_POINTS = 600;
+
         BodyType selectedType = BODY_TYPE_NONE;
         string selected;
 
@@ -43,9 +45,15 @@ namespace Bodies {
             body.SetPosition(futurePoints.at(body.GetId()).at(1).position);
             body.SetVelocity(futurePoints.at(body.GetId()).at(1).velocity);
 
-            // The point we just moved from is now a past point
-            //pastPoints.at(body.GetId()).push_back(futurePoints.at(body.GetId()).at(0));
+            // The point we just moved to is now also a past point 
+            // If we used the previous point, there'd be a gap in the line before the body
+            pastPoints.at(body.GetId()).push_back(futurePoints.at(body.GetId()).at(1));
             futurePoints.at(body.GetId()).erase(futurePoints.at(body.GetId()).begin());
+
+            // Check that we don't have too many past points now
+            if (pastPoints.at(body.GetId()).size() > MAX_PAST_POINTS) {
+                pastPoints.at(body.GetId()).erase(pastPoints.at(body.GetId()).begin());
+            }
         }
 
         auto IncrementBodyOrbitPoint() -> void {
@@ -110,12 +118,14 @@ namespace Bodies {
 
     auto AddBody(const Massive &body) -> void {
         massiveBodies.insert(std::make_pair(body.GetId(), body));
+        pastPoints.insert(std::make_pair(body.GetId(), vector<OrbitPoint>()));
         MassiveRender::AddBody(body);
     }
 
     auto AddBody(const Massless &body) -> void {
         // Massless bodies only need icons, so we don't need to worry about the Render namespace
         masslessBodies.insert(std::make_pair(body.GetId(), body));
+        pastPoints.insert(std::make_pair(body.GetId(), vector<OrbitPoint>()));
     }
 
     auto GetSelectedBody() -> string {
@@ -172,7 +182,11 @@ namespace Bodies {
         return masslessBodies.at(id);
     }
 
-    auto GetPositions() -> unordered_map<string, vector<OrbitPoint>> {
+    auto GetPastPoints() -> unordered_map<string, vector<OrbitPoint>> {
+        return pastPoints;
+    }
+
+    auto GetFuturePoints() -> unordered_map<string, vector<OrbitPoint>> {
         return futurePoints;
     }
 }

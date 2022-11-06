@@ -30,5 +30,6 @@ namespace Bodies {
     auto GetMasslessBody(const string &id) -> Massless;
     auto GetBody(const string &id) -> Body;
 
-    auto GetPositions() -> unordered_map<string, vector<OrbitPoint>>;
+    auto GetPastPoints() -> unordered_map<string, vector<OrbitPoint>>;
+    auto GetFuturePoints() -> unordered_map<string, vector<OrbitPoint>>;
 }

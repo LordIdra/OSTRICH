@@ -30,79 +30,14 @@ namespace OrbitPaths {
         const float PATH_WIDTH = 0.005;
         const vec3 PATH_COLOR = vec3(0.0, 0.0, 0.9);
         const float DISTANCE_THRESHOLD = 0.01;
-        const float RATIO_OF_POINTS_TO_FADE_OVER = 0.2;
+        const float RATIO_OF_FUTURE_POINTS_TO_FADE_OVER = 0.05;
+        const float PAST_POINT_BRIGHTNESS = 0.4;
 
-        unique_ptr<VAO> vao;
+        unique_ptr<VAO> futurePointsVAO;
+        unique_ptr<VAO> pastPointsVAO;
         unique_ptr<Program> program;
 
-        auto ConvertToSequences(unordered_map<string, vector<OrbitPoint>> &unscaledOrbitPoints) -> unordered_map<string, vector<vector<OrbitPoint>>> {
-            unordered_map<string, vector<vector<OrbitPoint>>> sequenceMap;
-            for (auto pair : unscaledOrbitPoints) {
-
-                // These sequences are series of points that need to be connected with a line
-                // Why not just a continuous set of points? Well, part the orbit may go off camera, meaning it would be split
-                // in two and we'd need to render two separate segments
-                vector<vector<OrbitPoint>> bodyScreenPositions = vector<vector<OrbitPoint>>();
-                for (int i = 0; i < pair.second.size()-1;) {
-                    
-                    // If the coordinate is off camera, no reason to create a sequence
-                    // Note that here we do checks. One check takes a vec3 and makes sure that the coordinate isn't actually BEHIND the camera
-                    // The second check takes a vec2 and makes sure it isn't off-screen
-                    vec3 scaledCoordinate = Rays::Scale(pair.second.at(i).position);
-                    bool isCoordinateBehindCamera = Rays::IsCoordinateOffCamera(scaledCoordinate);
-                    bool isCoordinateOffScreen = Rays::IsCoordinateOffCamera(Rays::WorldToScreen(scaledCoordinate));
-                    if (isCoordinateOffScreen || isCoordinateBehindCamera) {
-                        i++;
-                        continue;
-                    }
-
-                    // The current index points to an on-screen node
-                    // We want to start off-screen so that the sequence doesn't terminate on-screen
-                    // Of course, if the index is 0, we can't decrement
-                    if (i != 0) {
-                        i--;
-                    }
-
-                    // Okay, we just found a coordinate that's on camera, let's start creating a sequence
-                    vector<OrbitPoint> sequence;
-
-                    // Add start of sequence - the first node might be on screen, so it'll look like the sequence
-                    // starts on-screen even if it may start off-screen in actuality
-                    //sequence.push_back(pair.second.at(i-1));
-
-                    // Keep adding points to the sequence until the point is off-camera
-                    while (i < pair.second.size()-1) {
-                        sequence.push_back(pair.second.at(i));
-                        i++;
-                        
-                        // Note that here we do checks. One check takes a vec3 and makes sure that the coordinate isn't actually BEHIND the camera
-                        // The second check takes a vec2 and makes sure it isn't off-screen
-                        vec3 scaledCoordinate = Rays::Scale(pair.second.at(i).position);
-                        bool isCoordinateBehindCamera = Rays::IsCoordinateOffCamera(scaledCoordinate);
-                        bool isCoordinateOffScreen = Rays::IsCoordinateOffCamera(Rays::WorldToScreen(scaledCoordinate));
-                        if (isCoordinateOffScreen || isCoordinateBehindCamera) {
-                            break;
-                        }
-                    }
-
-                    // Now close off the sequence by adding the next point
-                    // This is done to make sure that lines actually appear to go off-screen, rather than
-                    // just terminating near the end of the screen
-                    sequence.push_back(pair.second.at(i));
-
-                    // All done
-                    bodyScreenPositions.push_back(sequence);
-                    i++;
-                }
-
-                // Assign the final vector to the body ID in the map
-                sequenceMap.insert(std::make_pair(pair.first, bodyScreenPositions));
-            }
-
-            return sequenceMap;
-        }
-
-        auto TransformSequencesToScreen(unordered_map<string, vector<OrbitPoint>> &unscaledPointMap) -> unordered_map<string, vector<vec3>> {
+        auto ScalePointMap(unordered_map<string, vector<OrbitPoint>> &unscaledPointMap) -> unordered_map<string, vector<vec3>> {
             unordered_map<string, vector<vec3>> worldPositionMap;
 
             // For every body
@@ -128,6 +63,70 @@ namespace OrbitPaths {
             vertices.push_back(color.y);
             vertices.push_back(color.z);
         }
+
+        auto DrawFuturePointMap(const unordered_map<string, vector<vec3>>&pointMap, const unsigned int drawMethod) -> void {
+            // Iterate through every body
+            for (const auto &pair : pointMap) {
+                vector<VERTEX_DATA_TYPE> vertices;
+
+                // Use color of the body for color of orbit path
+                vec3 color = Bodies::GetBody(pair.first).GetColor();
+
+                int numberOfPointsToFadeOver = pair.second.size() * RATIO_OF_FUTURE_POINTS_TO_FADE_OVER;
+
+                // Iterate through every sequence for the corresponding body
+                int i = 0;
+                for (const vec3 &position : pair.second) {
+
+                    // Figure out the color of this vertex
+                    vec3 vertexColor = color;
+                    if (pair.second.size() - i < numberOfPointsToFadeOver) {
+                        float brightness = (float(pair.second.size() - i) / numberOfPointsToFadeOver);
+                        vertexColor *= brightness;
+                    }
+
+                    i++;
+
+                    // Add new vertices (two triangles to form a quadrilateral)
+                    AddVertex(vertices, position, vertexColor);
+                }
+
+                program->Use();
+                program->Set("cameraMatrix", Camera::GetMatrix());
+                futurePointsVAO->Data(vertices, vertices.size() / STRIDE, GL_DYNAMIC_DRAW);
+                futurePointsVAO->Render(drawMethod);
+            }
+        }
+
+        auto DrawPastPointMap(const unordered_map<string, vector<vec3>>&pointMap, const unsigned int drawMethod) -> void {
+            // Iterate through every body
+            for (const auto &pair : pointMap) {
+                vector<VERTEX_DATA_TYPE> vertices;
+
+                // Use color of the body for color of orbit path
+                vec3 color = Bodies::GetBody(pair.first).GetColor();
+
+                int numberOfPointsToFadeOver = pair.second.size();
+
+                // Iterate through every sequence for the corresponding body
+                int i = 0;
+                for (const vec3 &position : pair.second) {
+
+                    // Figure out the color of this vertex
+                    float brightness = float(i) / numberOfPointsToFadeOver;
+                    vec3 vertexColor = color * brightness * PAST_POINT_BRIGHTNESS;
+                    i++;
+
+                    // Add new vertices (two triangles to form a quadrilateral)
+                    AddVertex(vertices, position, vertexColor);
+                }
+
+                program->Use();
+                program->Set("cameraMatrix", Camera::GetMatrix());
+                futurePointsVAO->Data(vertices, vertices.size() / STRIDE, GL_DYNAMIC_DRAW);
+                futurePointsVAO->Render(drawMethod);
+            }
+        }
     }
 
     auto Init() -> void {
@@ -136,10 +135,10 @@ namespace OrbitPaths {
         Shader fragment = Shader("../resources/shaders/path-fragment.fsh", GL_FRAGMENT_SHADER);
         program = std::make_unique<Program>(vertex, fragment);
 
-        // Create VAO
-        vao = std::make_unique<VAO>();
-        vao->Init();
-        vao->AddVertexAttribute(
+        // Create future points VAO
+        futurePointsVAO = std::make_unique<VAO>();
+        futurePointsVAO->Init();
+        futurePointsVAO->AddVertexAttribute(
             VertexAttribute{
             .index = 0,
             .size = 3,
@@ -147,7 +146,26 @@ namespace OrbitPaths {
             .normalised = GL_FALSE,
             .stride = STRIDE * sizeof(float),
             .offset = nullptr});
-        vao->AddVertexAttribute(VertexAttribute{
+        futurePointsVAO->AddVertexAttribute(VertexAttribute{
+            .index = 1,
+            .size = 3,
+            .type = GL_FLOAT,
+            .normalised = GL_FALSE,
+            .stride = STRIDE * sizeof(float),
+            .offset = (void*)(3 * sizeof(float))}); // NOLINT(cppcoreguidelines-pro-type-cstyle-cast)
+
+        // Create past points VAO
+        pastPointsVAO = std::make_unique<VAO>();
+        pastPointsVAO->Init();
+        pastPointsVAO->AddVertexAttribute(
+            VertexAttribute{
+            .index = 0,
+            .size = 3,
+            .type = GL_FLOAT,
+            .normalised = GL_FALSE,
+            .stride = STRIDE * sizeof(float),
+            .offset = nullptr});
+        pastPointsVAO->AddVertexAttribute(VertexAttribute{
             .index = 1,
             .size = 3,
             .type = GL_FLOAT,
@@ -157,40 +175,14 @@ namespace OrbitPaths {
     }
 
     auto Update() -> void {
-        unordered_map<string, vector<OrbitPoint>> unscaledPointMap = Bodies::GetPositions();
-        unordered_map<string, vector<vec3>> worldPositionMap = TransformSequencesToScreen(unscaledPointMap);
+        // Future points
+        unordered_map<string, vector<OrbitPoint>> unscaledFuturePointMap = Bodies::GetFuturePoints();
+        unordered_map<string, vector<vec3>> scaledFuturePointMap = ScalePointMap(unscaledFuturePointMap);
+        DrawFuturePointMap(scaledFuturePointMap, GL_POINTS);
 
-        // Now we have a list of sequences, let's draw them
-        // Iterate through every body
-        for (const auto &pair : worldPositionMap) {
-            vector<VERTEX_DATA_TYPE> vertices;
-
-            // Use color of the body for color of orbit path
-            vec3 color = Bodies::GetBody(pair.first).GetColor();
-
-            int numberOfPointsToFadeOver = pair.second.size() * RATIO_OF_POINTS_TO_FADE_OVER;
-            
-            // Iterate through every sequence for the corresponding body
-            int i = 0;
-            for (const vec3 &position : pair.second) {
-
-                // Figure out the color of this vertex
-                vec3 vertexColor = color;
-                if (pair.second.size() - i < numberOfPointsToFadeOver) {
-                    float brightness = (float(pair.second.size() - i) / numberOfPointsToFadeOver);
-                    vertexColor *= brightness;
-                }
-
-                i++;
-
-                // Add new vertices (two triangles to form a quadrilateral)
-                AddVertex(vertices, position, vertexColor);
-            }
-
-            program->Use();
-            program->Set("cameraMatrix", Camera::GetMatrix());
-            vao->Data(vertices, vertices.size() / STRIDE, GL_DYNAMIC_DRAW);
-            vao->Render(GL_POINTS);
-        }
+        // Past points
+        unordered_map<string, vector<OrbitPoint>> unscaledPastPointMap = Bodies::GetPastPoints();
+        unordered_map<string, vector<vec3>> scaledPastPointMap = ScalePointMap(unscaledPastPointMap);
+        DrawPastPointMap(scaledPastPointMap, GL_LINE_STRIP);
     }
 }
