@@ -1,5 +1,6 @@
 #include "Control.h"
 #include "main/Scenarios.h"
+#include "rendering/camera/CameraTransition.h"
 
 #include <glm/gtx/string_cast.hpp>
 #include <input/Keys.h>
@@ -93,6 +94,7 @@ namespace Control {
         InitGlad();
         Mouse::Init();
         Keys::Init();
+        CameraTransition::Init();
         InitImGui(); // Must be done after mouse/keys init because mouse/keys init will overwrite whatever imgui needs to set
         Icons::Init();
         MassiveRender::Init();
@@ -101,9 +103,6 @@ namespace Control {
         Camera::Init();
         Bodies::Init();
         Simulation::Init();
-
-        Mouse::SetCallbackLeftDouble(Bodies::SwitchSelectedBodyWhenSphereClicked);
-        Mouse::SetCallbackLeftDouble(Icons::SwitchBodyBasedOnIcon);
         
         Scenarios::LoadScenario("../scenarios/example.yml");
         Scenarios::SaveScenario("../scenarios/save-test.yml");
@@ -124,8 +123,9 @@ namespace Control {
             vec3 direction = Rays::ScreenToWorld(Mouse::GetScreenPosition());
 
             Bodies::Update(deltaTime);
+            Camera::Update(deltaTime);
+            CameraTransition::Update(deltaTime);
             MassiveRender::Update(deltaTime);
-            Camera::Update(Bodies::GetMinZoom());
             Interface::Update(deltaTime);
             OrbitPaths::Update();
             Icons::DrawIcons();

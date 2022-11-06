@@ -3,8 +3,9 @@
 #include <rendering/camera/Settings.h>
 #include <rendering/camera/Util.h>
 #include <window/Window.h>
-
+#include <input/Keys.h>
 #include <util/Constants.h>
+#include <main/Bodies.h>
 
 #include <glm/gtx/string_cast.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -15,6 +16,8 @@
 
 namespace Camera {
     namespace {
+        const float KEY_ZOOM_AMOUNT = 0.2;
+
         vec3 position(0, 0, 0);
         vec3 target(0, 0, 0);
 
@@ -32,13 +35,24 @@ namespace Camera {
             position.y = target.y + (zoom * sinf(angle.y));
             position.z = target.z + (zoom * sinf(angle.x) * cosf(angle.y));
         }
+
+        auto KeyZoomIn() -> void {
+            Camera::AddZoomDelta(KEY_ZOOM_AMOUNT);
+        }
+
+        auto KeyZoomOut() -> void {
+            Camera::AddZoomDelta(-KEY_ZOOM_AMOUNT);
+        }
     }
 
     auto Init() -> void {
         Camera::SetTarget(vec3(0.0F, 0.0F, 0.0F));
+
+        Keys::BindFunctionToKeyHold(GLFW_KEY_EQUAL, KeyZoomIn);
+        Keys::BindFunctionToKeyHold(GLFW_KEY_MINUS, KeyZoomOut);
     }
 
-    auto Update(float minZoom) -> void {
+    auto Update(const double deltaTime) -> void {
         // Apply deltas
         angle[0] += angleDelta[0];
         angle[1] += angleDelta[1];
@@ -56,7 +70,7 @@ namespace Camera {
 
         // Clamp the angle and zoom to their minimums/maximums
         ApplySymmetricRange(angle[1], MAX_ANGLE);
-        ApplyAsymmetricRange(zoom, minZoom, MAX_ZOOM);
+        ApplyAsymmetricRange(zoom, Bodies::GetMinZoom(), MAX_ZOOM);
     }
 
     auto GetView() -> mat4 {

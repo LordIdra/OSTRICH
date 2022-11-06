@@ -1,12 +1,16 @@
 #pragma once
 
+#include <bodies/Body.h>
 #include <util/Types.h>
 
 
 
 namespace Camera {
     auto Init() -> void;
-    auto Update(float minZoom) -> void;
+    auto Update(const double deltaTime) -> void;
+
+    auto StartTransition(const Body &body) -> void;
+    auto UpdateTransitionTarget(const Body &body) -> void;
 
     auto GetView() -> mat4;
     auto GetProjection() -> mat4;

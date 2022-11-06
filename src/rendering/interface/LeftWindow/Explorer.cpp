@@ -1,7 +1,8 @@
 #include "Explorer.h"
 
 #include <rendering/interface/Fonts.h>
-#include "main/Simulation.h"
+#include <rendering/camera/CameraTransition.h>
+#include <main/Simulation.h>
 #include <main/Bodies.h>
 
 #include <algorithm>
@@ -61,7 +62,7 @@ namespace ScenarioExplorer {
         auto AddNameSelectable(const string &id, const string &name) -> void {
             ImGui::TableNextColumn();
             if (ImGui::Selectable(Fonts::NormalizeString(Fonts::MainBig(), name, NAME_WIDTH).c_str(), id == Bodies::GetSelectedBody(), ImGuiSelectableFlags_SpanAllColumns)) {
-                Bodies::SetSelectedBody(id);
+                CameraTransition::SetTargetBody(id);
             }
         }
 

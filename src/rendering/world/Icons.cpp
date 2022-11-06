@@ -16,8 +16,6 @@
 
 #include <glad/glad.h>
 
-#include <string>
-
 using std::unique_ptr;
 using std::make_unique;
 
@@ -136,26 +134,6 @@ namespace Icons {
 
             return false;
         }
-
-        auto GenerateIcons() -> unordered_map<string, Icon> {
-            unordered_map<string, Icon> icons;
-
-            // Massive icons
-            for (const auto &pair : Bodies::GetMassiveBodies()) {
-                if (ShouldMassiveBeDrawn(pair.second)) {
-                    icons.insert({pair.first, pair.second});
-                }
-            }
-
-            // Massless icons
-            for (const auto &pair : Bodies::GetMasslessBodies()) {
-                if (ShouldMasslessBeDrawn(pair.second)) {
-                   icons.insert({pair.first, pair.second});
-                }
-            }
-
-            return icons;
-        }
     }
 
     auto Init() -> void {
@@ -185,6 +163,26 @@ namespace Icons {
         program = make_unique<Program>(vertex, fragment);
     }
 
+    auto GenerateIcons() -> unordered_map<string, Icon> {
+        unordered_map<string, Icon> icons;
+
+        // Massive icons
+        for (const auto &pair : Bodies::GetMassiveBodies()) {
+            if (ShouldMassiveBeDrawn(pair.second)) {
+                icons.insert({pair.first, pair.second});
+            }
+        }
+
+        // Massless icons
+        for (const auto &pair : Bodies::GetMasslessBodies()) {
+            if (ShouldMasslessBeDrawn(pair.second)) {
+               icons.insert({pair.first, pair.second});
+            }
+        }
+
+        return icons;
+    }
+
     auto DrawIcons() -> void {
         // Compile a list of all massive bodies to have icons rendered
         unordered_map<string, Icon> icons = GenerateIcons();
@@ -203,13 +201,5 @@ namespace Icons {
         vao->Data(data, vertexCount, GL_STATIC_DRAW);
         program->Use();
         vao->Render(GL_TRIANGLES);
-    }
-
-    auto SwitchBodyBasedOnIcon() -> void {
-        for (const auto &pair : GenerateIcons()) {
-            if (pair.second.MouseOnIcon(Icon::SELECT_THRESHOLD)) {
-                Bodies::SetSelectedBody(pair.first);
-            }
-        }
     }
 }

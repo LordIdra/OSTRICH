@@ -21,6 +21,7 @@ set(FILES
     "src/util/Log.cpp"
 
     "src/rendering/camera/Camera.cpp"
+    "src/rendering/camera/CameraTransition.cpp"
     "src/rendering/camera/Util.cpp"
 
     "src/rendering/geometry/Rays.cpp"

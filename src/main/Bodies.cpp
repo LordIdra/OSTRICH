@@ -82,38 +82,6 @@ namespace Bodies {
 
         // Move bodies to next orbit point(s) if it's time to do so
         IncrementBodyOrbitPoint();
-
-        // Update transition target,so that the camera follows the target
-        if (selectedType == BODY_TYPE_MASSIVE) {
-            MassiveRender::UpdateTransitionTarget(massiveBodies.at(selected));
-        } else if (selectedType == BODY_TYPE_MASSLESS) {
-            MassiveRender::UpdateTransitionTarget(masslessBodies.at(selected));
-        }
-
-    }
-
-    auto SwitchSelectedBodyWhenSphereClicked() -> void {
-        // This function only cares about the spheres representing massive bodies
-        // Seletcing via icons is handles in the Icons namespace
-        // Find the camera direction
-        vec3 direction = Rays::ScreenToWorld(Mouse::GetScreenPosition());
-
-        // Loop through every body
-        for (auto &pair : massiveBodies) {
-
-            // Check if the camera direction intersects the body
-            if (Rays::IntersectsSphere(
-                Camera::GetPosition(), 
-                direction, 
-                pair.second.GetScaledPosition(), 
-                pair.second.GetScaledRadius())) {
-
-                    // If so, update the selected body and start a transition
-                    selectedType = BODY_TYPE_MASSIVE;
-                    selected = pair.first;
-                    MassiveRender::StartTransition(pair.second);
-            }
-        }
     }
 
     auto AddBody(const Massive &body) -> void {
@@ -144,17 +112,15 @@ namespace Bodies {
     }
 
     auto SetSelectedBody(const string &id) -> void {
+        // important: this function does not start a transition to the specified body, use CameraTransition::SetTargetBody instead of this
         selected = id;
 
         // If the id corresponds to a massive body
         if (massiveBodies.find(id) != massiveBodies.end()) {
             selectedType = BODY_TYPE_MASSIVE;
-            MassiveRender::StartTransition(massiveBodies.at(id));
-        
         // If the id corresponds to a massless body
         } else if (masslessBodies.find(id) != masslessBodies.end()) {
             selectedType = BODY_TYPE_MASSLESS;
-            MassiveRender::StartTransition(masslessBodies.at(id));
         }
     }
 
