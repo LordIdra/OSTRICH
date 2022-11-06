@@ -7,5 +7,4 @@
 struct OrbitPoint {
     dvec3 position;
     dvec3 velocity;
-    double timeToNextPoint;
 };

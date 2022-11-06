@@ -1,13 +1,14 @@
 #include "input/Keys.h"
 #include "main/Bodies.h"
 #include "main/OrbitPoint.h"
+#include <main/Simulation.h>
 #include "util/Constants.h"
 #include "util/Log.h"
+
 #include <GLFW/glfw3.h>
 #include <algorithm>
 #include <glm/ext/quaternion_geometric.hpp>
 #include <glm/geometric.hpp>
-#include <main/Simulation.h>
 #include <unordered_map>
 #include <utility>
 
@@ -16,33 +17,34 @@
 namespace Simulation {
 
     namespace {
-        const double SPEED_MULTIPLIER = 2;
+        const double SPEED_MULTIPLIER = 5;
         const double MIN_SPEED = 1;
-        const double MAX_SPEED = 1000000;
+        const double MAX_SPEED = 100000000;
 
-        const double INITIAL_TIME_STEP_SIZE = 10000.0;
-        const double INITIAL_TIME_STEPS_PER_FRAME = 1;
+        const double INITIAL_TIME_STEP_SIZE = 5000;
+        const double INITIAL_TIME_STEP_COUNT = 10000;
+        const double INITIAL_SIMULATION_SPEED = 1;
 
-        double time_step_size = INITIAL_TIME_STEP_SIZE;
-        double time_steps_per_frame = INITIAL_TIME_STEPS_PER_FRAME;
+        double timeStepSize = INITIAL_TIME_STEP_SIZE;
+        double timeStepsPerFrame = INITIAL_TIME_STEP_COUNT;
+        double simulationSpeed = INITIAL_SIMULATION_SPEED;
 
         auto IncreaseSimulationSpeed() -> void {
             // Check that this action won't increase the simulation speed above the maximum speed
-            if ((time_steps_per_frame * SPEED_MULTIPLIER) > MAX_SPEED) {
+            if ((simulationSpeed * SPEED_MULTIPLIER) > MAX_SPEED) {
                 return;
             }
-            time_steps_per_frame *= SPEED_MULTIPLIER;
+            simulationSpeed *= SPEED_MULTIPLIER;
         }
 
         auto DecreaseSimulationSpeed() -> void {
             // Check that this action won't decrease the simulation speed below the minimum speed
-            if ((time_steps_per_frame / SPEED_MULTIPLIER) < MIN_SPEED) {
+            if ((simulationSpeed / SPEED_MULTIPLIER) < MIN_SPEED) {
                 return;
             }
-            time_steps_per_frame /= SPEED_MULTIPLIER;
+            simulationSpeed /= SPEED_MULTIPLIER;
         }
     }
-
 
     auto Init() -> void {
         Keys::BindFunctionToKeyPress(GLFW_KEY_COMMA, DecreaseSimulationSpeed);
@@ -50,7 +52,6 @@ namespace Simulation {
     }
 
     auto CalculateAcceleration(const unordered_map<string, Massive> &massiveBodies, const string &id, const dvec3 &position) -> dvec3 {
-
         // Loop through every body - we only need the massive bodies since massless bodies will have no effect on the body's acceleration
         dvec3 acceleration = dvec3(0, 0, 0);
         for (const auto &pair : massiveBodies) {
@@ -73,7 +74,7 @@ namespace Simulation {
         return acceleration;
     }
 
-    auto Integrate(const unordered_map<string, Massive> &massiveBodies, const string &id, const double time_step, const OrbitPoint &point) -> OrbitPoint {
+    auto GenerateNextOrbitPoint(const unordered_map<string, Massive> &massiveBodies, const string &id, const double time_step, const OrbitPoint &point) -> OrbitPoint {
         dvec3 acceleration = CalculateAcceleration(massiveBodies, id, point.position);
         OrbitPoint newPoint = point;
         newPoint.velocity += acceleration * time_step;
@@ -81,13 +82,13 @@ namespace Simulation {
         return newPoint;
     }
 
-    auto Integrate(const unordered_map<string, Massive> &massiveBodies, Body &body) -> void {
+    auto UpdateBodyPosition(const unordered_map<string, Massive> &massiveBodies, Body &body) -> void {
         dvec3 acceleration = CalculateAcceleration(massiveBodies, body.GetId(), body.GetPosition());
-        body.AddVelocity(acceleration * time_step_size);
-        body.AddPosition(body.GetVelocity() * time_step_size);
+        body.AddVelocity(acceleration * timeStepSize);
+        body.AddPosition(body.GetVelocity() * timeStepSize);
     }
 
-    auto Integrate() -> unordered_map<string, vector<OrbitPoint>> {
+    auto RegenerateFuturePoints() -> unordered_map<string, vector<OrbitPoint>> {
         unordered_map<string, Massive> massiveBodies = Bodies::GetMassiveBodies();
         unordered_map<string, Massless> masslessBodies = Bodies::GetMasslessBodies();
         unordered_map<string, vector<OrbitPoint>> points;
@@ -104,24 +105,22 @@ namespace Simulation {
         }
 
         // Integrate for all bodies and add positions
-        for (int i = 0; i < time_steps_per_frame; i++) {
+        for (int i = 0; i < timeStepsPerFrame; i++) {
 
             // Massive
             for (auto &pair : massiveBodies) {
                 points.at(pair.first).push_back(OrbitPoint{
-                        .position=pair.second.GetPosition(), 
-                        .velocity=pair.second.GetVelocity(),
-                        .timeToNextPoint=time_step_size});
-                Integrate(massiveBodies, pair.second);
+                    .position=pair.second.GetPosition(), 
+                    .velocity=pair.second.GetVelocity()});
+                UpdateBodyPosition(massiveBodies, pair.second);
             }
 
             // Massless
             for (auto &pair : masslessBodies) {
                 points.at(pair.first).push_back(OrbitPoint{
                     .position=pair.second.GetPosition(), 
-                    .velocity=pair.second.GetVelocity(),
-                    .timeToNextPoint=time_step_size});
-                Integrate(massiveBodies, pair.second);
+                    .velocity=pair.second.GetVelocity()});
+                UpdateBodyPosition(massiveBodies, pair.second);
             }
         }
 
@@ -146,10 +145,18 @@ namespace Simulation {
     }
 
     auto SetTimeStepSize(const double size) -> void {
-        time_step_size = size;
+        timeStepSize = size;
     }
 
     auto SetTimeStepsPerFrame(const double size) -> void {
-        time_steps_per_frame = size;
+        timeStepsPerFrame = size;
+    }
+
+    auto GetTimeStepSize() -> double {
+        return timeStepSize;
+    }
+
+    auto GetSimulationSpeed() -> double {
+        return simulationSpeed;
     }
 }

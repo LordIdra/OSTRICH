@@ -45,6 +45,14 @@ auto Body::GetScaledVelocity() const -> vec3 {
     return velocity / SCALE_FACTOR;
 }
 
+auto Body::SetVelocity(const dvec3 v) -> void {
+    velocity = v;
+}
+
+auto Body::SetPosition(const dvec3 x) -> void {
+    position = x;
+}
+
 auto Body::AddVelocity(const dvec3 v) -> void {
     velocity += v;
 }

@@ -10,7 +10,7 @@
 
 namespace Bodies {
     auto Init() -> void;
-    auto Update() -> void;
+    auto Update(const double deltaTime) -> void;
 
     auto SwitchSelectedBodyWhenSphereClicked() -> void;
 

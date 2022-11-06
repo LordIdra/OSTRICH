@@ -3,7 +3,7 @@
 #include <bodies/Massive.h>
 #include <bodies/Massless.h>
 #include <util/Types.h>
-#include <rendering/interface/icons/IconVertex.h>
+#include <rendering/world/IconVertex.h>
 
 
 

@@ -1,7 +1,7 @@
 #include "Icons.h"
 #include <input/Mouse.h>
 #include <memory>
-#include <rendering/interface/icons/IconVertex.h>
+#include <rendering/world/IconVertex.h>
 #include <window/Window.h>
 #include <glm/gtx/string_cast.hpp>
 #include <main/Bodies.h>
@@ -12,7 +12,7 @@
 #include <rendering/camera/Camera.h>
 #include <rendering/camera/Settings.h>
 #include <util/Log.h>
-#include <rendering/interface/icons/Icon.h>
+#include <rendering/world/Icon.h>
 
 #include <glad/glad.h>
 

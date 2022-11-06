@@ -28,6 +28,10 @@ public:
     auto GetScaledPosition() const -> vec3;
     auto GetScaledVelocity() const -> vec3;
 
+    auto SetVelocity(const dvec3 v) -> void;
+
+    auto SetPosition(const dvec3 x) -> void;
+
     auto AddVelocity(dvec3 v) -> void;
     auto AddPosition(dvec3 x) -> void;
 };

@@ -1,7 +1,7 @@
 #include "Bodies.h"
+
 #include "main/Simulation.h"
 #include "util/Log.h"
-
 #include <bodies/Body.h>
 #include <bodies/Massive.h>
 #include <bodies/Massless.h>
@@ -11,8 +11,11 @@
 #include <rendering/geometry/Transition.h>
 #include <input/Keys.h>
 #include <input/Mouse.h>
-#include <rendering/interface/Bodies/MassiveRender.h>
+#include <rendering/world/MassiveRender.h>
 #include <main/OrbitPoint.h>
+
+#include <GLFW/glfw3.h>
+#include <string>
 
 
 
@@ -23,13 +26,37 @@ namespace Bodies {
         unordered_map<string, Massive> massiveBodies;
         unordered_map<string, Massless> masslessBodies;
 
-        unordered_map<string, vector<OrbitPoint>> points;
+        unordered_map<string, vector<OrbitPoint>> pastPoints;
+        unordered_map<string, vector<OrbitPoint>> futurePoints;
 
         BodyType selectedType = BODY_TYPE_NONE;
         string selected;
 
         const float INITIAL_MASSLESS_MIN_ZOOM = 0.01;
+
         float masslessMinZoom = INITIAL_MASSLESS_MIN_ZOOM;
+
+        double timeSinceLastOrbitPointUpdate = 0;
+
+        auto UpdateBody(Body &body) -> void {
+            // Move body to next point
+            body.SetPosition(futurePoints.at(body.GetId()).at(1).position);
+            body.SetVelocity(futurePoints.at(body.GetId()).at(1).velocity);
+
+            // The point we just moved from is now a past point
+            //pastPoints.at(body.GetId()).push_back(futurePoints.at(body.GetId()).at(0));
+            futurePoints.at(body.GetId()).erase(futurePoints.at(body.GetId()).begin());
+        }
+
+        auto IncrementBodyOrbitPoint() -> void {
+            // Move the body to next point if necessary
+            while (timeSinceLastOrbitPointUpdate >= Simulation::GetTimeStepSize()) {
+                timeSinceLastOrbitPointUpdate -= Simulation::GetTimeStepSize();
+
+                for (auto &pair : massiveBodies)  { UpdateBody(pair.second); }
+                for (auto &pair : masslessBodies) { UpdateBody(pair.second); }
+            }
+        }
     }
 
     auto Init() -> void {
@@ -40,9 +67,13 @@ namespace Bodies {
         }
     }
 
-    auto Update() -> void {
+    auto Update(const double deltaTime) -> void {
         // Integrate to get the future positions of all bodies
-        points = Simulation::Integrate();
+        futurePoints = Simulation::RegenerateFuturePoints();
+        timeSinceLastOrbitPointUpdate += deltaTime * Simulation::GetSimulationSpeed();
+
+        // Move bodies to next orbit point(s) if it's time to do so
+        IncrementBodyOrbitPoint();
 
         // Update transition target,so that the camera follows the target
         if (selectedType == BODY_TYPE_MASSIVE) {
@@ -50,6 +81,7 @@ namespace Bodies {
         } else if (selectedType == BODY_TYPE_MASSLESS) {
             MassiveRender::UpdateTransitionTarget(masslessBodies.at(selected));
         }
+
     }
 
     auto SwitchSelectedBodyWhenSphereClicked() -> void {
@@ -141,6 +173,6 @@ namespace Bodies {
     }
 
     auto GetPositions() -> unordered_map<string, vector<OrbitPoint>> {
-        return points;
+        return futurePoints;
     }
 }

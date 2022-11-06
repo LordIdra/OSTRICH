@@ -6,7 +6,10 @@
 #include <input/Mouse.h>
 #include <rendering/camera/Camera.h>
 #include <rendering/interface/Interface.h>
-#include <rendering/interface/icons/Icons.h>
+#include <rendering/world/Icons.h>
+#include <rendering/world/MassiveRender.h>
+#include <rendering/world/OrbitPaths.h>
+
 #include <rendering/geometry/Rays.h>
 
 #include <util/Log.h>
@@ -91,6 +94,9 @@ namespace Control {
         Mouse::Init();
         Keys::Init();
         InitImGui(); // Must be done after mouse/keys init because mouse/keys init will overwrite whatever imgui needs to set
+        Icons::Init();
+        MassiveRender::Init();
+        OrbitPaths::Init();
         Interface::Init();
         Camera::Init();
         Bodies::Init();
@@ -117,9 +123,12 @@ namespace Control {
 
             vec3 direction = Rays::ScreenToWorld(Mouse::GetScreenPosition());
 
-            Bodies::Update();
+            Bodies::Update(deltaTime);
+            MassiveRender::Update(deltaTime);
             Camera::Update(Bodies::GetMinZoom());
             Interface::Update(deltaTime);
+            OrbitPaths::Update();
+            Icons::DrawIcons();
 
             Mouse::Update();
             Keys::Update();

@@ -27,11 +27,10 @@ set(FILES
     "src/rendering/geometry/Transition.cpp"
     "src/rendering/geometry/Sphere.cpp"
 
-    "src/rendering/interface/Bodies/MassiveRender.cpp"
-    "src/rendering/interface/Bodies/OrbitPaths.cpp"
-
-    "src/rendering/interface/icons/Icon.cpp"
-    "src/rendering/interface/icons/Icons.cpp"
+    "src/rendering/world/MassiveRender.cpp"
+    "src/rendering/world/OrbitPaths.cpp"
+    "src/rendering/world/Icon.cpp"
+    "src/rendering/world/Icons.cpp"
 
     "src/rendering/interface/BottomRightWindow/BottomRightWindow.cpp"
 
