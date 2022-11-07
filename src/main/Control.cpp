@@ -106,8 +106,7 @@ namespace Control {
         Bodies::Init();
         Simulation::Init();
         
-        Scenarios::LoadScenario("../scenarios/example.yml");
-        Scenarios::SaveScenario("../scenarios/save-test.yml");
+        Scenarios::LoadScenario("example.yml");
     }
 
     auto Mainloop() -> void {

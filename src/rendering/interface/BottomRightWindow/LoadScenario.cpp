@@ -1,10 +1,12 @@
 #include "LoadScenario.h"
 
 #include <rendering/interface/Fonts.h>
-
+#include <main/Scenarios.h>
 #include <util/Types.h>
+
 #include <depend/IconsMaterialDesignIcons_c.h>
 #include <imgui.h>
+#include <algorithm>
 
 
 
@@ -15,12 +17,12 @@ namespace LoadScenario {
         const string BODIES_TEXT = ICON_MDI_EARTH + string(" Bodies");
         const string TIME_TEXT = ICON_MDI_CLOCK + string(" Time");
 
-        const string SAVE_TEXT = ICON_MDI_CHECK_CIRCLE_OUTLINE + string(" Load");
+        const string LOAD_TEXT = ICON_MDI_CHECK_CIRCLE_OUTLINE + string(" Load");
         const string CANCEL_TEXT = ICON_MDI_CLOSE_CIRCLE_OUTLINE + string(" Cancel");
 
-        const int NAME_WIDTH = 300;
-        const int BODIES_WEIGHT = 50;
-        const int TIME_WEIGHT = 80;
+        const int NAME_WIDTH = 280;
+        const int BODIES_WEIGHT = 45;
+        const int TIME_WEIGHT = 100;
 
         const unsigned int NAME_COLUMN_ID = 0;
         const unsigned int BODIES_COLUMN_ID = 1;
@@ -31,12 +33,51 @@ namespace LoadScenario {
         const ImGuiPopupFlags POPUP_FLAGS = ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoTitleBar;
         const ImGuiTableFlags TABLE_FLAGS = ImGuiTableFlags_SizingFixedFit | ImGuiTableFlags_Sortable | ImGuiTableFlags_ScrollY | ImGuiTableFlags_NoPadOuterX | ImGuiTableFlags_NoPadInnerX;
 
+        ImGuiTableSortSpecs* sortSpecs;
+
         string selectedFile;
 
         auto AddTitle() -> void {
             ImGui::PushFont(Fonts::MainBig());
             ImGui::Text("%s", Fonts::NormalizeString(Fonts::MainBig(), TITLE_TEXT, TABLE_SIZE.x).c_str());
             ImGui::PopFont();
+        }
+
+        auto CompareScenarioFileNames(Scenarios::ScenarioFile scenario1, Scenarios::ScenarioFile scenario2) -> bool {
+            // Convert id1 and id2 to uppercase - necessary because string.compare is case-sensitive
+            for (char &c : scenario1.nameWithExtension) { c = char(toupper(c)); }
+            for (char &c : scenario2.nameWithExtension) { c = char(toupper(c)); }
+
+            bool comparison = scenario1.nameWithExtension.compare(scenario2.nameWithExtension) >= 0;
+            if (sortSpecs->Specs->SortDirection == ImGuiSortDirection_Descending) {
+                return comparison;
+            }
+            return !comparison;
+        }
+
+        auto CompareScenarioFileBodies(const Scenarios::ScenarioFile &scenario1, const Scenarios::ScenarioFile &scenario2) -> bool {
+            bool comparison = scenario1.bodyCount > scenario2.bodyCount;
+            if (sortSpecs->Specs->SortDirection == ImGuiSortDirection_Descending) {
+                return comparison;
+            }
+            return !comparison;
+        }
+
+        auto CompareScenarioFileTimes(const Scenarios::ScenarioFile &scenario1, const Scenarios::ScenarioFile &scenario2) -> bool {
+            bool comparison = scenario1.rawTime > scenario2.rawTime;
+            if (sortSpecs->Specs->SortDirection == ImGuiSortDirection_Descending) {
+                return comparison;
+            }
+            return !comparison;
+        }
+
+        auto CompareScenarioFiles(const Scenarios::ScenarioFile &scenario1, const Scenarios::ScenarioFile &scenario2) -> bool {
+            if (sortSpecs->Specs->ColumnIndex == NAME_COLUMN_ID) {
+                return CompareScenarioFileNames(scenario1, scenario2);
+            } else if (sortSpecs->Specs->ColumnIndex == BODIES_COLUMN_ID) {
+                return CompareScenarioFileBodies(scenario1, scenario2);
+            }
+            return CompareScenarioFileTimes(scenario1, scenario2);
         }
 
         auto AddHeader() -> void {
@@ -82,10 +123,17 @@ namespace LoadScenario {
             if (ImGui::BeginTable("file-table", 3, TABLE_FLAGS, TABLE_SIZE)) {
                 AddHeader();
 
+                sortSpecs = ImGui::TableGetSortSpecs();
+                vector<Scenarios::ScenarioFile> scenarios = Scenarios::GetScenarios();
+                std::sort(scenarios.begin(), scenarios.end(), CompareScenarioFiles);
+
+
                 ImGui::PushFont(Fonts::Data());
-                AddNameText("hello mortals");
-                AddBodiesText(666);
-                AddTimeText("5y 78d 20h 3m 8s");
+                for (Scenarios::ScenarioFile scenario : scenarios) {
+                    AddNameText(scenario.nameWithExtension);
+                    AddBodiesText(scenario.bodyCount);
+                    AddTimeText(scenario.formattedTime);
+                }
                 ImGui::PopFont();
 
                 ImGui::EndTable();
@@ -93,13 +141,13 @@ namespace LoadScenario {
         }
 
         auto AddButtons() -> void {
-            if (ImGui::Button(SAVE_TEXT.c_str(), ImVec2(120, 0))) { 
+            if (ImGui::Button(LOAD_TEXT.c_str(), ImVec2(120, 0))) {
                 ImGui::CloseCurrentPopup(); 
             }
 
             ImGui::SameLine();
 
-            if (ImGui::Button(CANCEL_TEXT.c_str(), ImVec2(120, 0))) { 
+            if (ImGui::Button(CANCEL_TEXT.c_str(), ImVec2(120, 0))) {
                 ImGui::CloseCurrentPopup(); 
             }
         }

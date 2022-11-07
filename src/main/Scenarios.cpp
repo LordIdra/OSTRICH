@@ -1,7 +1,10 @@
 #include "Scenarios.h"
 #include "bodies/Massive.h"
 #include "rendering/shaders/Util.h"
+#include "util/TimeFormat.h"
 
+#include <chrono>
+#include <string>
 #include <util/Log.h>
 #include <main/Bodies.h>
 
@@ -12,13 +15,18 @@
 #include <yaml-cpp/node/parse.h>
 #include <yaml-cpp/yaml.h>
 
+#include <iostream>
+#include <filesystem>
 #include <fstream>
+#include <chrono>
+
 
 
 namespace Scenarios {
 
+    string SCENARIO_DIRECTORY = "../scenarios/";
+
     namespace {
-        
         const float AMBIENT = 0.1;
         const float DIFFUSE = 0.8;
         const float SPECULAR = 0.3;
@@ -35,6 +43,15 @@ namespace Scenarios {
 
         auto SetString(YAML::Emitter &emitter, const string &key, const string &value) -> void {
             emitter << key << value;
+        }
+
+        auto GetInt(YAML::Node node, const string &path1, const string &path2) -> int {
+            if (!node[path2]) {
+                Log(WARN, "Missing key at " + path1 + "." + path2);
+                return 0;
+            }
+
+            return node[path2].as<int>();
         }
 
         auto GetDouble(YAML::Node node, const string &path1, const string &path2, const string &path3) -> double {
@@ -120,9 +137,31 @@ namespace Scenarios {
             SetVec3(emitter, "velocity", body.GetVelocity());
             emitter << YAML::EndMap;
         }
+
+        auto GetOnlyFilename(const string &path) -> string {
+            return path.substr(SCENARIO_DIRECTORY.size(), path.size() - SCENARIO_DIRECTORY.size());
+        }
+
+        auto GetBodyCount(YAML::Node &scenario) -> int {
+            int bodyCount = 0;
+
+            YAML::Node massive = scenario["massive"];
+            YAML::Node massless = scenario["massless"];
+
+            for (YAML::const_iterator i = massive.begin(); i != massive.end(); i++)   { bodyCount++; }
+            for (YAML::const_iterator i = massless.begin(); i != massless.end(); i++) { bodyCount++; }
+
+            return bodyCount;
+        }
+
+        auto GetTime(YAML::Node &scenario, const string &path) -> int {
+            return GetInt(scenario, path, "time");
+        }
     }
 
-    auto LoadScenario(const string &path) -> void{
+    auto LoadScenario(const string &filenameWithExtension) -> void{
+        string path = SCENARIO_DIRECTORY + filenameWithExtension;
+
         // Check if the file exists
         if (!FileExists(path)) {
             Log(WARN, "File not found at " + path);
@@ -160,7 +199,9 @@ namespace Scenarios {
         }
     }
 
-    auto SaveScenario(const string &path) -> void {
+    auto SaveScenario(const string &filenameWithExtension) -> void {
+        string path = SCENARIO_DIRECTORY + filenameWithExtension;
+
         // Check if the file already exists (we'd have to overwrite it if it does)
         if (FileExists(path)) {
             Log(WARN, "File already exists at " + path + " and would be overwritten");
@@ -195,5 +236,20 @@ namespace Scenarios {
         std::ofstream file(path);
         file << scenario.c_str();
         file.close();
+    }
+
+    auto GetScenarios() -> vector<ScenarioFile> {
+        vector<ScenarioFile> scenarios;
+        for (const auto &entry : std::filesystem::directory_iterator(SCENARIO_DIRECTORY)) {
+            YAML::Node scenario = YAML::LoadFile(entry.path());
+            
+            string fileName = GetOnlyFilename(entry.path());
+            int bodyCount = GetBodyCount(scenario);
+            int rawTime = GetTime(scenario, fileName);
+            string formattedTime = TimeFormat::FormatTime(rawTime);
+
+            scenarios.emplace_back(ScenarioFile{fileName, bodyCount, rawTime, formattedTime});
+        }
+        return scenarios;
     }
 }

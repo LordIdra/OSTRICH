@@ -27,6 +27,7 @@ set(FILES
     "src/window/Window.cpp"
 
     "src/util/Log.cpp"
+    "src/util/TimeFormat.cpp"
 
     "src/rendering/camera/Camera.cpp"
     "src/rendering/camera/CameraTransition.cpp"
@@ -68,6 +69,7 @@ set(FILES
 
 set(CMAKE_TOOLCHAIN_FILE "~/vcpkg/scripts/buildsystems/vcpkg.cmake")
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+set(CMAKE_CXX_STANDARD 17)
 
 find_program(CCACHE_FOUND ccache)
 set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE ccache)
