@@ -129,9 +129,9 @@ namespace Control {
             Camera::Update(deltaTime);
             CameraTransition::Update(deltaTime);
             MassiveRender::Update(deltaTime);
-            Interface::Update(deltaTime);
             OrbitPaths::Update();
             Icons::DrawIcons();
+            Interface::Update(deltaTime);
 
             Mouse::Update();
             Keys::Update();

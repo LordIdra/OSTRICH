@@ -1,7 +1,9 @@
 #include "SimulationControl.h"
 
+#include <rendering/interface/BottomRightWindow/LoadScenario.h>
 #include <rendering/interface/Fonts.h>
 #include <main/Simulation.h>
+#include <depend/IconsMaterialDesignIcons_c.h>
 
 #include <imgui.h>
 
@@ -15,17 +17,27 @@ namespace SimulationControl {
 
         const string SPEED_INDICATOR_ICON = ICON_MDI_CHEVRON_RIGHT_CIRCLE;
         const string SPEED_ICON = ICON_MDI_PLAY_SPEED;
-
+        
         auto AddGeneralButtons() -> void {
             ImGui::PushFont(Fonts::Main());
 
-            ImGui::Button(SAVE_TEXT.c_str());
+            if (ImGui::Button(SAVE_TEXT.c_str())) {
+                ImGui::OpenPopup("Save Scenario");
+            }
+
             ImGui::SameLine();
-            ImGui::Button(LOAD_TEXT.c_str());
+
+            if (ImGui::Button(LOAD_TEXT.c_str())) {
+                ImGui::OpenPopup("Load Scenario");
+            }
+
             ImGui::SameLine();
+            
             ImGui::Button(SETTINGS_TEXT.c_str());
 
             ImGui::PopFont();
+
+            LoadScenario::Draw();
         }
 
         auto AddSpeedIndicatorIcons() -> void {

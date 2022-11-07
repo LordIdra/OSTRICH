@@ -145,7 +145,7 @@ namespace Simulation {
             }
             double massProduct = body.GetMass() * pair.second.GetMass();
             double distance = glm::distance(body.GetPosition(), pair.second.GetPosition());
-            energy += (GRAVITATIONAL_CONSTANT * massProduct) / distance;
+            energy -= (GRAVITATIONAL_CONSTANT * massProduct) / distance;
         }
         return energy;
     }
@@ -181,14 +181,14 @@ namespace Simulation {
     auto GetSimulationKineticEnergy() -> double {
         double energy = 0;
         for (const auto &pair : Bodies::GetMassiveBodies())  { energy += GetKineticEnergy(pair.second); }
-        for (const auto &pair : Bodies::GetMasslessBodies()) { energy += GetKineticEnergy(pair.second);   }
+        for (const auto &pair : Bodies::GetMasslessBodies()) { energy += GetKineticEnergy(pair.second); }
         return energy;
     }
 
     auto GetSimulationPotentialEnergy() -> double {
         double energy = 0;
         for (const auto &pair : Bodies::GetMassiveBodies())  { energy += GetPotentialEnergy(pair.second); }
-        for (const auto &pair : Bodies::GetMasslessBodies()) { energy += GetPotentialEnergy(pair.second);   }
+        for (const auto &pair : Bodies::GetMasslessBodies()) { energy += GetPotentialEnergy(pair.second); }
         return energy;
     }
 
