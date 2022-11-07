@@ -2,6 +2,6 @@
 
 
 
-namespace BottomRightWindow {
+namespace SimulationData {
     auto Draw(const double deltaTime) -> void;
 }

@@ -3,6 +3,7 @@
 
 #include <rendering/interface/Fonts.h>
 #include <rendering/interface/BottomRightWindow/BottomRightWindow.h>
+#include <rendering/interface/TopRightWindow/TopRightWindow.h>
 #include <rendering/interface/LeftWindow/LeftWindow.h>
 
 #include <imgui_impl_glfw.h>
@@ -24,7 +25,8 @@ namespace Interface {
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
-        BottomRightWindow::Draw();
+        TopRightWindow::Draw(deltaTime);
+        BottomRightWindow::Draw(deltaTime);
         LeftWindow::Draw();
         
         ImGui::Render();

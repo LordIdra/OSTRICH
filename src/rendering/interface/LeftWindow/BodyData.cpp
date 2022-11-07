@@ -125,12 +125,12 @@ namespace BodyData {
     }
 
     auto Draw() -> void {
-        ImGui::Separator();
-
         // If no body is selected, we don't need to add anything for this section
         if (Bodies::GetSelectedType() == BODY_TYPE_NONE) {
             return;
         }
+
+        ImGui::Separator();
 
         Body selectedBody = Bodies::GetBody(Bodies::GetSelectedBody());
 

@@ -1,6 +1,14 @@
 cmake_minimum_required(VERSION 3.16)
 project("OSTRICH")
 
+set(DEPEND_FILES
+    "src/depend/implot/implot_demo.cpp"
+    "src/depend/implot/implot_internal.h"
+    "src/depend/implot/implot_items.cpp"
+    "src/depend/implot/implot.cpp"
+    "src/depend/implot/implot.h"
+)
+
 set(FILES
     "src/depend/stb_image.h"
     
@@ -34,6 +42,9 @@ set(FILES
     "src/rendering/world/Icons.cpp"
 
     "src/rendering/interface/BottomRightWindow/BottomRightWindow.cpp"
+    "src/rendering/interface/BottomRightWindow/SimulationControl.cpp"
+    "src/rendering/interface/TopRightWindow/TopRightWindow.cpp"
+    "src/rendering/interface/TopRightWindow/SimulationData.cpp"
 
     "src/rendering/interface/LeftWindow/LeftWindow.cpp"
     "src/rendering/interface/LeftWindow/BodyData.cpp"
@@ -56,8 +67,10 @@ set(FILES
 
 set(CMAKE_TOOLCHAIN_FILE "~/vcpkg/scripts/buildsystems/vcpkg.cmake")
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-set(CMAKE_C_COMPILER_LAUNCHER ${CCACHE})
-set(CMAKE_CXX_COMPILER_LAUNCHER ${CCACHE})
+
+find_program(CCACHE_FOUND ccache)
+set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE ccache)
+set_property(GLOBAL PROPERTY RULE_LAUNCH_LINK ccache)
 
 include("~/vcpkg/scripts/buildsystems/vcpkg.cmake")
 

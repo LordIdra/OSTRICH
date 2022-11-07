@@ -14,6 +14,7 @@ namespace Simulation {
     const double MAX_MULTIPLIER = 12;
 
     auto Init() -> void;
+    auto UpdateTime(const float deltaTime) -> void;
 
     auto CalculateAcceleration(const unordered_map<string, Massive> &massiveBodies, const string &id, const dvec3 &position) -> dvec3;
 
@@ -24,10 +25,17 @@ namespace Simulation {
     auto GetKineticEnergy(const Body &body) -> double;
     auto GetPotentialEnergy(const Body &body) -> double;
 
+    auto GetTotalEnergy(const Body &body) -> double;
+
     auto SetTimeStepSize(const double size) -> void;
     auto SetTimeStepsPerFrame(const double size) -> void;
 
     auto GetTimeStepSize() -> double;
+    auto GetTimeStep() -> double;
     auto GetSimulationSpeed() -> double;
     auto GetSimulationSpeedMultiplier() -> double;
+    
+    auto GetSimulationKineticEnergy() -> double;
+    auto GetSimulationPotentialEnergy() -> double;
+    auto GetSimulationTotalEnergy() -> double;
 }

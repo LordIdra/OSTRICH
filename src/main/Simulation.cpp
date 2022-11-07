@@ -27,6 +27,8 @@ namespace Simulation {
         double simulationSpeed = INITIAL_SIMULATION_SPEED;
         double simulationSpeedMultiplier = INITIAL_SIMULATION_SPEED;
 
+        double timeStep = 0;
+
         auto IncreaseSimulationSpeed() -> void {
             // Check that this action won't increase the simulation speed above the maximum speed
             if (simulationSpeedMultiplier >= MAX_MULTIPLIER) {
@@ -49,6 +51,10 @@ namespace Simulation {
     auto Init() -> void {
         Keys::BindFunctionToKeyPress(GLFW_KEY_COMMA, DecreaseSimulationSpeed);
         Keys::BindFunctionToKeyPress(GLFW_KEY_PERIOD, IncreaseSimulationSpeed);
+    }
+
+    auto UpdateTime(const float deltaTime) -> void {
+        timeStep += deltaTime * simulationSpeed;
     }
 
     auto CalculateAcceleration(const unordered_map<string, Massive> &massiveBodies, const string &id, const dvec3 &position) -> dvec3 {
@@ -144,6 +150,10 @@ namespace Simulation {
         return energy;
     }
 
+    auto GetTotalEnergy(const Body &body) -> double {
+        return GetKineticEnergy(body) + GetPotentialEnergy(body);
+    }
+
     auto SetTimeStepSize(const double size) -> void {
         timeStepSize = size;
     }
@@ -156,11 +166,33 @@ namespace Simulation {
         return timeStepSize;
     }
 
+    auto GetTimeStep() -> double {
+        return timeStep;
+    }
+
     auto GetSimulationSpeed() -> double {
         return simulationSpeed;
     }
 
     auto GetSimulationSpeedMultiplier() -> double {
         return simulationSpeedMultiplier;
+    }
+
+    auto GetSimulationKineticEnergy() -> double {
+        double energy = 0;
+        for (const auto &pair : Bodies::GetMassiveBodies())  { energy += GetKineticEnergy(pair.second); }
+        for (const auto &pair : Bodies::GetMasslessBodies()) { energy += GetKineticEnergy(pair.second);   }
+        return energy;
+    }
+
+    auto GetSimulationPotentialEnergy() -> double {
+        double energy = 0;
+        for (const auto &pair : Bodies::GetMassiveBodies())  { energy += GetPotentialEnergy(pair.second); }
+        for (const auto &pair : Bodies::GetMasslessBodies()) { energy += GetPotentialEnergy(pair.second);   }
+        return energy;
+    }
+
+    auto GetSimulationTotalEnergy() -> double {
+        return GetSimulationKineticEnergy() + GetSimulationPotentialEnergy();
     }
 }

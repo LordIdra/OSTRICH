@@ -3,6 +3,7 @@
 #include "rendering/camera/CameraTransition.h"
 
 #include <glm/gtx/string_cast.hpp>
+#include <depend/implot/implot.h>
 #include <input/Keys.h>
 #include <input/Mouse.h>
 #include <rendering/camera/Camera.h>
@@ -76,6 +77,7 @@ namespace Control {
             // Initialize Imgui
             IMGUI_CHECKVERSION();
             ImGui::CreateContext();
+            ImPlot::CreateContext();
             ImGui::StyleColorsDark();
 
             // Initialise GLFW and OpenGL backends
@@ -123,6 +125,7 @@ namespace Control {
             vec3 direction = Rays::ScreenToWorld(Mouse::GetScreenPosition());
 
             Bodies::Update(deltaTime);
+            Simulation::UpdateTime(deltaTime);
             Camera::Update(deltaTime);
             CameraTransition::Update(deltaTime);
             MassiveRender::Update(deltaTime);
