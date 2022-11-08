@@ -17,6 +17,7 @@ namespace LoadScenario {
         const string BODIES_TEXT = ICON_MDI_EARTH + string(" Bodies");
         const string TIME_TEXT = ICON_MDI_CLOCK + string(" Time");
 
+        const string NO_SCENARIO_SELECTED_TEXT = ICON_MDI_CANCEL + string(" No scenario selected");
         const string LOAD_TEXT = ICON_MDI_CHECK_CIRCLE_OUTLINE + string(" Load");
         const string CANCEL_TEXT = ICON_MDI_CLOSE_CIRCLE_OUTLINE + string(" Cancel");
 
@@ -29,6 +30,12 @@ namespace LoadScenario {
         const unsigned int TIME_COLUMN_ID = 2;
 
         const ImVec2 TABLE_SIZE = ImVec2(600, 400);
+        const ImVec2 CANCEL_BUTTON_SIZE = ImVec2(90, 0);
+        const ImVec2 LOAD_BUTTON_SIZE = ImVec2(90, 0);
+        const ImVec2 ERROR_BUTTON_SIZE = ImVec2(220, 0);
+
+        const ImVec4 DISABLED_BUTTON_COLOR = ImVec4(0.5, 0.5, 0.5, 1.0);
+        const ImVec4 TRANSPARENT_COLOR = ImVec4(0.0, 0.0, 0.0, 0.0);
 
         const ImGuiPopupFlags POPUP_FLAGS = ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoTitleBar;
         const ImGuiTableFlags TABLE_FLAGS = ImGuiTableFlags_SizingFixedFit | ImGuiTableFlags_Sortable | ImGuiTableFlags_ScrollY | ImGuiTableFlags_NoPadOuterX | ImGuiTableFlags_NoPadInnerX;
@@ -141,15 +148,27 @@ namespace LoadScenario {
         }
 
         auto AddButtons() -> void {
-            if (ImGui::Button(LOAD_TEXT.c_str(), ImVec2(120, 0))) {
-                Scenarios::LoadScenario(selectedFile);
+            // Cancel
+            if (ImGui::Button(CANCEL_TEXT.c_str(), CANCEL_BUTTON_SIZE)) {
                 ImGui::CloseCurrentPopup(); 
             }
 
             ImGui::SameLine();
 
-            if (ImGui::Button(CANCEL_TEXT.c_str(), ImVec2(120, 0))) {
-                ImGui::CloseCurrentPopup(); 
+            // No scenario selected
+            if (selectedFile == "") {
+                ImGui::PushStyleColor(ImGuiCol_Text, DISABLED_BUTTON_COLOR);
+                ImGui::PushStyleColor(ImGuiCol_ButtonHovered, TRANSPARENT_COLOR);
+                ImGui::PushStyleColor(ImGuiCol_ButtonActive, TRANSPARENT_COLOR);
+                ImGui::Button(NO_SCENARIO_SELECTED_TEXT.c_str(), ERROR_BUTTON_SIZE);
+                ImGui::PopStyleColor(3);
+            
+            // Load
+            } else {
+                if (ImGui::Button(LOAD_TEXT.c_str(), LOAD_BUTTON_SIZE)) {
+                    Scenarios::LoadScenario(selectedFile);
+                    ImGui::CloseCurrentPopup(); 
+                }
             }
         }
     }

@@ -116,8 +116,6 @@ namespace Control {
         Camera::Init();
         Bodies::Init();
         Simulation::Init();
-        
-        Scenarios::LoadScenario("example.yml");
     }
 
     auto Mainloop() -> void {

@@ -30,6 +30,11 @@ namespace SaveScenario {
         const unsigned int TIME_COLUMN_ID = 2;
 
         const ImVec2 TABLE_SIZE = ImVec2(600, 400);
+        const ImVec2 CANCEL_BUTTON_SIZE = ImVec2(120, 0);
+        const ImVec2 SAVE_BUTTON_SIZE = ImVec2(120, 0);
+        const ImVec2 ERROR_BUTTON_SIZE = ImVec2(200, 0);
+
+        const ImVec4 DISABLED_BUTTON_COLOR = ImVec4(0.7, 0.7, 0.7, 1.0);
 
         const ImGuiPopupFlags POPUP_FLAGS = ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoTitleBar;
         const ImGuiTableFlags TABLE_FLAGS = ImGuiTableFlags_SizingFixedFit | ImGuiTableFlags_Sortable | ImGuiTableFlags_ScrollY | ImGuiTableFlags_NoPadOuterX | ImGuiTableFlags_NoPadInnerX;
@@ -126,7 +131,6 @@ namespace SaveScenario {
                 vector<Scenarios::ScenarioFile> scenarios = Scenarios::GetScenarios();
                 std::sort(scenarios.begin(), scenarios.end(), CompareScenarioFiles);
 
-
                 ImGui::PushFont(Fonts::Data());
                 for (Scenarios::ScenarioFile scenario : scenarios) {
                     AddNameText(scenario.nameWithExtension);
@@ -140,13 +144,15 @@ namespace SaveScenario {
         }
 
         auto AddButtons() -> void {
-            if (ImGui::Button(SAVE_TEXT.c_str(), ImVec2(120, 0))) {
+            // Cancel
+            if (ImGui::Button(CANCEL_TEXT.c_str(), CANCEL_BUTTON_SIZE)) {
                 ImGui::CloseCurrentPopup(); 
             }
 
             ImGui::SameLine();
 
-            if (ImGui::Button(CANCEL_TEXT.c_str(), ImVec2(120, 0))) {
+            // Save
+            if (ImGui::Button(SAVE_TEXT.c_str(), SAVE_BUTTON_SIZE)) {
                 ImGui::CloseCurrentPopup(); 
             }
         }
