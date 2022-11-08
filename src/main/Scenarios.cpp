@@ -210,18 +210,12 @@ namespace Scenarios {
     auto SaveScenario(const string &filenameWithExtension) -> void {
         string path = SCENARIO_DIRECTORY + filenameWithExtension;
 
-        // Check if the file already exists (we'd have to overwrite it if it does)
-        if (FileExists(path)) {
-            Log(WARN, "File already exists at " + path + " and would be overwritten");
-            return;
-        }
-
         YAML::Emitter scenario;
         scenario << YAML::BeginMap;
 
         // Save time
         scenario << YAML::Key << "time";
-        scenario << YAML::Value << Simulation::GetTimeStep();
+        scenario << YAML::Value << int(Simulation::GetTimeStep());
         
         // Save massive bodies
         scenario << YAML::Key << "massive";
@@ -231,6 +225,7 @@ namespace Scenarios {
             Massive body = pair.second;
             SaveMassive(id, scenario, body);
         }
+        scenario << YAML::EndMap;
 
         // Save massless bodies
         scenario << YAML::Key << "massless" << YAML::Value;
@@ -250,9 +245,25 @@ namespace Scenarios {
         file.close();
     }
 
+    auto ScenarioExists(const string &path) -> bool {
+        for (const auto &entry : std::filesystem::directory_iterator(SCENARIO_DIRECTORY)) {
+            if (string(entry.path()).substr(string(entry.path()).size()-4, 4) != ".yml") {
+                continue;
+            }
+            if (GetOnlyFilename(entry.path()) == path) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     auto GetScenarios() -> vector<ScenarioFile> {
         vector<ScenarioFile> scenarios;
         for (const auto &entry : std::filesystem::directory_iterator(SCENARIO_DIRECTORY)) {
+            if (string(entry.path()).substr(string(entry.path()).size()-4, 4) != ".yml") {
+                continue;
+            }
             YAML::Node scenario = YAML::LoadFile(entry.path());
             
             string fileName = GetOnlyFilename(entry.path());

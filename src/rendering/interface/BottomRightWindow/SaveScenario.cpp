@@ -17,9 +17,10 @@ namespace SaveScenario {
         const string BODIES_TEXT = ICON_MDI_EARTH + string(" Bodies");
         const string TIME_TEXT = ICON_MDI_CLOCK + string(" Time");
 
-        const string NO_FILE_SELECTED_TEXT = ICON_MDI_CANCEL + string(" No file selected");
+        const string ENTER_FILENAME_TEXT = ICON_MDI_CANCEL + string(" Enter filename");
         const string SAVE_TEXT = ICON_MDI_CHECK_CIRCLE_OUTLINE + string(" Save");
         const string CANCEL_TEXT = ICON_MDI_CLOSE_CIRCLE_OUTLINE + string(" Cancel");
+        const string OVERWRITE_TEXT = ICON_MDI_ALERT_CIRCLE_OUTLINE + string(" Overwrite");
 
         const int NAME_WIDTH = 280;
         const int BODIES_WEIGHT = 45;
@@ -30,18 +31,20 @@ namespace SaveScenario {
         const unsigned int TIME_COLUMN_ID = 2;
 
         const ImVec2 TABLE_SIZE = ImVec2(600, 400);
-        const ImVec2 CANCEL_BUTTON_SIZE = ImVec2(120, 0);
-        const ImVec2 SAVE_BUTTON_SIZE = ImVec2(120, 0);
-        const ImVec2 ERROR_BUTTON_SIZE = ImVec2(200, 0);
+        const ImVec2 CANCEL_BUTTON_SIZE = ImVec2(90, 0);
+        const ImVec2 SAVE_BUTTON_SIZE = ImVec2(90, 0);
+        const ImVec2 ERROR_BUTTON_SIZE = ImVec2(167, 0);
+        const ImVec2 OVERWRITE_BUTTON_SIZE = ImVec2(130, 0);
 
         const ImVec4 DISABLED_BUTTON_COLOR = ImVec4(0.7, 0.7, 0.7, 1.0);
+        const ImVec4 TRANSPARENT_COLOR = ImVec4(0.0, 0.0, 0.0, 0.0);
+        const ImVec4 OVERWRITE_BUTTON_COLOR = ImVec4(1.0, 0.7, 0.2, 1.0);
 
         const ImGuiPopupFlags POPUP_FLAGS = ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoTitleBar;
         const ImGuiTableFlags TABLE_FLAGS = ImGuiTableFlags_SizingFixedFit | ImGuiTableFlags_Sortable | ImGuiTableFlags_ScrollY | ImGuiTableFlags_NoPadOuterX | ImGuiTableFlags_NoPadInnerX;
 
         ImGuiTableSortSpecs* sortSpecs;
-
-        string selectedFile;
+        char filename[64];
 
         auto AddTitle() -> void {
             ImGui::PushFont(Fonts::MainBig());
@@ -110,7 +113,9 @@ namespace SaveScenario {
 
         auto AddNameText(const string &text) -> void {
             ImGui::TableNextColumn();
-            ImGui::Text("%s", Fonts::NormalizeString(Fonts::MainBig(), text, NAME_WIDTH).c_str());
+            if (ImGui::Selectable(Fonts::NormalizeString(Fonts::MainBig(), text, NAME_WIDTH).c_str(), string(filename) == text, ImGuiSelectableFlags_SpanAllColumns)) {
+                strcpy(filename, text.c_str());
+            }
         }
 
         auto AddBodiesText(const int bodies) -> void {
@@ -143,6 +148,10 @@ namespace SaveScenario {
             }
         }
 
+        auto AddFilenameEntry() -> void {
+            ImGui::InputTextWithHint("##", "enter filename here", filename, IM_ARRAYSIZE(filename));
+        }
+
         auto AddButtons() -> void {
             // Cancel
             if (ImGui::Button(CANCEL_TEXT.c_str(), CANCEL_BUTTON_SIZE)) {
@@ -151,9 +160,29 @@ namespace SaveScenario {
 
             ImGui::SameLine();
 
-            // Save
-            if (ImGui::Button(SAVE_TEXT.c_str(), SAVE_BUTTON_SIZE)) {
-                ImGui::CloseCurrentPopup(); 
+            // No filename
+            if (filename[0] == '\0') {
+                ImGui::PushStyleColor(ImGuiCol_Text, DISABLED_BUTTON_COLOR);
+                ImGui::PushStyleColor(ImGuiCol_ButtonHovered, TRANSPARENT_COLOR);
+                ImGui::PushStyleColor(ImGuiCol_ButtonActive, TRANSPARENT_COLOR);
+                ImGui::Button(ENTER_FILENAME_TEXT.c_str(), ERROR_BUTTON_SIZE);
+                ImGui::PopStyleColor(3);
+
+            // Load
+            } else {
+                if (Scenarios::ScenarioExists(filename)) {
+                    ImGui::PushStyleColor(ImGuiCol_Text,OVERWRITE_BUTTON_COLOR);
+                    if (ImGui::Button(OVERWRITE_TEXT.c_str(), OVERWRITE_BUTTON_SIZE)) {
+                        Scenarios::SaveScenario(string(filename));
+                        ImGui::CloseCurrentPopup(); 
+                    }
+                    ImGui::PopStyleColor();
+                } else {
+                    if (ImGui::Button(SAVE_TEXT.c_str(), SAVE_BUTTON_SIZE)) {
+                        Scenarios::SaveScenario(string(filename));
+                        ImGui::CloseCurrentPopup(); 
+                    }
+                }
             }
         }
     }
@@ -165,6 +194,7 @@ namespace SaveScenario {
         if (ImGui::BeginPopupModal("Save Scenario", NULL, POPUP_FLAGS)) {
             AddTitle();
             AddFileTable();
+            AddFilenameEntry();
             AddButtons();
             ImGui::EndPopup();
         }

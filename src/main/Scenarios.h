@@ -15,5 +15,7 @@ namespace Scenarios {
 
     auto SaveScenario(const string &path) -> void;
     auto LoadScenario(const string &path) -> void;
+
+    auto ScenarioExists(const string &path) -> bool;
     auto GetScenarios() -> vector<ScenarioFile>;
 }
