@@ -140,7 +140,9 @@ namespace Scenarios {
         }
 
         auto GetOnlyFilename(const string &path) -> string {
-            return path.substr(SCENARIO_DIRECTORY.size(), path.size() - SCENARIO_DIRECTORY.size());
+            string withoutPrefix = path.substr(SCENARIO_DIRECTORY.size(), path.size() - SCENARIO_DIRECTORY.size());
+            string withoutSuffix = withoutPrefix.substr(0, withoutPrefix.size()-4);
+            return withoutSuffix;
         }
 
         auto GetBodyCount(YAML::Node &scenario) -> int {
@@ -208,7 +210,7 @@ namespace Scenarios {
     }
 
     auto SaveScenario(const string &filenameWithExtension) -> void {
-        string path = SCENARIO_DIRECTORY + filenameWithExtension;
+        string path = SCENARIO_DIRECTORY + filenameWithExtension + ".yml";
 
         YAML::Emitter scenario;
         scenario << YAML::BeginMap;
