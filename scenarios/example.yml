@@ -12,8 +12,8 @@ massive:
     color: [0.6, 0.6, 0.6]
     radius: 1737.4e+3
     mass: 0.07346e+24
-    position: [1.4055e+9, 0, 0]
-    velocity: [0, -1.0e+2, 0.570e+3]
+    position: [0.4055e+9, 0, 0]
+    velocity: [0, 0, 0.970e+3]
   
 massless:
   spacecraft:

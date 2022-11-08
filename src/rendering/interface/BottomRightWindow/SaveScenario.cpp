@@ -10,14 +10,14 @@
 
 
 
-namespace LoadScenario {
+namespace SaveScenario {
     namespace {
-        const string TITLE_TEXT = ICON_MDI_FOLDER_DOWNLOAD + string(" Load Scenario");
+        const string TITLE_TEXT = ICON_MDI_FOLDER_DOWNLOAD + string(" Save Scenario");
         const string NAME_TEXT = ICON_MDI_FORMAT_TEXT + string(" Name");
         const string BODIES_TEXT = ICON_MDI_EARTH + string(" Bodies");
         const string TIME_TEXT = ICON_MDI_CLOCK + string(" Time");
 
-        const string LOAD_TEXT = ICON_MDI_CHECK_CIRCLE_OUTLINE + string(" Load");
+        const string SAVE_TEXT = ICON_MDI_CHECK_CIRCLE_OUTLINE + string(" Save");
         const string CANCEL_TEXT = ICON_MDI_CLOSE_CIRCLE_OUTLINE + string(" Cancel");
 
         const int NAME_WIDTH = 280;
@@ -122,7 +122,7 @@ namespace LoadScenario {
         auto AddFileTable() -> void {
             if (ImGui::BeginTable("file-table", 3, TABLE_FLAGS, TABLE_SIZE)) {
                 AddHeader();
-
+                
                 sortSpecs = ImGui::TableGetSortSpecs();
                 vector<Scenarios::ScenarioFile> scenarios = Scenarios::GetScenarios();
                 std::sort(scenarios.begin(), scenarios.end(), CompareScenarioFiles);
@@ -141,8 +141,7 @@ namespace LoadScenario {
         }
 
         auto AddButtons() -> void {
-            if (ImGui::Button(LOAD_TEXT.c_str(), ImVec2(120, 0))) {
-                Scenarios::LoadScenario(selectedFile);
+            if (ImGui::Button(SAVE_TEXT.c_str(), ImVec2(120, 0))) {
                 ImGui::CloseCurrentPopup(); 
             }
 

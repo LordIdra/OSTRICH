@@ -1,0 +1,131 @@
+time: 49942
+massive:
+  ms-mills:
+    name: Ms Mills
+    color:
+      - 1.0
+      - 1.0
+      - 0.0
+    radius: 1737400
+    mass: 6.3460000000000003e+20
+    position:
+      - 1.0e+8
+      - 0
+      - 0
+    velocity:
+      - 0
+      - 1.0e+2
+      - 0
+  the-shouty-teacher:
+    name: Mr Macinerny
+    color:
+      - 0.7
+      - 0.0
+      - 0.0
+    radius: 1234567
+    mass: 1.9722000000000002e+21
+    position:
+      - 2.0e+8
+      - 0
+      - 0
+    velocity:
+      - 0
+      - 1.0e+2
+      - 0
+  ono:
+    name: Mr Johnston
+    color:
+      - 0.6
+      - 0.2
+      - 0.0
+    radius: 1004680
+    mass: 1.0722000000000002e+20
+    position:
+      - 3.0e+8
+      - 0
+      - 0
+    velocity:
+      - 0
+      - 1.0e+2
+      - 0
+  ono2:
+    name: Mr Patel
+    color:
+      - 0.6
+      - 0.2
+      - 0.0
+    radius: 1004680
+    mass: 1.0722000000000002e+22
+    position:
+      - 4.0e+8
+      - 0
+      - 0
+    velocity:
+      - 0
+      - 1.0e+2
+      - 0
+  ono3:
+    name: Mr Poole
+    color:
+      - 0.6
+      - 0.2
+      - 0.0
+    radius: 1004680
+    mass: 1.0722000000000002e+20
+    position:
+      - 5.0e+8
+      - 0
+      - 0
+    velocity:
+      - 0
+      - 1.0e+2
+      - 0
+  ono4:
+    name: Ms Polemidioti
+    color:
+      - 0.6
+      - 0.2
+      - 0.0
+    radius: 1004680
+    mass: 1.0722000000000002e+21
+    position:
+      - 6.0e+8
+      - 0
+      - 0
+    velocity:
+      - 0
+      - 1.0e+2
+      - 0
+  ono5:
+    name: Ms Opie
+    color:
+      - 0.6
+      - 0.2
+      - 0.0
+    radius: 1004680
+    mass: 1.0722000000000002e+20
+    position:
+      - 7.0e+8
+      - 0
+      - 0
+    velocity:
+      - 0
+      - 1.0e+2
+      - 0
+  ono6:
+    name: Ms YATES
+    color:
+      - 0.6
+      - 0.2
+      - 0.0
+    radius: 1004680
+    mass: 1.0722000000000002e+21
+    position:
+      - 8.0e+8
+      - 0
+      - 0
+    velocity:
+      - 0
+      - 1.0e+2
+      - 0
+massless:

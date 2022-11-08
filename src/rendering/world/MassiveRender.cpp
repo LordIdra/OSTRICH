@@ -45,11 +45,16 @@ namespace MassiveRender {
         }
     }
 
+
     auto Init() -> void {
         // Program
         Shader vertex = Shader("../resources/shaders/massive-vertex.vsh", GL_VERTEX_SHADER);
         Shader fragment = Shader("../resources/shaders/massive-fragment.fsh", GL_FRAGMENT_SHADER);
         program = make_unique<Program>(vertex, fragment);
+    }
+    
+    auto Reset() -> void {
+        massive_vaos.clear();
     }
 
     auto Update(const double deltaTime) -> void {

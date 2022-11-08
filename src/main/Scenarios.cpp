@@ -1,10 +1,9 @@
 #include "Scenarios.h"
 #include "bodies/Massive.h"
+#include "main/Simulation.h"
 #include "rendering/shaders/Util.h"
 #include "util/TimeFormat.h"
-
-#include <chrono>
-#include <string>
+#include <main/Control.h>
 #include <util/Log.h>
 #include <main/Bodies.h>
 
@@ -15,6 +14,8 @@
 #include <yaml-cpp/node/parse.h>
 #include <yaml-cpp/yaml.h>
 
+#include <string>
+#include <chrono>
 #include <iostream>
 #include <filesystem>
 #include <fstream>
@@ -184,6 +185,13 @@ namespace Scenarios {
             return;
         }
 
+        // Reset current simulation
+        Control::Reset();
+
+        // Set time
+        int time = GetInt(scenario, path, "time");
+        Simulation::SetTimeStep(time);
+
         // Load Massive bodies
         for (YAML::const_iterator i = massive.begin(); i != massive.end(); i++) {
             string id = i->first.as<string>();
@@ -210,10 +218,14 @@ namespace Scenarios {
 
         YAML::Emitter scenario;
         scenario << YAML::BeginMap;
+
+        // Save time
+        scenario << YAML::Key << "time";
+        scenario << YAML::Value << Simulation::GetTimeStep();
         
         // Save massive bodies
-        scenario << YAML::Key << "massive" << YAML::Value;
-        scenario << YAML::BeginMap;
+        scenario << YAML::Key << "massive";
+        scenario << YAML::Value << YAML::BeginMap;
         for (const auto &pair : Bodies::GetMassiveBodies()) {
             string id = pair.first;
             Massive body = pair.second;

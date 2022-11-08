@@ -61,6 +61,10 @@ namespace CameraTransition {
         Mouse::SetCallbackLeftDouble(SwitchBodyBasedOnIcon);
     }
 
+    auto Reset() -> void {
+        transition = Transition(ZERO_VECTOR, ZERO_VECTOR, 0.0, 0.0, 0.0);
+    }
+
     auto Update(const double deltaTime) -> void {
         // Update transition target, so that the camera follows the target
         if (Bodies::GetSelectedType() == BODY_TYPE_MASSIVE) {

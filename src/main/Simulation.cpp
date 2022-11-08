@@ -53,6 +53,14 @@ namespace Simulation {
         Keys::BindFunctionToKeyPress(GLFW_KEY_PERIOD, IncreaseSimulationSpeed);
     }
 
+    auto Reset() -> void {
+        timeStepSize = INITIAL_TIME_STEP_SIZE;
+        timeStepsPerFrame = INITIAL_TIME_STEP_COUNT;
+        simulationSpeed = INITIAL_SIMULATION_SPEED;
+        simulationSpeedMultiplier = INITIAL_SIMULATION_SPEED;
+        timeStep = 0;
+    }
+
     auto UpdateTime(const float deltaTime) -> void {
         timeStep += deltaTime * simulationSpeed;
     }
@@ -156,6 +164,10 @@ namespace Simulation {
 
     auto SetTimeStepSize(const double size) -> void {
         timeStepSize = size;
+    }
+
+    auto SetTimeStep(const double step) -> void {
+        timeStep = step;
     }
 
     auto SetTimeStepsPerFrame(const double size) -> void {

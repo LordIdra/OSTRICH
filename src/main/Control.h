@@ -9,5 +9,6 @@
 
 namespace Control {
     auto Init(const bool fullscreen, const string &windowTitle) -> void;
+    auto Reset() -> void;
     auto Mainloop() -> void;
 }

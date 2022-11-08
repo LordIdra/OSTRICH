@@ -90,6 +90,15 @@ namespace Control {
         }
     }
 
+    auto Reset() -> void {
+        CameraTransition::Reset();
+        Bodies::Reset();
+        MassiveRender::Reset();
+        Camera::Reset();
+        Bodies::Reset();
+        Simulation::Reset();
+    }
+
     auto Init(const bool fullscreen, const string &windowTitle) -> void {
         InitGLFW();
         Window::Init(fullscreen, windowTitle);

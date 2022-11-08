@@ -8,8 +8,8 @@
 
 namespace BottomRightWindow {
     namespace {
-        const ImVec2 WINDOW_SIZE = ImVec2(275, 90);
-        const ImVec2 WINDOW_POSITION = ImVec2(1590, 960);
+        const ImVec2 WINDOW_SIZE = ImVec2(275, 120);
+        const ImVec2 WINDOW_POSITION = ImVec2(1490, 860);
 
         const ImGuiWindowFlags WINDOW_FLAGS = ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
 

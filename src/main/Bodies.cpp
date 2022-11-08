@@ -67,12 +67,23 @@ namespace Bodies {
         }
     }
 
+
     auto Init() -> void {
         // Initial camera lock
         if (!massiveBodies.empty()) {
             selectedType = BODY_TYPE_MASSIVE;
             selected = massiveBodies.begin()->first;
         }
+    }
+    
+    auto Reset() -> void {
+        massiveBodies.clear();
+        masslessBodies.clear();
+        pastPoints.clear();
+        futurePoints.clear();
+        selectedType = BODY_TYPE_NONE;
+        selected = "";
+        timeSinceLastOrbitPointUpdate = 0;
     }
 
     auto Update(const double deltaTime) -> void {

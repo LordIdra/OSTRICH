@@ -44,6 +44,7 @@ set(FILES
 
     "src/rendering/interface/BottomRightWindow/BottomRightWindow.cpp"
     "src/rendering/interface/BottomRightWindow/SimulationControl.cpp"
+    "src/rendering/interface/BottomRightWindow/SaveScenario.cpp"
     "src/rendering/interface/BottomRightWindow/LoadScenario.cpp"
     "src/rendering/interface/TopRightWindow/TopRightWindow.cpp"
     "src/rendering/interface/TopRightWindow/SimulationData.cpp"

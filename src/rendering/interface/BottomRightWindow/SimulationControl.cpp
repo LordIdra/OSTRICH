@@ -1,4 +1,5 @@
 #include "SimulationControl.h"
+#include "util/TimeFormat.h"
 
 #include <rendering/interface/BottomRightWindow/LoadScenario.h>
 #include <rendering/interface/Fonts.h>
@@ -16,7 +17,9 @@ namespace SimulationControl {
         const string SETTINGS_TEXT = ICON_MDI_COG + string(" Settings");
 
         const string SPEED_INDICATOR_ICON = ICON_MDI_CHEVRON_RIGHT_CIRCLE;
-        const string SPEED_ICON = ICON_MDI_PLAY_SPEED;
+
+        const string SPEED_TEXT = ICON_MDI_PLAY_SPEED + string(" Speed ");
+        const string TIME_TEXT = ICON_MDI_CLOCK + string(" Time   ");
         
         auto AddGeneralButtons() -> void {
             ImGui::PushFont(Fonts::Main());
@@ -70,7 +73,17 @@ namespace SimulationControl {
         }
 
         auto AddSpeedIcon() -> void {
-            ImGui::Text("%s %.0f%s", SPEED_ICON.c_str(), Simulation::GetSimulationSpeed(), "s per second");
+            ImGui::Text("%s", SPEED_TEXT.c_str());
+            ImGui::SameLine();
+            ImGui::PushFont(Fonts::Data());
+            ImGui::Text("%s", TimeFormat::FormatTime(Simulation::GetSimulationSpeed()).c_str());
+            ImGui::PopFont();
+
+            ImGui::Text("%s", TIME_TEXT.c_str());
+            ImGui::SameLine();
+            ImGui::PushFont(Fonts::Data());
+            ImGui::Text("%s", TimeFormat::FormatTime(Simulation::GetTimeStep()).c_str());
+            ImGui::PopFont();
         }
     }
 

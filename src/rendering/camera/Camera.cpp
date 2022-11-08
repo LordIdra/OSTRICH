@@ -45,11 +45,16 @@ namespace Camera {
         }
     }
 
+
     auto Init() -> void {
-        Camera::SetTarget(vec3(0.0F, 0.0F, 0.0F));
+        SetTarget(vec3(0.0F, 0.0F, 0.0F));
 
         Keys::BindFunctionToKeyHold(GLFW_KEY_EQUAL, KeyZoomIn);
         Keys::BindFunctionToKeyHold(GLFW_KEY_MINUS, KeyZoomOut);
+    }
+    
+    auto Reset() -> void {
+        SetTarget(vec3(0, 0, 0));
     }
 
     auto Update(const double deltaTime) -> void {

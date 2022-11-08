@@ -7,6 +7,7 @@
 
 namespace Camera {
     auto Init() -> void;
+    auto Reset() -> void;
     auto Update(const double deltaTime) -> void;
 
     auto StartTransition(const Body &body) -> void;
