@@ -1,4 +1,4 @@
-#include "LoadScenario.h"
+#include "SaveScenario.h"
 
 #include <rendering/interface/Fonts.h>
 #include <main/Scenarios.h>
@@ -12,11 +12,12 @@
 
 namespace SaveScenario {
     namespace {
-        const string TITLE_TEXT = ICON_MDI_FOLDER_DOWNLOAD + string(" Save Scenario");
+        const string TITLE_TEXT = ICON_MDI_FOLDER_UPLOAD + string(" Save Scenario");
         const string NAME_TEXT = ICON_MDI_FORMAT_TEXT + string(" Name");
         const string BODIES_TEXT = ICON_MDI_EARTH + string(" Bodies");
         const string TIME_TEXT = ICON_MDI_CLOCK + string(" Time");
 
+        const string NO_FILE_SELECTED_TEXT = ICON_MDI_CANCEL + string(" No file selected");
         const string SAVE_TEXT = ICON_MDI_CHECK_CIRCLE_OUTLINE + string(" Save");
         const string CANCEL_TEXT = ICON_MDI_CLOSE_CIRCLE_OUTLINE + string(" Cancel");
 
@@ -104,9 +105,7 @@ namespace SaveScenario {
 
         auto AddNameText(const string &text) -> void {
             ImGui::TableNextColumn();
-            if (ImGui::Selectable(Fonts::NormalizeString(Fonts::MainBig(), text, NAME_WIDTH).c_str(), selectedFile == text, ImGuiSelectableFlags_SpanAllColumns)) {
-                selectedFile = text;
-            }
+            ImGui::Text("%s", Fonts::NormalizeString(Fonts::MainBig(), text, NAME_WIDTH).c_str());
         }
 
         auto AddBodiesText(const int bodies) -> void {
@@ -157,7 +156,7 @@ namespace SaveScenario {
         ImGui::PushStyleColor(ImGuiCol_PopupBg, ImVec4(0.1, 0.1, 0.1, 0.7));
         ImGui::PushStyleColor(ImGuiCol_Border, ImVec4(0.1, 0.1, 0.1, 0.7));
 
-        if (ImGui::BeginPopupModal("Load Scenario", NULL, POPUP_FLAGS)) {
+        if (ImGui::BeginPopupModal("Save Scenario", NULL, POPUP_FLAGS)) {
             AddTitle();
             AddFileTable();
             AddButtons();

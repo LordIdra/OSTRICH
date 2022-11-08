@@ -102,31 +102,7 @@ namespace SimulationData {
         auto AddResetButton() -> void {
             ImGui::PushFont(Fonts::Main());
             if (ImGui::Button(RESET_TEXT.c_str())) {
-                // Original energy
-                originalEnergy = Simulation::GetSimulationTotalEnergy();
-
-                // Time values
-                timeValues.clear();
-
-                // Energy deviation
-                energyDeviation.clear();
-
-                // Simulation energy
-                simulationEnergyKinetic.clear();
-                simulationEnergyPotential.clear();
-                simulationEnergyTotal.clear();
-
-                // Body energy
-                for (const auto &pair : Bodies::GetMassiveBodies()) {
-                    bodyEnergyKinetic.at(pair.first).clear();
-                    bodyEnergyPotential.at(pair.first).clear();
-                    bodyEnergyTotal.at(pair.first).clear();
-                }
-                for (const auto &pair : Bodies::GetMasslessBodies()) {
-                    bodyEnergyKinetic.at(pair.first).clear();
-                    bodyEnergyPotential.at(pair.first).clear();
-                    bodyEnergyTotal.at(pair.first).clear();
-                }
+                Reset();
             }
             ImGui::PopFont();
         }
@@ -157,6 +133,34 @@ namespace SimulationData {
             bodyEnergyKinetic.at(pair.first).push_back(Simulation::GetKineticEnergy(pair.second));
             bodyEnergyPotential.at(pair.first).push_back(Simulation::GetPotentialEnergy(pair.second));
             bodyEnergyTotal.at(pair.first).push_back(Simulation::GetTotalEnergy(pair.second));
+        }
+    }
+
+    auto Reset() -> void {
+        // Original energy
+        originalEnergy = Simulation::GetSimulationTotalEnergy();
+
+        // Time values
+        timeValues.clear();
+
+        // Energy deviation
+        energyDeviation.clear();
+
+        // Simulation energy
+        simulationEnergyKinetic.clear();
+        simulationEnergyPotential.clear();
+        simulationEnergyTotal.clear();
+
+        // Body energy
+        for (const auto &pair : Bodies::GetMassiveBodies()) {
+            bodyEnergyKinetic.at(pair.first).clear();
+            bodyEnergyPotential.at(pair.first).clear();
+            bodyEnergyTotal.at(pair.first).clear();
+        }
+        for (const auto &pair : Bodies::GetMasslessBodies()) {
+            bodyEnergyKinetic.at(pair.first).clear();
+            bodyEnergyPotential.at(pair.first).clear();
+            bodyEnergyTotal.at(pair.first).clear();
         }
     }
 

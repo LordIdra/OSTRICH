@@ -1,6 +1,7 @@
 #include "Control.h"
 #include "main/Scenarios.h"
 #include "rendering/camera/CameraTransition.h"
+#include "rendering/interface/TopRightWindow/SimulationData.h"
 
 #include <glm/gtx/string_cast.hpp>
 #include <depend/implot/implot.h>
@@ -97,6 +98,7 @@ namespace Control {
         Camera::Reset();
         Bodies::Reset();
         Simulation::Reset();
+        SimulationData::Reset();
     }
 
     auto Init(const bool fullscreen, const string &windowTitle) -> void {

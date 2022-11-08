@@ -1,6 +1,8 @@
 #include "SimulationControl.h"
+
 #include "util/TimeFormat.h"
 
+#include <rendering/interface/BottomRightWindow/SaveScenario.h>
 #include <rendering/interface/BottomRightWindow/LoadScenario.h>
 #include <rendering/interface/Fonts.h>
 #include <main/Simulation.h>
@@ -40,6 +42,7 @@ namespace SimulationControl {
 
             ImGui::PopFont();
 
+            SaveScenario::Draw();
             LoadScenario::Draw();
         }
 
