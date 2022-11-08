@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.16)
 project("OSTRICH")
 
+# Internally built dependencies
 set(DEPEND_FILES
     "src/depend/implot/implot_demo.cpp"
     "src/depend/implot/implot_internal.h"
@@ -9,6 +10,7 @@ set(DEPEND_FILES
     "src/depend/implot/implot.h"
 )
 
+# Source files
 set(FILES
     "src/depend/stb_image.h"
     
@@ -66,25 +68,43 @@ set(FILES
 )
 
 # Enable clang tidy checks
-#set(CMAKE_CXX_CLANG_TIDY clang-tidy -checks=bugprone-*,clang-analyzer-*,concurrency-*,cppcoreguidelines-*,misc-*,modernize-*,performance-*,portability-*,readability-*,-misc-unused-using-decls,-cppcoreguidelines-pro-type-union-access,-readability-implicit-bool-conversion,-readability-magic-numbers,-bugprone-narrowing-conversions,-modernize-pass-by-value,-cppcoreguidelines-pro-type-vararg)
+set(CMAKE_CXX_CLANG_TIDY clang-tidy -checks=bugprone-*,clang-analyzer-*,concurrency-*,cppcoreguidelines-*,misc-*,modernize-*,performance-*,portability-*,readability-*,-misc-unused-using-decls,-cppcoreguidelines-pro-type-union-access,-readability-implicit-bool-conversion,-readability-magic-numbers,-bugprone-narrowing-conversions,-modernize-pass-by-value,-cppcoreguidelines-pro-type-vararg)
 
+# Use vscode toolchain file
 set(CMAKE_TOOLCHAIN_FILE "~/vcpkg/scripts/buildsystems/vcpkg.cmake")
+
+# Export compile commands (better IDE integration)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
+# Run vcpkg cmake file
+include("~/vcpkg/scripts/buildsystems/vcpkg.cmake")
+
+# C++ standard
 set(CMAKE_CXX_STANDARD 17)
 
+# Enable ccache
 find_program(CCACHE_FOUND ccache)
 set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE ccache)
 set_property(GLOBAL PROPERTY RULE_LAUNCH_LINK ccache)
 
-include("~/vcpkg/scripts/buildsystems/vcpkg.cmake")
-
+# Find external dependencies
 find_package(glad CONFIG REQUIRED)
 find_package(glfw3 CONFIG REQUIRED)
 find_package(glm CONFIG REQUIRED)
 find_package(imgui REQUIRED)
 find_package(yaml-cpp CONFIG REQUIRED)
 
-add_executable(${PROJECT_NAME} ${FILES} ${DEPEND_FILES})
+# Build dependencies (without clang-tidy checks)
+add_library(dependencies OBJECT ${DEPEND_FILES})
+target_include_directories(dependencies PRIVATE "~/vcpkg/installed/x64-linux/include")
+set_target_properties(dependencies PROPERTIES CXX_CLANG_TIDY "")
 
+# Build OSTRICH
+add_executable(${PROJECT_NAME} ${FILES})
+
+# Include src directory (easier to reference from #include directives)
 target_include_directories(${PROJECT_NAME} PRIVATE "src")
+
+# Link external libraries and internally built dependencies
 target_link_libraries (${PROJECT_NAME} PRIVATE glad::glad glfw imgui::imgui yaml-cpp)
+target_link_libraries (${PROJECT_NAME} PRIVATE dependencies)
