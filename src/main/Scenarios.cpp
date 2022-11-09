@@ -87,7 +87,7 @@ namespace Scenarios {
         }
 
         auto SetVec3(YAML::Emitter &emitter, const string &key, const vec3 &value) -> void {
-            emitter << key << YAML::BeginSeq << value.x << value.y << value.y << YAML::EndSeq;
+            emitter << key << YAML::BeginSeq << value.x << value.y << value.z << YAML::EndSeq;
         }
 
         auto GenerateMaterial(const vec3 color) -> Material {
@@ -162,8 +162,8 @@ namespace Scenarios {
         }
     }
 
-    auto LoadScenario(const string &filenameWithExtension) -> void{
-        string path = SCENARIO_DIRECTORY + filenameWithExtension;
+    auto LoadScenario(const string &filenameWithoutExtension) -> void{
+        string path = SCENARIO_DIRECTORY + filenameWithoutExtension + ".yml";
 
         // Check if the file exists
         if (!FileExists(path)) {
