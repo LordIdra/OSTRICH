@@ -57,7 +57,7 @@ namespace Camera {
         SetTarget(vec3(0, 0, 0));
     }
 
-    auto Update(const double deltaTime) -> void {
+    auto Update() -> void {
         // Apply deltas
         angle[0] += angleDelta[0];
         angle[1] += angleDelta[1];

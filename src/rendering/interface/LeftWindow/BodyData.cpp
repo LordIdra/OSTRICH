@@ -59,7 +59,7 @@ namespace BodyData {
              ImGui::PushFont(Fonts::Data());
              ImGui::TableNextColumn();
              ImVec4 color = ImVec4(body.GetColor().r, body.GetColor().g, body.GetColor().b, 1.0F);
-             ImGui::ColorEdit3("Body Colour", (float*)&color, ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel);
+             ImGui::ColorEdit3("Body Colour", (float*)&color, ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel); //NOLINT(cppcoreguidelines-pro-type-cstyle-cast)
              ImGui::PopFont();
          }
 

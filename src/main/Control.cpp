@@ -130,16 +130,14 @@ namespace Control {
                 Camera::AddAngleDelta(Mouse::GetPositionDelta());
             }
 
-            vec3 direction = Rays::ScreenToWorld(Mouse::GetScreenPosition());
-
             Bodies::Update(deltaTime);
             Simulation::UpdateTime(deltaTime);
-            Camera::Update(deltaTime);
+            Camera::Update();
             CameraTransition::Update(deltaTime);
-            MassiveRender::Update(deltaTime);
+            MassiveRender::Update();
             OrbitPaths::Update();
             Icons::DrawIcons();
-            Interface::Update(deltaTime);
+            Interface::Update();
 
             Mouse::Update();
             Keys::Update();

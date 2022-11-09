@@ -57,7 +57,7 @@ namespace MassiveRender {
         massive_vaos.clear();
     }
 
-    auto Update(const double deltaTime) -> void {
+    auto Update() -> void {
         // Set program variables
         program->Use();
         program->Set("cameraMatrix", Camera::GetMatrix());

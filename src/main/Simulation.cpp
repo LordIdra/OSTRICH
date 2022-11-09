@@ -61,7 +61,7 @@ namespace Simulation {
         timeStep = 0;
     }
 
-    auto UpdateTime(const float deltaTime) -> void {
+    auto UpdateTime(const double deltaTime) -> void {
         timeStep += deltaTime * simulationSpeed;
     }
 
@@ -142,7 +142,7 @@ namespace Simulation {
     }
 
     auto GetKineticEnergy(const Body &body) -> double {
-        return 0.5 * body.GetMass() * pow(glm::length(body.GetVelocity()), 2);
+    return 0.5 * body.GetMass() * pow(glm::length(body.GetVelocity()), 2); // NOLINT(cppcoreguidelines-avoid-magic-numbers)
     }
 
     auto GetPotentialEnergy(const Body &body) -> double {

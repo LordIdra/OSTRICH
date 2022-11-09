@@ -15,7 +15,7 @@ namespace Simulation {
 
     auto Init() -> void;
     auto Reset() -> void;
-    auto UpdateTime(const float deltaTime) -> void;
+    auto UpdateTime(const double deltaTime) -> void;
 
     auto CalculateAcceleration(const unordered_map<string, Massive> &massiveBodies, const string &id, const dvec3 &position) -> dvec3;
 

@@ -26,9 +26,11 @@ namespace SaveScenario {
         const int BODIES_WEIGHT = 45;
         const int TIME_WEIGHT = 100;
 
-        const unsigned int NAME_COLUMN_ID = 0;
-        const unsigned int BODIES_COLUMN_ID = 1;
-        const unsigned int TIME_COLUMN_ID = 2;
+        const int NAME_COLUMN_ID = 0;
+        const int BODIES_COLUMN_ID = 1;
+        const int TIME_COLUMN_ID = 2;
+
+        const int TEXT_BUFFER_SIZE = 2048;
 
         const ImVec2 TABLE_SIZE = ImVec2(600, 400);
         const ImVec2 CANCEL_BUTTON_SIZE = ImVec2(90, 0);
@@ -36,6 +38,8 @@ namespace SaveScenario {
         const ImVec2 ERROR_BUTTON_SIZE = ImVec2(167, 0);
         const ImVec2 OVERWRITE_BUTTON_SIZE = ImVec2(130, 0);
 
+        const ImVec4 MODAL_BACKGROUND = ImVec4(0.1, 0.1, 0.1, 0.7);
+        const ImVec4 MODAL_BORDER = ImVec4(0.1, 0.1, 0.1, 0.7);
         const ImVec4 DISABLED_BUTTON_COLOR = ImVec4(0.7, 0.7, 0.7, 1.0);
         const ImVec4 TRANSPARENT_COLOR = ImVec4(0.0, 0.0, 0.0, 0.0);
         const ImVec4 OVERWRITE_BUTTON_COLOR = ImVec4(1.0, 0.7, 0.2, 1.0);
@@ -44,7 +48,7 @@ namespace SaveScenario {
         const ImGuiTableFlags TABLE_FLAGS = ImGuiTableFlags_SizingFixedFit | ImGuiTableFlags_Sortable | ImGuiTableFlags_ScrollY | ImGuiTableFlags_NoPadOuterX | ImGuiTableFlags_NoPadInnerX;
 
         ImGuiTableSortSpecs* sortSpecs;
-        char filename[64];
+        char filename[TEXT_BUFFER_SIZE]; //NOLINT(cppcoreguidelines-avoid-c-arrays,modernize-avoid-c-arrays)
 
         auto AddTitle() -> void {
             ImGui::PushFont(Fonts::MainBig());
@@ -83,7 +87,7 @@ namespace SaveScenario {
         auto CompareScenarioFiles(const Scenarios::ScenarioFile &scenario1, const Scenarios::ScenarioFile &scenario2) -> bool {
             if (sortSpecs->Specs->ColumnIndex == NAME_COLUMN_ID) {
                 return CompareScenarioFileNames(scenario1, scenario2);
-            } else if (sortSpecs->Specs->ColumnIndex == BODIES_COLUMN_ID) {
+            } else if (sortSpecs->Specs->ColumnIndex == BODIES_COLUMN_ID) { //NOLINT(readability-else-after-return)
                 return CompareScenarioFileBodies(scenario1, scenario2);
             }
             return CompareScenarioFileTimes(scenario1, scenario2);
@@ -113,8 +117,8 @@ namespace SaveScenario {
 
         auto AddNameText(const string &text) -> void {
             ImGui::TableNextColumn();
-            if (ImGui::Selectable(Fonts::NormalizeString(Fonts::MainBig(), text, NAME_WIDTH).c_str(), string(filename) == text, ImGuiSelectableFlags_SpanAllColumns)) {
-                strcpy(filename, text.c_str());
+            if (ImGui::Selectable(Fonts::NormalizeString(Fonts::MainBig(), text, NAME_WIDTH).c_str(), string((char*)filename) == text, ImGuiSelectableFlags_SpanAllColumns)) {
+                strncpy((char*)filename, text.c_str(), text.size());
             }
         }
 
@@ -123,7 +127,7 @@ namespace SaveScenario {
             ImGui::Text("%d", bodies);
         }
 
-        auto AddTimeText(const string text) -> void {
+        auto AddTimeText(const string &text) -> void {
             ImGui::TableNextColumn();
             ImGui::Text("%s", text.c_str());
         }
@@ -137,7 +141,7 @@ namespace SaveScenario {
                 std::sort(scenarios.begin(), scenarios.end(), CompareScenarioFiles);
 
                 ImGui::PushFont(Fonts::Data());
-                for (Scenarios::ScenarioFile scenario : scenarios) {
+                for (const Scenarios::ScenarioFile &scenario : scenarios) {
                     AddNameText(scenario.nameWithExtension);
                     AddBodiesText(scenario.bodyCount);
                     AddTimeText(scenario.formattedTime);
@@ -149,7 +153,7 @@ namespace SaveScenario {
         }
 
         auto AddFilenameEntry() -> void {
-            ImGui::InputTextWithHint("##", "enter filename here", filename, IM_ARRAYSIZE(filename));
+            ImGui::InputTextWithHint("##", "enter filename here", (char*)filename, TEXT_BUFFER_SIZE * sizeof(char));
         }
 
         auto AddButtons() -> void {
@@ -170,16 +174,16 @@ namespace SaveScenario {
 
             // Load
             } else {
-                if (Scenarios::ScenarioExists(filename)) {
+                if (Scenarios::ScenarioExists((char*)filename)) {
                     ImGui::PushStyleColor(ImGuiCol_Text,OVERWRITE_BUTTON_COLOR);
                     if (ImGui::Button(OVERWRITE_TEXT.c_str(), OVERWRITE_BUTTON_SIZE)) {
-                        Scenarios::SaveScenario(string(filename));
+                        Scenarios::SaveScenario((char*)filename);
                         ImGui::CloseCurrentPopup(); 
                     }
                     ImGui::PopStyleColor();
                 } else {
                     if (ImGui::Button(SAVE_TEXT.c_str(), SAVE_BUTTON_SIZE)) {
-                        Scenarios::SaveScenario(string(filename));
+                        Scenarios::SaveScenario((char*)filename);
                         ImGui::CloseCurrentPopup(); 
                     }
                 }
@@ -188,10 +192,10 @@ namespace SaveScenario {
     }
 
     auto Draw() -> void {
-        ImGui::PushStyleColor(ImGuiCol_PopupBg, ImVec4(0.1, 0.1, 0.1, 0.7));
-        ImGui::PushStyleColor(ImGuiCol_Border, ImVec4(0.1, 0.1, 0.1, 0.7));
+        ImGui::PushStyleColor(ImGuiCol_PopupBg, MODAL_BACKGROUND);
+        ImGui::PushStyleColor(ImGuiCol_Border, MODAL_BORDER);
 
-        if (ImGui::BeginPopupModal("Save Scenario", NULL, POPUP_FLAGS)) {
+        if (ImGui::BeginPopupModal("Save Scenario", nullptr, POPUP_FLAGS)) {
             AddTitle();
             AddFileTable();
             AddFilenameEntry();

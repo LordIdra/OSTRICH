@@ -196,21 +196,21 @@ namespace Scenarios {
 
         // Load Massive bodies
         for (YAML::const_iterator i = massive.begin(); i != massive.end(); i++) {
-            string id = i->first.as<string>();
+            auto id = i->first.as<string>();
             YAML::Node node = i->second;
             Bodies::AddBody(LoadMassive(id, node, path));
         }
 
         // Load massless bodies
         for (YAML::const_iterator i = massless.begin(); i != massless.end(); i++) {
-            string id = i->first.as<string>();
+            auto id = i->first.as<string>();
             YAML::Node node = i->second;
             Bodies::AddBody(LoadMassless(id, node, path));
         }
     }
 
-    auto SaveScenario(const string &filenameWithExtension) -> void {
-        string path = SCENARIO_DIRECTORY + filenameWithExtension + ".yml";
+    auto SaveScenario(const string &filenameWithoutExtension) -> void {
+        string path = SCENARIO_DIRECTORY + filenameWithoutExtension + ".yml";
 
         YAML::Emitter scenario;
         scenario << YAML::BeginMap;

@@ -6,7 +6,6 @@
 
 #include <imgui.h>
 #include <depend/implot/implot.h>
-#include <math.h>
 
 #include <string>
 #include <unordered_map>
@@ -30,18 +29,27 @@ namespace SimulationData {
         unordered_map<string, vector<double>> bodyEnergyPotential;
         unordered_map<string, vector<double>> bodyEnergyTotal;
 
+        const ImVec2 ENERGY_DEVIATION_PLOT_SIZE = ImVec2(385, 100);
+        const ImVec2 TOTAL_ENERGY_PLOT_SIZE = ImVec2(385, 200);
+        const ImVec2 BODY_ENERGY_PLOT_SIZE = ImVec2(385, 200);
+
+        const ImVec4 ENERGY_DEVIATION_LINE_COLOR = ImVec4(1.0, 0.0, 0.0, 1.0);
+        const ImVec4 KINETIC_ENERGY_LINE_COLOR = ImVec4(1.0, 0.5, 0.5, 1.0);
+        const ImVec4 POTENTIAL_ENERGY_LINE_COLOR = ImVec4(0.5, 0.5, 1.0, 1.0);
+        const ImVec4 TOTAL_ENERGY_LINE_COLOR = ImVec4(0.5, 1.0, 0.5, 1.0);
+
         const ImPlotAxisFlags AXIS_FLAGS = ImPlotAxisFlags_AutoFit | ImPlotAxisFlags_NoTickLabels | ImPlotAxisFlags_NoSideSwitch | ImPlotAxisFlags_NoHighlight;
 
         const string RESET_TEXT = ICON_MDI_REFRESH + string(" Reset Data");
 
         auto AddEnergyDeviation() -> void {
-            if (ImPlot::BeginPlot("Energy Deviation", ImVec2(385, 100))) {
+            if (ImPlot::BeginPlot("Energy Deviation", ENERGY_DEVIATION_PLOT_SIZE)) {
 
                 // Axes
-                ImPlot::SetupAxes(NULL, NULL, AXIS_FLAGS, AXIS_FLAGS);
+                ImPlot::SetupAxes(nullptr, nullptr, AXIS_FLAGS, AXIS_FLAGS);
 
                 // Error
-                ImPlot::PushStyleColor(ImPlotCol_Line, ImVec4(1.0, 0.0, 0.0, 1.0));
+                ImPlot::PushStyleColor(ImPlotCol_Line, ENERGY_DEVIATION_LINE_COLOR);
                 ImPlot::PlotLine("", &timeValues[0], &(energyDeviation[0]), timeValues.size());
                 ImPlot::PopStyleColor();
 
@@ -50,23 +58,23 @@ namespace SimulationData {
         }
 
         auto AddSimulationEnergy() -> void {
-            if (ImPlot::BeginPlot("Simulation Energy", ImVec2(385, 200))) {
+            if (ImPlot::BeginPlot("Simulation Energy", TOTAL_ENERGY_PLOT_SIZE)) {
 
                 // Axes
-                ImPlot::SetupAxes(NULL, NULL, AXIS_FLAGS, AXIS_FLAGS);
+                ImPlot::SetupAxes(nullptr, nullptr, AXIS_FLAGS, AXIS_FLAGS);
 
                 // Kinetic
-                ImPlot::PushStyleColor(ImPlotCol_Line, ImVec4(1.0, 0.5, 0.5, 1.0));
+                ImPlot::PushStyleColor(ImPlotCol_Line, KINETIC_ENERGY_LINE_COLOR);
                 ImPlot::PlotLine("Kinetic", &timeValues[0], &simulationEnergyKinetic[0], timeValues.size());
                 ImPlot::PopStyleColor();
 
                 // Potential
-                ImPlot::PushStyleColor(ImPlotCol_Line, ImVec4(0.5, 0.5, 1.0, 1.0));
+                ImPlot::PushStyleColor(ImPlotCol_Line, POTENTIAL_ENERGY_LINE_COLOR);
                 ImPlot::PlotLine("Potential", &timeValues[0], &simulationEnergyPotential[0], timeValues.size());
                 ImPlot::PopStyleColor();
 
                 // Total
-                ImPlot::PushStyleColor(ImPlotCol_Line, ImVec4(0.5, 1.0, 0.5, 1.0));
+                ImPlot::PushStyleColor(ImPlotCol_Line, TOTAL_ENERGY_LINE_COLOR);
                 ImPlot::PlotLine("Total", &timeValues[0], &simulationEnergyTotal[0], timeValues.size());
                 ImPlot::PopStyleColor();
 
@@ -75,23 +83,23 @@ namespace SimulationData {
         }
 
         auto AddBodyEnergy() -> void {
-            if (ImPlot::BeginPlot("Body Energy", ImVec2(385, 200))) {
+            if (ImPlot::BeginPlot("Body Energy", BODY_ENERGY_PLOT_SIZE)) {
 
                 // Axes
-                ImPlot::SetupAxes(NULL, NULL, AXIS_FLAGS, AXIS_FLAGS);
+                ImPlot::SetupAxes(nullptr, nullptr, AXIS_FLAGS, AXIS_FLAGS);
 
                 // Kinetic
-                ImPlot::PushStyleColor(ImPlotCol_Line, ImVec4(1.0, 0.5, 0.5, 1.0));
+                ImPlot::PushStyleColor(ImPlotCol_Line, KINETIC_ENERGY_LINE_COLOR);
                 ImPlot::PlotLine("Kinetic", &timeValues[0], &(bodyEnergyKinetic.at(Bodies::GetSelectedBody())[0]), timeValues.size());
                 ImPlot::PopStyleColor();
 
                 // Potential
-                ImPlot::PushStyleColor(ImPlotCol_Line, ImVec4(0.5, 0.5, 1.0, 1.0));
+                ImPlot::PushStyleColor(ImPlotCol_Line, POTENTIAL_ENERGY_LINE_COLOR);
                 ImPlot::PlotLine("Potential", &timeValues[0], &(bodyEnergyPotential.at(Bodies::GetSelectedBody())[0]), timeValues.size());
                 ImPlot::PopStyleColor();
 
                 // Total
-                ImPlot::PushStyleColor(ImPlotCol_Line, ImVec4(0.5, 1.0, 0.5, 1.0));
+                ImPlot::PushStyleColor(ImPlotCol_Line, TOTAL_ENERGY_LINE_COLOR);
                 ImPlot::PlotLine("Total", &timeValues[0], &(bodyEnergyTotal.at(Bodies::GetSelectedBody())[0]), timeValues.size());
                 ImPlot::PopStyleColor();
 
@@ -108,7 +116,7 @@ namespace SimulationData {
         }
 
         auto UpdateEnergyDeviation() -> void {
-            energyDeviation.push_back(100 * (Simulation::GetSimulationTotalEnergy() - originalEnergy) / originalEnergy);
+            energyDeviation.push_back(100 * (Simulation::GetSimulationTotalEnergy() - originalEnergy) / originalEnergy); //NOLINT(cppcoreguidelines-avoid-magic-numbers)
         }
 
         auto UpdateSimulationEnergy() -> void {
@@ -117,7 +125,7 @@ namespace SimulationData {
             simulationEnergyTotal.push_back(Simulation::GetSimulationTotalEnergy());
         }
 
-        auto UpdateBodyEnergy(const std::pair<string, Body> pair) -> void {
+        auto UpdateBodyEnergy(const std::pair<string, Body> &pair) -> void {
             if (bodyEnergyKinetic.count(pair.first) == 0) {
                 bodyEnergyKinetic.insert(std::make_pair(pair.first, vector<double>()));
             }
@@ -164,7 +172,7 @@ namespace SimulationData {
         }
     }
 
-    auto Draw(const double deltaTime) -> void {
+    auto Draw() -> void {
         ImPlot::ShowDemoWindow();
 
         // Set original energy if it hasn't been set

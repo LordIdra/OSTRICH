@@ -19,14 +19,14 @@ namespace Interface {
         Fonts::Init();
     }
     
-    auto Update(const double deltaTime) -> void {
+    auto Update() -> void {
         // Declare new ImGui frame
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
-        TopRightWindow::Draw(deltaTime);
-        BottomRightWindow::Draw(deltaTime);
+        TopRightWindow::Draw();
+        BottomRightWindow::Draw();
         LeftWindow::Draw();
         
         ImGui::Render();

@@ -15,12 +15,12 @@ namespace TopRightWindow {
         bool windowOpen = true;
     }
 
-    auto Draw(const double deltaTime) -> void {
+    auto Draw() -> void {
         ImGui::Begin("Top Right Window", &windowOpen, WINDOW_FLAGS);
         ImGui::SetWindowSize(WINDOW_SIZE);
         ImGui::SetWindowPos(WINDOW_POSITION);
 
-        SimulationData::Draw(deltaTime);
+        SimulationData::Draw();
 
         ImGui::End();
     }

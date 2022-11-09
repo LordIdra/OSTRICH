@@ -79,13 +79,13 @@ namespace SimulationControl {
             ImGui::Text("%s", SPEED_TEXT.c_str());
             ImGui::SameLine();
             ImGui::PushFont(Fonts::Data());
-            ImGui::Text("%s", TimeFormat::FormatTime(Simulation::GetSimulationSpeed()).c_str());
+            ImGui::Text("%s", TimeFormat::FormatTime(int(Simulation::GetSimulationSpeed())).c_str());
             ImGui::PopFont();
 
             ImGui::Text("%s", TIME_TEXT.c_str());
             ImGui::SameLine();
             ImGui::PushFont(Fonts::Data());
-            ImGui::Text("%s", TimeFormat::FormatTime(Simulation::GetTimeStep()).c_str());
+            ImGui::Text("%s", TimeFormat::FormatTime(int(Simulation::GetTimeStep())).c_str());
             ImGui::PopFont();
         }
     }

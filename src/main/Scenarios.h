@@ -13,8 +13,8 @@ namespace Scenarios {
         string formattedTime;
     };
 
-    auto SaveScenario(const string &path) -> void;
-    auto LoadScenario(const string &pathWithoutExtension) -> void;
+    auto SaveScenario(const string &filenameWithoutExtension) -> void;
+    auto LoadScenario(const string &filenameWithoutExtension) -> void;
 
     auto ScenarioExists(const string &path) -> bool;
     auto GetScenarios() -> vector<ScenarioFile>;

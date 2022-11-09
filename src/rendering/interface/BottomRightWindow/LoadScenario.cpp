@@ -34,6 +34,8 @@ namespace LoadScenario {
         const ImVec2 LOAD_BUTTON_SIZE = ImVec2(90, 0);
         const ImVec2 ERROR_BUTTON_SIZE = ImVec2(220, 0);
 
+        const ImVec4 MODAL_BACKGROUND = ImVec4(0.1, 0.1, 0.1, 0.7);
+        const ImVec4 MODAL_BORDER = ImVec4(0.1, 0.1, 0.1, 0.7);
         const ImVec4 DISABLED_BUTTON_COLOR = ImVec4(0.5, 0.5, 0.5, 1.0);
         const ImVec4 TRANSPARENT_COLOR = ImVec4(0.0, 0.0, 0.0, 0.0);
 
@@ -81,7 +83,7 @@ namespace LoadScenario {
         auto CompareScenarioFiles(const Scenarios::ScenarioFile &scenario1, const Scenarios::ScenarioFile &scenario2) -> bool {
             if (sortSpecs->Specs->ColumnIndex == NAME_COLUMN_ID) {
                 return CompareScenarioFileNames(scenario1, scenario2);
-            } else if (sortSpecs->Specs->ColumnIndex == BODIES_COLUMN_ID) {
+            } else if (sortSpecs->Specs->ColumnIndex == BODIES_COLUMN_ID) { // NOLINT(readability-else-after-return)
                 return CompareScenarioFileBodies(scenario1, scenario2);
             }
             return CompareScenarioFileTimes(scenario1, scenario2);
@@ -121,7 +123,7 @@ namespace LoadScenario {
             ImGui::Text("%d", bodies);
         }
 
-        auto AddTimeText(const string text) -> void {
+        auto AddTimeText(const string &text) -> void {
             ImGui::TableNextColumn();
             ImGui::Text("%s", text.c_str());
         }
@@ -136,7 +138,7 @@ namespace LoadScenario {
 
 
                 ImGui::PushFont(Fonts::Data());
-                for (Scenarios::ScenarioFile scenario : scenarios) {
+                for (const Scenarios::ScenarioFile &scenario : scenarios) {
                     AddNameText(scenario.nameWithExtension);
                     AddBodiesText(scenario.bodyCount);
                     AddTimeText(scenario.formattedTime);
@@ -156,7 +158,7 @@ namespace LoadScenario {
             ImGui::SameLine();
 
             // No scenario selected
-            if (selectedFile == "") {
+            if (selectedFile.empty()) {
                 ImGui::PushStyleColor(ImGuiCol_Text, DISABLED_BUTTON_COLOR);
                 ImGui::PushStyleColor(ImGuiCol_ButtonHovered, TRANSPARENT_COLOR);
                 ImGui::PushStyleColor(ImGuiCol_ButtonActive, TRANSPARENT_COLOR);
@@ -174,10 +176,10 @@ namespace LoadScenario {
     }
 
     auto Draw() -> void {
-        ImGui::PushStyleColor(ImGuiCol_PopupBg, ImVec4(0.1, 0.1, 0.1, 0.7));
-        ImGui::PushStyleColor(ImGuiCol_Border, ImVec4(0.1, 0.1, 0.1, 0.7));
+        ImGui::PushStyleColor(ImGuiCol_PopupBg, MODAL_BACKGROUND);
+        ImGui::PushStyleColor(ImGuiCol_Border, MODAL_BORDER);
 
-        if (ImGui::BeginPopupModal("Load Scenario", NULL, POPUP_FLAGS)) {
+        if (ImGui::BeginPopupModal("Load Scenario", nullptr, POPUP_FLAGS)) {
             AddTitle();
             AddFileTable();
             AddButtons();

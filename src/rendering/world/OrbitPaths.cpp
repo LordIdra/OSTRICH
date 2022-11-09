@@ -72,7 +72,7 @@ namespace OrbitPaths {
                 // Use color of the body for color of orbit path
                 vec3 color = Bodies::GetBody(pair.first).GetColor();
 
-                int numberOfPointsToFadeOver = pair.second.size() * RATIO_OF_FUTURE_POINTS_TO_FADE_OVER;
+                int numberOfPointsToFadeOver = int(pair.second.size() * RATIO_OF_FUTURE_POINTS_TO_FADE_OVER);
 
                 // Iterate through every sequence for the corresponding body
                 int i = 0;
@@ -81,7 +81,7 @@ namespace OrbitPaths {
                     // Figure out the color of this vertex
                     vec3 vertexColor = color;
                     if (pair.second.size() - i < numberOfPointsToFadeOver) {
-                        float brightness = (float(pair.second.size() - i) / numberOfPointsToFadeOver);
+                        float brightness = (float(pair.second.size() - i) / float(numberOfPointsToFadeOver));
                         vertexColor *= brightness;
                     }
 
@@ -113,7 +113,7 @@ namespace OrbitPaths {
                 for (const vec3 &position : pair.second) {
 
                     // Figure out the color of this vertex
-                    float brightness = float(i) / numberOfPointsToFadeOver;
+                    float brightness = float(i) / float(numberOfPointsToFadeOver);
                     vec3 vertexColor = color * brightness * PAST_POINT_BRIGHTNESS;
                     i++;
 
