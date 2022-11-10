@@ -1,7 +1,8 @@
 #include "SaveScenario.h"
+#include "scenarios/ScenarioFileUtil.h"
 
 #include <rendering/interface/Fonts.h>
-#include <main/Scenarios.h>
+#include <scenarios/Scenarios.h>
 #include <util/Types.h>
 
 #include <depend/IconsMaterialDesignIcons_c.h>
@@ -56,19 +57,19 @@ namespace SaveScenario {
             ImGui::PopFont();
         }
 
-        auto CompareScenarioFileNames(Scenarios::ScenarioFile scenario1, Scenarios::ScenarioFile scenario2) -> bool {
+        auto CompareScenarioFileNames(ScenarioFile scenario1, ScenarioFile scenario2) -> bool {
             // Convert id1 and id2 to uppercase - necessary because string.compare is case-sensitive
-            for (char &c : scenario1.nameWithExtension) { c = char(toupper(c)); }
-            for (char &c : scenario2.nameWithExtension) { c = char(toupper(c)); }
+            for (char &c : scenario1.nameWithoutExtension) { c = char(toupper(c)); }
+            for (char &c : scenario2.nameWithoutExtension) { c = char(toupper(c)); }
 
-            bool comparison = scenario1.nameWithExtension.compare(scenario2.nameWithExtension) >= 0;
+            bool comparison = scenario1.nameWithoutExtension.compare(scenario2.nameWithoutExtension) >= 0;
             if (sortSpecs->Specs->SortDirection == ImGuiSortDirection_Descending) {
                 return comparison;
             }
             return !comparison;
         }
 
-        auto CompareScenarioFileBodies(const Scenarios::ScenarioFile &scenario1, const Scenarios::ScenarioFile &scenario2) -> bool {
+        auto CompareScenarioFileBodies(const ScenarioFile &scenario1, const ScenarioFile &scenario2) -> bool {
             bool comparison = scenario1.bodyCount > scenario2.bodyCount;
             if (sortSpecs->Specs->SortDirection == ImGuiSortDirection_Descending) {
                 return comparison;
@@ -76,7 +77,7 @@ namespace SaveScenario {
             return !comparison;
         }
 
-        auto CompareScenarioFileTimes(const Scenarios::ScenarioFile &scenario1, const Scenarios::ScenarioFile &scenario2) -> bool {
+        auto CompareScenarioFileTimes(const ScenarioFile &scenario1, const ScenarioFile &scenario2) -> bool {
             bool comparison = scenario1.rawTime > scenario2.rawTime;
             if (sortSpecs->Specs->SortDirection == ImGuiSortDirection_Descending) {
                 return comparison;
@@ -84,7 +85,7 @@ namespace SaveScenario {
             return !comparison;
         }
 
-        auto CompareScenarioFiles(const Scenarios::ScenarioFile &scenario1, const Scenarios::ScenarioFile &scenario2) -> bool {
+        auto CompareScenarioFiles(const ScenarioFile &scenario1, const ScenarioFile &scenario2) -> bool {
             if (sortSpecs->Specs->ColumnIndex == NAME_COLUMN_ID) {
                 return CompareScenarioFileNames(scenario1, scenario2);
             } else if (sortSpecs->Specs->ColumnIndex == BODIES_COLUMN_ID) { //NOLINT(readability-else-after-return)
@@ -118,7 +119,7 @@ namespace SaveScenario {
         auto AddNameText(const string &text) -> void {
             ImGui::TableNextColumn();
             if (ImGui::Selectable(Fonts::NormalizeString(Fonts::MainBig(), text, NAME_WIDTH).c_str(), string((char*)filename) == text, ImGuiSelectableFlags_SpanAllColumns)) {
-                strncpy((char*)filename, text.c_str(), text.size());
+                strncpy((char*)filename, text.c_str(), TEXT_BUFFER_SIZE);
             }
         }
 
@@ -137,12 +138,12 @@ namespace SaveScenario {
                 AddHeader();
                 
                 sortSpecs = ImGui::TableGetSortSpecs();
-                vector<Scenarios::ScenarioFile> scenarios = Scenarios::GetScenarios();
+                vector<ScenarioFile> scenarios = ScenarioFileUtil::GetScenarios();
                 std::sort(scenarios.begin(), scenarios.end(), CompareScenarioFiles);
 
                 ImGui::PushFont(Fonts::Data());
-                for (const Scenarios::ScenarioFile &scenario : scenarios) {
-                    AddNameText(scenario.nameWithExtension);
+                for (const ScenarioFile &scenario : scenarios) {
+                    AddNameText(scenario.nameWithoutExtension);
                     AddBodiesText(scenario.bodyCount);
                     AddTimeText(scenario.formattedTime);
                 }
@@ -174,7 +175,7 @@ namespace SaveScenario {
 
             // Load
             } else {
-                if (Scenarios::ScenarioExists((char*)filename)) {
+                if (ScenarioFileUtil::ScenarioExists((char*)filename)) {
                     ImGui::PushStyleColor(ImGuiCol_Text,OVERWRITE_BUTTON_COLOR);
                     if (ImGui::Button(OVERWRITE_TEXT.c_str(), OVERWRITE_BUTTON_SIZE)) {
                         Scenarios::SaveScenario((char*)filename);

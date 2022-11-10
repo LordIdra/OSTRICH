@@ -41,49 +41,59 @@ namespace Bodies {
         double timeSinceLastOrbitPointUpdate = 0;
 
         auto UpdateBody(Body &body) -> void {
+            vector<OrbitPoint> &futurePointVector = futurePoints.at(body.GetId());
+            vector<OrbitPoint> &pastPointVector = pastPoints.at(body.GetId());
+            const OrbitPoint &newPoint = futurePointVector.at(1);
+
             // Move body to next point
-            body.SetPosition(futurePoints.at(body.GetId()).at(1).position);
-            body.SetVelocity(futurePoints.at(body.GetId()).at(1).velocity);
+            body.SetPosition(newPoint.position);
+            body.SetVelocity(newPoint.velocity);
 
             // The point we just moved to is now also a past point 
-            // If we used the previous point, there'd be a gap in the line before the body
-            pastPoints.at(body.GetId()).push_back(futurePoints.at(body.GetId()).at(1));
-            futurePoints.at(body.GetId()).erase(futurePoints.at(body.GetId()).begin());
+            pastPointVector.push_back(newPoint);
+            futurePointVector.erase(futurePointVector.begin());
 
             // Check that we don't have too many past points now
-            if (pastPoints.at(body.GetId()).size() > MAX_PAST_POINTS) {
-                pastPoints.at(body.GetId()).erase(pastPoints.at(body.GetId()).begin());
+            if (pastPointVector.size() > MAX_PAST_POINTS) {
+                pastPointVector.erase(pastPointVector.begin());
             }
         }
 
         auto IncrementBodyOrbitPoint() -> void {
-            // Move the body to next point if necessary
+            // Continually move every body to the next orbit point, spanning the time period
+            // that the last frame encompassed
+            // For example, if TimeStepSize is 10 and in one frame we moved 100 time steps,
+            // we would do 11 updates
             while (timeSinceLastOrbitPointUpdate >= Simulation::GetTimeStepSize()) {
                 timeSinceLastOrbitPointUpdate -= Simulation::GetTimeStepSize();
-
                 for (auto &pair : massiveBodies)  { UpdateBody(pair.second); }
                 for (auto &pair : masslessBodies) { UpdateBody(pair.second); }
             }
         }
     }
 
+    auto Reset() -> void {
+        // Delete bodies
+        massiveBodies.clear();
+        masslessBodies.clear();
 
-    auto Init() -> void {
-        // Initial camera lock
+        // Delete points
+        pastPoints.clear();
+        futurePoints.clear();
+
+        // Unselect bodies
+        selectedType = BODY_TYPE_NONE;
+        selected = "";
+
+        // Reset time since last update
+        timeSinceLastOrbitPointUpdate = 0;
+    }
+
+    auto InitializeSelectedBody() -> void {
         if (!massiveBodies.empty()) {
             selectedType = BODY_TYPE_MASSIVE;
             selected = massiveBodies.begin()->first;
         }
-    }
-    
-    auto Reset() -> void {
-        massiveBodies.clear();
-        masslessBodies.clear();
-        pastPoints.clear();
-        futurePoints.clear();
-        selectedType = BODY_TYPE_NONE;
-        selected = "";
-        timeSinceLastOrbitPointUpdate = 0;
     }
 
     auto Update(const double deltaTime) -> void {
@@ -102,7 +112,6 @@ namespace Bodies {
     }
 
     auto AddBody(const Massless &body) -> void {
-        // Massless bodies only need icons, so we don't need to worry about the Render namespace
         masslessBodies.insert(std::make_pair(body.GetId(), body));
         pastPoints.insert(std::make_pair(body.GetId(), vector<OrbitPoint>()));
     }
@@ -129,6 +138,7 @@ namespace Bodies {
         // If the id corresponds to a massive body
         if (massiveBodies.find(id) != massiveBodies.end()) {
             selectedType = BODY_TYPE_MASSIVE;
+            
         // If the id corresponds to a massless body
         } else if (masslessBodies.find(id) != masslessBodies.end()) {
             selectedType = BODY_TYPE_MASSLESS;

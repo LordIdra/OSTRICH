@@ -17,8 +17,11 @@ set(FILES
     "src/main/Bodies.cpp"
     "src/main/Control.cpp"
     "src/main/Main.cpp"
-    "src/main/Scenarios.cpp"
     "src/main/Simulation.cpp"
+    
+    "src/scenarios/Scenarios.cpp"
+    "src/scenarios/ScenarioFileUtil.cpp"
+    "src/scenarios/YMLUtil.cpp"
 
     "src/bodies/Body.cpp"
     "src/bodies/Massive.cpp"

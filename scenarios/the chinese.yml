@@ -1,132 +1,77 @@
-time: 49946
+time: 1078312
 massive:
-  ono6:
-    name: Ms YATES
+  moon:
+    name: The Moon
     color:
       - 0.600000024
-      - 0.200000003
-      - 0
-    radius: 1004680
-    mass: 1.0722000000000003e+21
-    position:
-      - 800000000
-      - 0
-      - 0
-    velocity:
-      - 0
-      - 100
-      - 0
-  ono5:
-    name: Ms Opie
-    color:
       - 0.600000024
-      - 0.200000003
-      - 0
-    radius: 1004680
-    mass: 1.0722000000000002e+20
-    position:
-      - 700000000
-      - 0
-      - 0
-    velocity:
-      - 0
-      - 100
-      - 0
-  ono4:
-    name: Ms Polemidioti
-    color:
       - 0.600000024
-      - 0.200000003
-      - 0
-    radius: 1004680
-    mass: 1.0722000000000003e+21
-    position:
-      - 600000000
-      - 0
-      - 0
-    velocity:
-      - 0
-      - 100
-      - 0
-  ono3:
-    name: Mr Poole
-    color:
-      - 0.600000024
-      - 0.200000003
-      - 0
-    radius: 1004680
-    mass: 1.0722000000000002e+20
-    position:
-      - 500000000
-      - 0
-      - 0
-    velocity:
-      - 0
-      - 100
-      - 0
-  ono2:
-    name: Mr Patel
-    color:
-      - 0.600000024
-      - 0.200000003
-      - 0
-    radius: 1004680
-    mass: 1.0722000000000002e+22
-    position:
-      - 400000000
-      - 0
-      - 0
-    velocity:
-      - 0
-      - 100
-      - 0
-  ono:
-    name: Mr Johnston
-    color:
-      - 0.600000024
-      - 0.200000003
-      - 0
-    radius: 1004680
-    mass: 1.0722000000000002e+20
-    position:
-      - 300000000
-      - 0
-      - 0
-    velocity:
-      - 0
-      - 100
-      - 0
-  the-shouty-teacher:
-    name: Mr Macinerny
-    color:
-      - 0.699999988
-      - 0
-      - 0
-    radius: 1234567
-    mass: 1.9722000000000003e+21
-    position:
-      - 200000000
-      - 0
-      - 0
-    velocity:
-      - 0
-      - 100
-      - 0
-  ms-mills:
-    name: Ms Mills
-    color:
-      - 1
-      - 1
-      - 0
     radius: 1737400
-    mass: 6.346e+20
+    mass: 7.3460000000000003e+22
     position:
-      - 100000000
+      - 242450656
       - 0
-      - 0
+      - 313559104
     velocity:
+      - -805.737427
       - 0
-      - 100
+      - 579.124573
+  earth:
+    name: The Earth
+    color:
+      - 0.100000001
+      - 0.400000006
+      - 0.899999976
+    radius: 63710000
+    mass: 5.9722000000000002e+24
+    position:
+      - 1998776.5
       - 0
+      - 641922.438
+    velocity:
+      - 9.8565712
+      - 0
+      - 4.93167162
 massless:
-  {}
+  mr-boniface:
+    name: Mr Boniface
+    color:
+      - 1
+      - 0
+      - 0
+    position:
+      - 1.01223045e+10
+      - 764270080
+      - 1862.80994
+    velocity:
+      - 26990.1914
+      - -1711.14929
+      - 0.00654702121
+  spacecraft-2:
+    name: Another Spacecraft that is carrying nuclear warheads
+    color:
+      - 0.899999976
+      - 0.899999976
+      - 0.300000012
+    position:
+      - -11966521
+      - -114348904
+      - 87888080
+    velocity:
+      - -186.266418
+      - 1109.69385
+      - 1247.38892
+  spacecraft:
+    name: Spacecraft
+    color:
+      - 0.100000001
+      - 0.899999976
+      - 0.300000012
+    position:
+      - -1.49293312e+09
+      - 63555824
+      - -175705728
+    velocity:
+      - -198.984131
+      - 168.518036
+      - -465.84317

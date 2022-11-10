@@ -1,5 +1,5 @@
 #include "Control.h"
-#include "main/Scenarios.h"
+#include "scenarios/Scenarios.h"
 #include "rendering/camera/CameraTransition.h"
 #include "rendering/interface/TopRightWindow/SimulationData.h"
 
@@ -33,6 +33,8 @@ namespace Control {
         const int MAJOR_VERSION = 3;
         const int MINOR_VERSION = 3;
         const char* GLSL_VERSION = "#version 330";
+
+        const vec4 WINDOW_BACKGROUND = vec4(0.0, 0.0, 0.0, 1.0);
 
         double previousTime = 0;
         double deltaTime = 0;
@@ -114,7 +116,6 @@ namespace Control {
         OrbitPaths::Init();
         Interface::Init();
         Camera::Init();
-        Bodies::Init();
         Simulation::Init();
     }
 
@@ -123,7 +124,7 @@ namespace Control {
             deltaTime = glfwGetTime() - previousTime;
             previousTime = glfwGetTime();
 
-            Window::Background(vec4(0.0, 0.0, 0.0, 1.0));
+            Window::Background(WINDOW_BACKGROUND);
             Camera::AddZoomDelta(Mouse::GetScrollDelta().y);
 
             if (Mouse::RightButtonHeld()) {

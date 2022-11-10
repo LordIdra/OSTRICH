@@ -5,12 +5,12 @@
 
 
 namespace Mouse {
-    auto SetCallbackLeftPress(void (*function)()) -> void;
-    auto SetCallbackLeftRelease(void (*function)()) -> void;
-    auto SetCallbackLeftDouble(void (*function)()) -> void;
+    auto AddCallbackLeftPress(void (*function)()) -> void;
+    auto AddCallbackLeftRelease(void (*function)()) -> void;
+    auto AddCallbackLeftDouble(void (*function)()) -> void;
 
-    auto SetCallbackRightPress(void (*function)()) -> void;
-    auto SetCallbackRightRelease(void (*function)()) -> void;
+    auto AddCallbackRightPress(void (*function)()) -> void;
+    auto AddCallbackRightRelease(void (*function)()) -> void;
 
     auto LeftButtonHeld() -> bool;
     auto RightButtonHeld() -> bool;

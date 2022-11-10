@@ -57,8 +57,8 @@ namespace CameraTransition {
     }
 
     auto Init() -> void {
-        Mouse::SetCallbackLeftDouble(SwitchSelectedBodyWhenSphereClicked);
-        Mouse::SetCallbackLeftDouble(SwitchBodyBasedOnIcon);
+        Mouse::AddCallbackLeftDouble(SwitchSelectedBodyWhenSphereClicked);
+        Mouse::AddCallbackLeftDouble(SwitchBodyBasedOnIcon);
     }
 
     auto Reset() -> void {

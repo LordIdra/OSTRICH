@@ -145,9 +145,8 @@ namespace SimulationData {
     }
 
     auto Reset() -> void {
-        // Original energy
-        originalEnergy = Simulation::GetSimulationTotalEnergy();
-
+        ResetOriginalEnergy();
+        
         // Time values
         timeValues.clear();
 
@@ -170,6 +169,11 @@ namespace SimulationData {
             bodyEnergyPotential.at(pair.first).clear();
             bodyEnergyTotal.at(pair.first).clear();
         }
+    }
+
+    auto ResetOriginalEnergy() -> void {
+        // Original energy
+        originalEnergy = Simulation::GetSimulationTotalEnergy();
     }
 
     auto Draw() -> void {
