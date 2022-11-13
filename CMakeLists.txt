@@ -49,6 +49,7 @@ set(FILES
 
     "src/rendering/interface/BottomRightWindow/BottomRightWindow.cpp"
     "src/rendering/interface/BottomRightWindow/SimulationControl.cpp"
+    "src/rendering/interface/BottomRightWindow/ScenarioTable.cpp"
     "src/rendering/interface/BottomRightWindow/SaveScenario.cpp"
     "src/rendering/interface/BottomRightWindow/LoadScenario.cpp"
     "src/rendering/interface/TopRightWindow/TopRightWindow.cpp"
@@ -101,6 +102,7 @@ find_package(yaml-cpp CONFIG REQUIRED)
 add_library(dependencies OBJECT ${DEPEND_FILES})
 target_include_directories(dependencies PRIVATE "~/vcpkg/installed/x64-linux/include")
 set_target_properties(dependencies PROPERTIES CXX_CLANG_TIDY "")
+target_link_libraries (dependencies PRIVATE imgui::imgui)
 
 # Build OSTRICH
 add_executable(${PROJECT_NAME} ${FILES})

@@ -1,4 +1,4 @@
-time: 1078312
+time: 700004
 massive:
   moon:
     name: The Moon
@@ -9,13 +9,13 @@ massive:
     radius: 1737400
     mass: 7.3460000000000003e+22
     position:
-      - 242450656
+      - 405500000
       - 0
-      - 313559104
+      - 0
     velocity:
-      - -805.737427
       - 0
-      - 579.124573
+      - 0
+      - 970
   earth:
     name: The Earth
     color:
@@ -25,13 +25,13 @@ massive:
     radius: 63710000
     mass: 5.9722000000000002e+24
     position:
-      - 1998776.5
       - 0
-      - 641922.438
+      - 0
+      - 0
     velocity:
-      - 9.8565712
       - 0
-      - 4.93167162
+      - 0
+      - 0
 massless:
   mr-boniface:
     name: Mr Boniface
@@ -40,13 +40,13 @@ massless:
       - 0
       - 0
     position:
-      - 1.01223045e+10
-      - 764270080
-      - 1862.80994
+      - 0
+      - 1.40550003e+09
+      - 0
     velocity:
-      - 26990.1914
-      - -1711.14929
-      - 0.00654702121
+      - 27000
+      - -1700
+      - 0
   spacecraft-2:
     name: Another Spacecraft that is carrying nuclear warheads
     color:
@@ -54,13 +54,13 @@ massless:
       - 0.899999976
       - 0.300000012
     position:
-      - -11966521
-      - -114348904
-      - 87888080
+      - 0
+      - 140550000
+      - 0
     velocity:
-      - -186.266418
-      - 1109.69385
-      - 1247.38892
+      - 270
+      - 190
+      - -1700
   spacecraft:
     name: Spacecraft
     color:
@@ -68,10 +68,10 @@ massless:
       - 0.899999976
       - 0.300000012
     position:
-      - -1.49293312e+09
-      - 63555824
-      - -175705728
+      - -1.40550003e+09
+      - 0
+      - 0
     velocity:
-      - -198.984131
-      - 168.518036
-      - -465.84317
+      - -270
+      - 170
+      - -470
