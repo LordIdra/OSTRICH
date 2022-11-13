@@ -3,5 +3,6 @@
 
 
 namespace LoadScenario {
-    auto Draw() -> void;
+    auto Draw(const bool allowCancel) -> void;
+    auto ScenarioLoaded() -> bool;
 }

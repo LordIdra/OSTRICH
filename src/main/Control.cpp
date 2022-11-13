@@ -1,4 +1,5 @@
 #include "Control.h"
+#include "rendering/interface/BottomRightWindow/LoadScenario.h"
 #include "scenarios/Scenarios.h"
 #include "rendering/camera/CameraTransition.h"
 #include "rendering/interface/TopRightWindow/SimulationData.h"
@@ -117,6 +118,27 @@ namespace Control {
         Interface::Init();
         Camera::Init();
         Simulation::Init();
+    }
+
+    auto PromptScenarioLoad() -> void {
+        while ((!LoadScenario::ScenarioLoaded()) && (!Window::ShouldClose())) {
+            Window::Background(WINDOW_BACKGROUND);
+
+            ImGui_ImplOpenGL3_NewFrame();
+            ImGui_ImplGlfw_NewFrame();
+            ImGui::NewFrame();
+
+            ImGui::OpenPopup("Load Scenario");
+            LoadScenario::Draw(false);
+
+            ImGui::Render();
+            ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
+            Mouse::Update();
+            Keys::Update();
+            glfwPollEvents();
+            Window::Update();
+        }
     }
 
     auto Mainloop() -> void {

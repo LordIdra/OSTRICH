@@ -43,7 +43,7 @@ namespace SimulationControl {
             ImGui::PopFont();
 
             SaveScenario::Draw();
-            LoadScenario::Draw();
+            LoadScenario::Draw(true);
         }
 
         auto AddSpeedIndicatorIcons() -> void {

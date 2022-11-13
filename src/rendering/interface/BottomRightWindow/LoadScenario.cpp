@@ -30,19 +30,23 @@ namespace LoadScenario {
 
         const ImGuiPopupFlags POPUP_FLAGS = ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoTitleBar;
 
+        bool scenarioLoaded = false;
+
         auto AddTitle() -> void {
             ImGui::PushFont(Fonts::MainBig());
             ImGui::Text("%s", Fonts::NormalizeString(Fonts::MainBig(), TITLE_TEXT, ScenarioTable::TABLE_SIZE.x).c_str());
             ImGui::PopFont();
         }
 
-        auto AddButtons() -> void {
+        auto AddButtons(const bool allowCancel) -> void {
             // Cancel
-            if (ImGui::Button(CANCEL_TEXT.c_str(), CANCEL_BUTTON_SIZE)) {
-                ImGui::CloseCurrentPopup(); 
-            }
+            if (allowCancel) {
+                if (ImGui::Button(CANCEL_TEXT.c_str(), CANCEL_BUTTON_SIZE)) {
+                    ImGui::CloseCurrentPopup(); 
+                }
 
-            ImGui::SameLine();
+                ImGui::SameLine();
+            }
 
             // No scenario selected
             if (ScenarioTable::GetSelectedFile().empty()) {
@@ -56,24 +60,29 @@ namespace LoadScenario {
             } else {
                 if (ImGui::Button(LOAD_TEXT.c_str(), LOAD_BUTTON_SIZE)) {
                     Scenarios::LoadScenario(ScenarioTable::GetSelectedFile());
-                    ImGui::CloseCurrentPopup(); 
+                    scenarioLoaded = true;
+                    ImGui::CloseCurrentPopup();
                 }
             }
         }
     }
 
-    auto Draw() -> void {
+    auto Draw(const bool allowCancel) -> void {
         ImGui::PushStyleColor(ImGuiCol_PopupBg, MODAL_BACKGROUND);
         ImGui::PushStyleColor(ImGuiCol_Border, MODAL_BORDER);
 
         if (ImGui::BeginPopupModal("Load Scenario", nullptr, POPUP_FLAGS)) {
             AddTitle();
             ScenarioTable::AddFileTable();
-            AddButtons();
+            AddButtons(allowCancel);
             ImGui::EndPopup();
         }
 
         ImGui::PopStyleColor();
         ImGui::PopStyleColor();
+    }
+
+    auto ScenarioLoaded() -> bool {
+        return scenarioLoaded;
     }
 }
