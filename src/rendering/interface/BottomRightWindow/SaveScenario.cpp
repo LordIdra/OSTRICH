@@ -48,36 +48,46 @@ namespace SaveScenario {
             ImGui::InputTextWithHint("##", "enter filename here", (char*)filename, TEXT_BUFFER_SIZE * sizeof(char));
         }
 
-        auto AddButtons() -> void {
-            // Cancel
+        auto AddCancelButton() -> void {
             if (ImGui::Button(CANCEL_TEXT.c_str(), CANCEL_BUTTON_SIZE)) {
                 ImGui::CloseCurrentPopup(); 
             }
+        }
 
+        auto AddNofilenameButton() -> void {
+            ImGui::PushStyleColor(ImGuiCol_Text, DISABLED_BUTTON_COLOR);
+            ImGui::PushStyleColor(ImGuiCol_ButtonHovered, TRANSPARENT_COLOR);
+            ImGui::PushStyleColor(ImGuiCol_ButtonActive, TRANSPARENT_COLOR);
+            ImGui::Button(ENTER_FILENAME_TEXT.c_str(), ERROR_BUTTON_SIZE);
+            ImGui::PopStyleColor(3);
+        }
+
+        auto AddOverwriteButton() -> void {
+            ImGui::PushStyleColor(ImGuiCol_Text,OVERWRITE_BUTTON_COLOR);
+            if (ImGui::Button(OVERWRITE_TEXT.c_str(), OVERWRITE_BUTTON_SIZE)) {
+                Scenarios::SaveScenario((char*)filename);
+                ImGui::CloseCurrentPopup(); 
+            }
+            ImGui::PopStyleColor();
+        }
+
+        auto AddSaveButton() -> void {
+            if (ImGui::Button(SAVE_TEXT.c_str(), SAVE_BUTTON_SIZE)) {
+                Scenarios::SaveScenario((char*)filename);
+                ImGui::CloseCurrentPopup(); 
+            }
+        }
+
+        auto AddButtons() -> void {
+            AddCancelButton();
             ImGui::SameLine();
-
-            // No filename
             if (filename[0] == '\0') {
-                ImGui::PushStyleColor(ImGuiCol_Text, DISABLED_BUTTON_COLOR);
-                ImGui::PushStyleColor(ImGuiCol_ButtonHovered, TRANSPARENT_COLOR);
-                ImGui::PushStyleColor(ImGuiCol_ButtonActive, TRANSPARENT_COLOR);
-                ImGui::Button(ENTER_FILENAME_TEXT.c_str(), ERROR_BUTTON_SIZE);
-                ImGui::PopStyleColor(3);
-
-            // Load
+                AddNofilenameButton();
             } else {
                 if (ScenarioFileUtil::ScenarioExists((char*)filename)) {
-                    ImGui::PushStyleColor(ImGuiCol_Text,OVERWRITE_BUTTON_COLOR);
-                    if (ImGui::Button(OVERWRITE_TEXT.c_str(), OVERWRITE_BUTTON_SIZE)) {
-                        Scenarios::SaveScenario((char*)filename);
-                        ImGui::CloseCurrentPopup(); 
-                    }
-                    ImGui::PopStyleColor();
+                    AddOverwriteButton();
                 } else {
-                    if (ImGui::Button(SAVE_TEXT.c_str(), SAVE_BUTTON_SIZE)) {
-                        Scenarios::SaveScenario((char*)filename);
-                        ImGui::CloseCurrentPopup(); 
-                    }
+                    AddSaveButton();
                 }
             }
         }
@@ -90,7 +100,7 @@ namespace SaveScenario {
         if (ImGui::BeginPopupModal("Save Scenario", nullptr, POPUP_FLAGS)) {
             AddTitle();
             ScenarioTable::AddFileTable();
-            strncpy((char*)filename, ScenarioTable::GetSelectedFile().c_str(), TEXT_BUFFER_SIZE);
+            strncpy((char*)filename, ScenarioTable::GetSelectedFile().c_str(), TEXT_BUFFER_SIZE); // I hate C
             AddFilenameEntry();
             AddButtons();
             ImGui::EndPopup();

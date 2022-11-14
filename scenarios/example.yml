@@ -1,33 +1,77 @@
-time: 700000
+time: 700007
 massive:
-  earth:
-    name: "The Earth"
-    color: [0.1, 0.4, 0.9]
-    radius: 6371.0e+4
-    mass: 5.9722e+24
-    position: [0, 0, 0]
-    velocity: [0, 0, 0]
   moon:
-    name: "The Moon"
-    color: [0.6, 0.6, 0.6]
-    radius: 1737.4e+3
-    mass: 0.07346e+24
-    position: [0.4055e+9, 0, 0]
-    velocity: [0, 0, 0.970e+3]
-  
+    name: The Moon
+    color:
+      - 0.600000024
+      - 0.600000024
+      - 0.600000024
+    radius: 1737400
+    mass: 7.3460000000000003e+22
+    position:
+      - 405500000
+      - 0
+      - 0
+    velocity:
+      - 0
+      - 0
+      - 970
+  earth:
+    name: The Earth
+    color:
+      - 0.100000001
+      - 0.400000006
+      - 0.899999976
+    radius: 63710000
+    mass: 5.9722000000000002e+24
+    position:
+      - 0
+      - 0
+      - 0
+    velocity:
+      - 0
+      - 0
+      - 0
 massless:
-  spacecraft:
-    name: "Spacecraft"
-    color: [0.1, 0.9, 0.3]
-    position: [-1.4055e+9, 0, 0]
-    velocity: [-0.270e+3, 0.170e+3, -0.470e+3]
-  spacecraft-2:
-    name: "Another Spacecraft that is carrying nuclear warheads"
-    color: [0.9, 0.9, 0.3]
-    position: [0, 1.4055e+8, 0]
-    velocity: [0.270e+3, 0.190e+3, -0.170e+4]
   mr-boniface:
-    name: "Mr Boniface"
-    color: [1.0, 0.0, 0.0]
-    position: [0, 1.4055e+9, 0]
-    velocity: [0.270e+5, -0.170e+4, 0]
+    name: Mr Boniface
+    color:
+      - 1
+      - 0
+      - 0
+    position:
+      - 0
+      - 1.40550003e+09
+      - 0
+    velocity:
+      - 27000
+      - -1700
+      - 0
+  spacecraft-2:
+    name: Another Spacecraft that is carrying nuclear warheads
+    color:
+      - 0.899999976
+      - 0.899999976
+      - 0.300000012
+    position:
+      - 0
+      - 140550000
+      - 0
+    velocity:
+      - 270
+      - 190
+      - -1700
+  spacecraft:
+    name: Spacecraft
+    color:
+      - 0.100000001
+      - 0.899999976
+      - 0.300000012
+    position:
+      - -1.40550003e+09
+      - 0
+      - 0
+    velocity:
+      - -270
+      - 170
+      - -470

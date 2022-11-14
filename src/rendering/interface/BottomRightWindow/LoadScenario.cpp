@@ -38,31 +38,39 @@ namespace LoadScenario {
             ImGui::PopFont();
         }
 
+        auto AddCancelButton(const bool allowCancel) {
+            if (ImGui::Button(CANCEL_TEXT.c_str(), CANCEL_BUTTON_SIZE)) {
+                ImGui::CloseCurrentPopup(); 
+            }
+        }
+
+        auto AddDisabledButton() -> void {
+            ImGui::PushStyleColor(ImGuiCol_Text, DISABLED_BUTTON_COLOR);
+            ImGui::PushStyleColor(ImGuiCol_ButtonHovered, TRANSPARENT_COLOR);
+            ImGui::PushStyleColor(ImGuiCol_ButtonActive, TRANSPARENT_COLOR);
+            ImGui::Button(NO_SCENARIO_SELECTED_TEXT.c_str(), ERROR_BUTTON_SIZE);
+            ImGui::PopStyleColor(3);
+        }
+
+        auto AddLoadScenarioButton() -> void {
+            if (ImGui::Button(LOAD_TEXT.c_str(), LOAD_BUTTON_SIZE)) {
+                Scenarios::LoadScenario(ScenarioTable::GetSelectedFile());
+                scenarioLoaded = true;
+                ImGui::CloseCurrentPopup();
+            }
+        }
+
         auto AddButtons(const bool allowCancel) -> void {
             // Cancel
             if (allowCancel) {
-                if (ImGui::Button(CANCEL_TEXT.c_str(), CANCEL_BUTTON_SIZE)) {
-                    ImGui::CloseCurrentPopup(); 
-                }
-
+                AddCancelButton(allowCancel);
                 ImGui::SameLine();
             }
 
-            // No scenario selected
             if (ScenarioTable::GetSelectedFile().empty()) {
-                ImGui::PushStyleColor(ImGuiCol_Text, DISABLED_BUTTON_COLOR);
-                ImGui::PushStyleColor(ImGuiCol_ButtonHovered, TRANSPARENT_COLOR);
-                ImGui::PushStyleColor(ImGuiCol_ButtonActive, TRANSPARENT_COLOR);
-                ImGui::Button(NO_SCENARIO_SELECTED_TEXT.c_str(), ERROR_BUTTON_SIZE);
-                ImGui::PopStyleColor(3);
-            
-            // Load
+                AddDisabledButton();
             } else {
-                if (ImGui::Button(LOAD_TEXT.c_str(), LOAD_BUTTON_SIZE)) {
-                    Scenarios::LoadScenario(ScenarioTable::GetSelectedFile());
-                    scenarioLoaded = true;
-                    ImGui::CloseCurrentPopup();
-                }
+                AddLoadScenarioButton();
             }
         }
     }
