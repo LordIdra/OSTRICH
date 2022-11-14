@@ -3,7 +3,7 @@
 
 
 namespace SimulationData {
-    auto Reset() -> void;
-    auto ResetOriginalEnergy() -> void;
+    auto PreReset() -> void;
+    auto PostReset() -> void;
     auto Draw() -> void;
 }

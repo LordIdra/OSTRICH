@@ -26,11 +26,6 @@ namespace Bodies {
         unordered_map<string, Massive> massiveBodies;
         unordered_map<string, Massless> masslessBodies;
 
-        unordered_map<string, vector<OrbitPoint>> pastPoints;
-        unordered_map<string, vector<OrbitPoint>> futurePoints;
-
-        const unsigned int MAX_PAST_POINTS = 600;
-
         BodyType selectedType = BODY_TYPE_NONE;
         string selected;
 
@@ -38,82 +33,44 @@ namespace Bodies {
 
         float masslessMinZoom = INITIAL_MASSLESS_MIN_ZOOM;
 
-        double timeSinceLastOrbitPointUpdate = 0;
-
-        auto UpdateBody(Body &body) -> void {
-            vector<OrbitPoint> &futurePointVector = futurePoints.at(body.GetId());
-            vector<OrbitPoint> &pastPointVector = pastPoints.at(body.GetId());
-            const OrbitPoint &newPoint = futurePointVector.at(1);
-
-            // Move body to next point
-            body.SetPosition(newPoint.position);
-            body.SetVelocity(newPoint.velocity);
-
-            // The point we just moved to is now also a past point 
-            pastPointVector.push_back(newPoint);
-            futurePointVector.erase(futurePointVector.begin());
-
-            // Check that we don't have too many past points now
-            if (pastPointVector.size() > MAX_PAST_POINTS) {
-                pastPointVector.erase(pastPointVector.begin());
+        auto GetBodyAsReference(const string &id) -> Body& {
+            if (massiveBodies.find(id) != massiveBodies.end()) {
+                return massiveBodies.at(id);
             }
-        }
-
-        auto IncrementBodyOrbitPoint() -> void {
-            // Continually move every body to the next orbit point, spanning the time period
-            // that the last frame encompassed
-            // For example, if TimeStepSize is 10 and in one frame we moved 100 time steps,
-            // we would do 11 updates
-            while (timeSinceLastOrbitPointUpdate >= Simulation::GetTimeStepSize()) {
-                timeSinceLastOrbitPointUpdate -= Simulation::GetTimeStepSize();
-                for (auto &pair : massiveBodies)  { UpdateBody(pair.second); }
-                for (auto &pair : masslessBodies) { UpdateBody(pair.second); }
-            }
+            // Yes, technically the id may not exist, but this is REALLY unlikely unless some code is very obviously wrong in other ways
+            return masslessBodies.at(id);
         }
     }
 
-    auto Reset() -> void {
+    auto PreReset() -> void {
         // Delete bodies
         massiveBodies.clear();
         masslessBodies.clear();
 
-        // Delete points
-        pastPoints.clear();
-        futurePoints.clear();
-
         // Unselect bodies
         selectedType = BODY_TYPE_NONE;
         selected = "";
-
-        // Reset time since last update
-        timeSinceLastOrbitPointUpdate = 0;
     }
 
-    auto InitializeSelectedBody() -> void {
+    auto PostReset() -> void {
         if (!massiveBodies.empty()) {
             selectedType = BODY_TYPE_MASSIVE;
             selected = massiveBodies.begin()->first;
         }
     }
 
-    auto Update(const double deltaTime) -> void {
-        // Integrate to get the future positions of all bodies
-        futurePoints = Simulation::RegenerateFuturePoints();
-        timeSinceLastOrbitPointUpdate += deltaTime * Simulation::GetSimulationSpeed();
-
-        // Move bodies to next orbit point(s) if it's time to do so
-        IncrementBodyOrbitPoint();
-    }
-
     auto AddBody(const Massive &body) -> void {
         massiveBodies.insert(std::make_pair(body.GetId(), body));
-        pastPoints.insert(std::make_pair(body.GetId(), vector<OrbitPoint>()));
         MassiveRender::AddBody(body);
     }
 
     auto AddBody(const Massless &body) -> void {
         masslessBodies.insert(std::make_pair(body.GetId(), body));
-        pastPoints.insert(std::make_pair(body.GetId(), vector<OrbitPoint>()));
+    }
+
+    auto UpdateBody(const string &id, const OrbitPoint &point) -> void {
+        GetBodyAsReference(id).SetPosition(point.position);
+        GetBodyAsReference(id).SetVelocity(point.velocity);
     }
 
     auto GetSelectedBody() -> string {
@@ -167,13 +124,5 @@ namespace Bodies {
         }
         // Yes, technically the id may not exist, but this is REALLY unlikely unless some code is very obviously wrong in other ways
         return masslessBodies.at(id);
-    }
-
-    auto GetPastPoints() -> unordered_map<string, vector<OrbitPoint>> {
-        return pastPoints;
-    }
-
-    auto GetFuturePoints() -> unordered_map<string, vector<OrbitPoint>> {
-        return futurePoints;
     }
 }

@@ -61,7 +61,7 @@ namespace CameraTransition {
         Mouse::AddCallbackLeftDouble(SwitchBodyBasedOnIcon);
     }
 
-    auto Reset() -> void {
+    auto PreReset() -> void {
         transition = Transition(ZERO_VECTOR, ZERO_VECTOR, 0.0, 0.0, 0.0);
     }
 

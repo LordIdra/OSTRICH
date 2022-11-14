@@ -141,14 +141,13 @@ namespace Scenarios {
             return; 
         }
 
-        Control::Reset();
+        Control::PreReset();
 
         LoadTime(scenario);
         LoadMassiveBodies(scenario);
         LoadMasslessBodies(scenario);
 
-        Bodies::InitializeSelectedBody();
-        SimulationData::ResetOriginalEnergy();
+        Control::PostReset();
     }
 
     auto SaveScenario(const string &filenameWithoutExtension) -> void {

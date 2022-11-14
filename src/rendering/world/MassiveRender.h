@@ -6,7 +6,7 @@
 
 namespace MassiveRender {
     auto Init() -> void;
-    auto Reset() -> void;
+    auto PreReset() -> void;
     auto Update() -> void;
     auto AddBody(const Massive &body) -> void;
 }

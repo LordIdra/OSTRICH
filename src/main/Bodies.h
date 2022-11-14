@@ -9,12 +9,13 @@
 
 
 namespace Bodies {
-    auto Reset() -> void;
-    auto InitializeSelectedBody() -> void;
-    auto Update(const double deltaTime) -> void;
+    auto PreReset() -> void;
+    auto PostReset() -> void;
 
     auto AddBody(const Massive &body) -> void;
     auto AddBody(const Massless &body) -> void;
+
+    auto UpdateBody(const string &id, const OrbitPoint &point) -> void;
 
     auto SetSelectedBody(const string &id) -> void;
     auto GetSelectedBody() -> string;

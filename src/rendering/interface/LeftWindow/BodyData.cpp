@@ -83,7 +83,7 @@ namespace BodyData {
 
              ImGui::PushFont(Fonts::Data());
              ImGui::TableNextColumn();
-             ImGui::Text("%.2e %s", glm::length(Simulation::CalculateAcceleration(Bodies::GetMassiveBodies(), body.GetId(), body.GetPosition())), "m/s\u00B2");
+             ImGui::Text("%s", "todo fix this");
              ImGui::PopFont();
          }
 

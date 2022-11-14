@@ -110,7 +110,7 @@ namespace SimulationData {
         auto AddResetButton() -> void {
             ImGui::PushFont(Fonts::Main());
             if (ImGui::Button(RESET_TEXT.c_str())) {
-                Reset();
+                PreReset();
             }
             ImGui::PopFont();
         }
@@ -144,8 +144,8 @@ namespace SimulationData {
         }
     }
 
-    auto Reset() -> void {
-        ResetOriginalEnergy();
+    auto PreReset() -> void {
+        PostReset();
         
         // Time values
         timeValues.clear();
@@ -171,7 +171,7 @@ namespace SimulationData {
         }
     }
 
-    auto ResetOriginalEnergy() -> void {
+    auto PostReset() -> void {
         // Original energy
         originalEnergy = Simulation::GetSimulationTotalEnergy();
     }

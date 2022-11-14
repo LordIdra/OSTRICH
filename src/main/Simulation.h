@@ -14,14 +14,17 @@ namespace Simulation {
     const double MAX_MULTIPLIER = 12;
 
     auto Init() -> void;
-    auto Reset() -> void;
-    auto UpdateTime(const double deltaTime) -> void;
+    auto Update(const double deltaTime) -> void;
+    auto PreReset() -> void;
 
-    auto CalculateAcceleration(const unordered_map<string, Massive> &massiveBodies, const string &id, const dvec3 &position) -> dvec3;
+    auto PostReset() -> void;
 
-    auto GenerateNextOrbitPoint(const unordered_map<string, Massive> &massiveBodies, const string &id, const double time_step, const OrbitPoint &point) -> OrbitPoint;
-    auto UpdateBodyPosition(const unordered_map<string, Massive> &massiveBodies, Body &body) -> void;
-    auto RegenerateFuturePoints() -> unordered_map<string, vector<OrbitPoint>>;
+    auto CalculateLatestAcceleration(const string &id, const dvec3 &position) -> dvec3;
+
+    auto GenerateNextOrbitPoint(const string &id, const OrbitPoint &point) -> OrbitPoint;
+    
+    auto GetPastOrbitPoints() -> unordered_map<string, vector<OrbitPoint>>;
+    auto GetFutureOrbitPoints() -> unordered_map<string, vector<OrbitPoint>>;
 
     auto GetKineticEnergy(const Body &body) -> double;
     auto GetPotentialEnergy(const Body &body) -> double;

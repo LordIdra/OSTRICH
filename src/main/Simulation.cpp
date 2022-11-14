@@ -14,22 +14,35 @@
 #include <utility>
 
 #include <depend/tracy-0.9/public/tracy/Tracy.hpp>
+#include <vector>
 
 
 
 namespace Simulation {
 
     namespace {
-        const double INITIAL_TIME_STEP_SIZE = 5000;
-        const double INITIAL_TIME_STEP_COUNT = 10000;
-        const double INITIAL_SIMULATION_SPEED = 1;
+        const double INITIAL_TIME_STEP_SIZE = 500;
+        const double INITIAL_TIME_STEPS_PER_FRAME = 500;
+        const double INITIAL_SIMULATION_SPEED_MULTIPLIER = 1;
+
+        const unsigned int MAX_PAST_POINTS = 1000;
+        const unsigned int MAX_FUTURE_POINTS = 1000;
 
         double timeStepSize = INITIAL_TIME_STEP_SIZE;
-        double timeStepsPerFrame = INITIAL_TIME_STEP_COUNT;
-        double simulationSpeed = INITIAL_SIMULATION_SPEED;
-        double simulationSpeedMultiplier = INITIAL_SIMULATION_SPEED;
+        double timeStepsPerFrame = INITIAL_TIME_STEPS_PER_FRAME;
+        double simulationSpeed = INITIAL_SIMULATION_SPEED_MULTIPLIER;
+        double simulationSpeedMultiplier = INITIAL_SIMULATION_SPEED_MULTIPLIER;
+
+        double timeSinceLastOrbitPointUpdate = 0;
+
+        int futurePointCount = 0;
 
         double timeStep = 0;
+
+        unordered_map<string, vector<OrbitPoint>> futurePoints;
+        unordered_map<string, vector<OrbitPoint>> pastPoints;
+
+        vector<string> bodiesWithSignificantMass;
 
         auto IncreaseSimulationSpeed() -> void {
             // Check that this action won't increase the simulation speed above the maximum speed
@@ -48,6 +61,37 @@ namespace Simulation {
             simulationSpeedMultiplier -= 1;
             simulationSpeed /= SPEED_MULTIPLIER;
         }
+
+        auto UpdateBody(const string &id) -> void {
+            vector<OrbitPoint> &futurePointVector = futurePoints.at(id);
+            vector<OrbitPoint> &pastPointVector = pastPoints.at(id);
+            const OrbitPoint &newPoint = futurePointVector.at(1);
+
+            // Move body to next point
+            Bodies::UpdateBody(id, newPoint);
+
+            // The point we just moved to is now also a past point 
+            pastPointVector.push_back(newPoint);
+            futurePointVector.erase(futurePointVector.begin());
+
+            // Check that we don't have too many past points now
+            if (pastPointVector.size() > MAX_PAST_POINTS) {
+                pastPointVector.erase(pastPointVector.begin());
+            }
+        }
+
+        auto IncrementBodyOrbitPoints() -> void {
+            // Move every body to the next orbit point, spanning the time period
+            // that the last frame encompassed
+            // For example, if TimeStepSize is 10 and in one frame we moved 100 time steps,
+            // we would do 11 updates
+            while (timeSinceLastOrbitPointUpdate >= Simulation::GetTimeStepSize()) {
+                timeSinceLastOrbitPointUpdate -= Simulation::GetTimeStepSize();
+                futurePointCount -= 1;
+                for (auto &pair : Bodies::GetMassiveBodies())  { UpdateBody(pair.first); }
+                for (auto &pair : Bodies::GetMasslessBodies()) { UpdateBody(pair.first); }
+            }
+        }
     }
 
     auto Init() -> void {
@@ -55,92 +99,111 @@ namespace Simulation {
         Keys::BindFunctionToKeyPress(GLFW_KEY_PERIOD, IncreaseSimulationSpeed);
     }
 
-    auto Reset() -> void {
-        timeStepSize = INITIAL_TIME_STEP_SIZE;
-        timeStepsPerFrame = INITIAL_TIME_STEP_COUNT;
-        simulationSpeed = INITIAL_SIMULATION_SPEED;
-        simulationSpeedMultiplier = INITIAL_SIMULATION_SPEED;
-        timeStep = 0;
-    }
-
-    auto UpdateTime(const double deltaTime) -> void {
+    auto Update(const double deltaTime) -> void {
+        // Update time
         timeStep += deltaTime * simulationSpeed;
+        timeSinceLastOrbitPointUpdate += deltaTime * simulationSpeed;
+
+        IncrementBodyOrbitPoints();
+
+        // The rest of the function will be updating orbit points
+        // so check first if we actually need to add any more orbit points
+        if (futurePointCount >= MAX_FUTURE_POINTS) {
+            return;
+        }
+
+        // Integrate for all bodies and add positions
+        while (futurePointCount < MAX_FUTURE_POINTS) {
+
+            if (futurePointCount >= MAX_FUTURE_POINTS) {
+                return;
+            }
+
+            // Massive
+            for (auto &pair : Bodies::GetMassiveBodies()) {
+                OrbitPoint oldPoint = futurePoints.at(pair.first).at(futurePoints.at(pair.first).size()-1);
+                OrbitPoint newPoint = GenerateNextOrbitPoint(pair.first, oldPoint);
+                futurePoints.at(pair.first).push_back(newPoint);
+            }
+
+            // Massless
+            for (auto &pair : Bodies::GetMasslessBodies()) {
+                OrbitPoint oldPoint = futurePoints.at(pair.first).at(futurePoints.at(pair.first).size()-1);
+                OrbitPoint newPoint = GenerateNextOrbitPoint(pair.first, oldPoint);
+                futurePoints.at(pair.first).push_back(newPoint);
+            }
+
+            futurePointCount++;
+        }
     }
 
-    auto CalculateAcceleration(const unordered_map<string, Massive> &massiveBodies, const string &id, const dvec3 &position) -> dvec3 {
+    auto PreReset() -> void {
+        timeStepSize = INITIAL_TIME_STEP_SIZE;
+        timeStepsPerFrame = INITIAL_TIME_STEPS_PER_FRAME;
+        simulationSpeed = INITIAL_SIMULATION_SPEED_MULTIPLIER;
+        simulationSpeedMultiplier = INITIAL_SIMULATION_SPEED_MULTIPLIER;
+        timeStep = 0;
+        timeSinceLastOrbitPointUpdate = 0;
+        pastPoints.clear();
+        futurePoints.clear();
+    }
+
+    auto PostReset() -> void {
+        // Fill the point map with keys that correspond to all massive and massless bodies
+        // Massive
+        for (const auto &pair : Bodies::GetMassiveBodies()) {
+            futurePoints.insert(std::make_pair(pair.first, vector<OrbitPoint>{OrbitPoint{pair.second.GetPosition(), pair.second.GetVelocity()}}));
+            pastPoints.insert(std::make_pair(pair.first, vector<OrbitPoint>()));
+            bodiesWithSignificantMass.push_back(pair.first);
+        }
+
+        // Massless
+        for (const auto &pair : Bodies::GetMasslessBodies()) {
+            futurePoints.insert(std::make_pair(pair.first, vector<OrbitPoint>{OrbitPoint{pair.second.GetPosition(), pair.second.GetVelocity()}}));
+            pastPoints.insert(std::make_pair(pair.first, vector<OrbitPoint>()));
+        }
+    }
+
+    auto CalculateLatestAcceleration(const string &id, const dvec3 &position) -> dvec3 {
         // Loop through every body - we only need the massive bodies since massless bodies will have no effect on the body's acceleration
         dvec3 acceleration = dvec3(0, 0, 0);
-        for (const auto &pair : massiveBodies) {
+        for (const string &otherId : bodiesWithSignificantMass) {
+
+            Body otherBody = Bodies::GetBody(otherId);
+            dvec3 otherPosition = futurePoints.at(otherId).at(futurePoints.at(otherId).size()-1).position;
 
             // Check that the massive body is not the target body
             // If this was the case, we would be trying to apply the body's gravitational force to itself...
-            if (pair.second.GetId() == id) {
+            if (otherId == id) {
                 continue;
             }
 
             // Calculate force that the massive object is enacting on the body using Newton's Universal Law of Gravitation
             // and add the force to the total force vector
-            dvec3 displacement = position - pair.second.GetPosition();
+            dvec3 displacement = position - otherPosition;
             dvec3 direction = glm::normalize(displacement);
             double distance = glm::length(displacement);
-            double accelerationScalar = (GRAVITATIONAL_CONSTANT * pair.second.GetMass()) / glm::pow(distance, 2);
+            double accelerationScalar = (GRAVITATIONAL_CONSTANT * otherBody.GetMass()) / glm::pow(distance, 2);
             acceleration -= direction * accelerationScalar;
         }
 
         return acceleration;
     }
 
-    auto GenerateNextOrbitPoint(const unordered_map<string, Massive> &massiveBodies, const string &id, const double time_step, const OrbitPoint &point) -> OrbitPoint {
-        dvec3 acceleration = CalculateAcceleration(massiveBodies, id, point.position);
+    auto GenerateNextOrbitPoint(const string &id, const OrbitPoint &point) -> OrbitPoint {
+        dvec3 acceleration = CalculateLatestAcceleration(id, point.position);
         OrbitPoint newPoint = point;
-        newPoint.velocity += acceleration * time_step;
-        newPoint.position += point.velocity * time_step;
+        newPoint.velocity += acceleration * timeStep;
+        newPoint.position += point.velocity * timeStep;
         return newPoint;
     }
 
-    auto UpdateBodyPosition(const unordered_map<string, Massive> &massiveBodies, Body &body) -> void {
-        dvec3 acceleration = CalculateAcceleration(massiveBodies, body.GetId(), body.GetPosition());
-        body.AddVelocity(acceleration * timeStepSize);
-        body.AddPosition(body.GetVelocity() * timeStepSize);
+    auto GetPastOrbitPoints() -> unordered_map<string, vector<OrbitPoint>> {
+        return pastPoints;
     }
 
-    auto RegenerateFuturePoints() -> unordered_map<string, vector<OrbitPoint>> {
-        unordered_map<string, Massive> massiveBodies = Bodies::GetMassiveBodies();
-        unordered_map<string, Massless> masslessBodies = Bodies::GetMasslessBodies();
-        unordered_map<string, vector<OrbitPoint>> points;
-
-        // Fill the map with keys that correspond to all massive and massless bodies
-        // Massive
-        for (const auto &pair : massiveBodies) {
-            points.insert(std::make_pair(pair.first, vector<OrbitPoint>()));
-        }
-
-        // Massless
-        for (const auto &pair : masslessBodies) {
-            points.insert(std::make_pair(pair.first, vector<OrbitPoint>()));
-        }
-        
-        // Integrate for all bodies and add positions
-        for (int i = 0; i < timeStepsPerFrame; i++) {
-
-            // Massive
-            for (auto &pair : massiveBodies) {
-                points.at(pair.first).push_back(OrbitPoint{
-                    .position=pair.second.GetPosition(), 
-                    .velocity=pair.second.GetVelocity()});
-                UpdateBodyPosition(massiveBodies, pair.second);
-            }
-
-            // Massless
-            for (auto &pair : masslessBodies) {
-                points.at(pair.first).push_back(OrbitPoint{
-                    .position=pair.second.GetPosition(), 
-                    .velocity=pair.second.GetVelocity()});
-                UpdateBodyPosition(massiveBodies, pair.second);
-            }
-        }
-
-        return points;
+    auto GetFutureOrbitPoints() -> unordered_map<string, vector<OrbitPoint>> {
+        return futurePoints;
     }
 
     auto GetKineticEnergy(const Body &body) -> double {

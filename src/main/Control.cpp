@@ -94,14 +94,22 @@ namespace Control {
         }
     }
 
-    auto Reset() -> void {
-        CameraTransition::Reset();
-        Bodies::Reset();
-        MassiveRender::Reset();
-        Camera::Reset();
-        Bodies::Reset();
-        Simulation::Reset();
-        SimulationData::Reset();
+    auto PreReset() -> void {
+        // To be called before a new scenario is loaded
+        CameraTransition::PreReset();
+        Bodies::PreReset();
+        MassiveRender::PreReset();
+        Camera::PreReset();
+        Bodies::PreReset();
+        Simulation::PreReset();
+        SimulationData::PreReset();
+    }
+
+    auto PostReset() -> void {
+        // To be called after a new scenario is loaded
+        Bodies::PostReset();
+        Simulation::PostReset();
+        SimulationData::PostReset();
     }
 
     auto Init(const bool fullscreen, const string &windowTitle) -> void {
@@ -153,8 +161,7 @@ namespace Control {
                 Camera::AddAngleDelta(Mouse::GetPositionDelta());
             }
 
-            Bodies::Update(deltaTime);
-            Simulation::UpdateTime(deltaTime);
+            Simulation::Update(deltaTime);
             Camera::Update();
             CameraTransition::Update(deltaTime);
             MassiveRender::Update();
@@ -166,7 +173,7 @@ namespace Control {
             Keys::Update();
             glfwPollEvents();
             Window::Update();
-            
+
             FrameMark;
         }
     }

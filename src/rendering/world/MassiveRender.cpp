@@ -53,7 +53,7 @@ namespace MassiveRender {
         program = make_unique<Program>(vertex, fragment);
     }
     
-    auto Reset() -> void {
+    auto PreReset() -> void {
         massive_vaos.clear();
     }
 

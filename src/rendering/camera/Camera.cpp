@@ -53,7 +53,7 @@ namespace Camera {
         Keys::BindFunctionToKeyHold(GLFW_KEY_MINUS, KeyZoomOut);
     }
     
-    auto Reset() -> void {
+    auto PreReset() -> void {
         SetTarget(vec3(0, 0, 0));
     }
 

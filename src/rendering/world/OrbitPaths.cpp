@@ -176,12 +176,12 @@ namespace OrbitPaths {
 
     auto Update() -> void {
         // Future points
-        unordered_map<string, vector<OrbitPoint>> unscaledFuturePointMap = Bodies::GetFuturePoints();
+        unordered_map<string, vector<OrbitPoint>> unscaledFuturePointMap = Simulation::GetFutureOrbitPoints();
         unordered_map<string, vector<vec3>> scaledFuturePointMap = ScalePointMap(unscaledFuturePointMap);
         DrawFuturePointMap(scaledFuturePointMap, GL_POINTS);
 
         // Past points
-        unordered_map<string, vector<OrbitPoint>> unscaledPastPointMap = Bodies::GetPastPoints();
+        unordered_map<string, vector<OrbitPoint>> unscaledPastPointMap = Simulation::GetPastOrbitPoints();
         unordered_map<string, vector<vec3>> scaledPastPointMap = ScalePointMap(unscaledPastPointMap);
         DrawPastPointMap(scaledPastPointMap, GL_LINE_STRIP);
     }
