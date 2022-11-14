@@ -58,7 +58,6 @@ namespace MassiveRender {
     }
 
     auto Update() -> void {
-        // Set program variables
         program->Use();
         program->Set("cameraMatrix", Camera::GetMatrix());
         program->Set("cameraPosition", Camera::GetPosition());

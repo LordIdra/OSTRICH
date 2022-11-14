@@ -166,6 +166,8 @@ namespace Control {
             Keys::Update();
             glfwPollEvents();
             Window::Update();
+            
+            FrameMark;
         }
     }
 }

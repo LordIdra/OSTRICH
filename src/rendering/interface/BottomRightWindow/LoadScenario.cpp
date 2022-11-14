@@ -38,7 +38,7 @@ namespace LoadScenario {
             ImGui::PopFont();
         }
 
-        auto AddCancelButton(const bool allowCancel) {
+        auto AddCancelButton() -> void {
             if (ImGui::Button(CANCEL_TEXT.c_str(), CANCEL_BUTTON_SIZE)) {
                 ImGui::CloseCurrentPopup(); 
             }
@@ -63,7 +63,7 @@ namespace LoadScenario {
         auto AddButtons(const bool allowCancel) -> void {
             // Cancel
             if (allowCancel) {
-                AddCancelButton(allowCancel);
+                AddCancelButton();
                 ImGui::SameLine();
             }
 

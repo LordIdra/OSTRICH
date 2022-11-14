@@ -13,6 +13,8 @@
 #include <unordered_map>
 #include <utility>
 
+#include <depend/tracy-0.9/public/tracy/Tracy.hpp>
+
 
 
 namespace Simulation {
@@ -117,7 +119,7 @@ namespace Simulation {
         for (const auto &pair : masslessBodies) {
             points.insert(std::make_pair(pair.first, vector<OrbitPoint>()));
         }
-
+        
         // Integrate for all bodies and add positions
         for (int i = 0; i < timeStepsPerFrame; i++) {
 
