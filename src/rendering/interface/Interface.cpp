@@ -19,14 +19,14 @@ namespace Interface {
         Fonts::Init();
     }
     
-    auto Update() -> void {
+    auto Update(const double deltaTime) -> void {
         ZoneScoped;
         // Declare new ImGui frame
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
-        TopRightWindow::Draw();
+        TopRightWindow::Draw(deltaTime);
         BottomRightWindow::Draw();
         LeftWindow::Draw();
         

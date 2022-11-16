@@ -31,6 +31,8 @@ namespace SimulationData {
         unordered_map<string, vector<double>> bodyEnergyPotential;
         unordered_map<string, vector<double>> bodyEnergyTotal;
 
+        double timeSinceLastUpdate = 0;
+
         const ImVec2 ENERGY_DEVIATION_PLOT_SIZE = ImVec2(385, 100);
         const ImVec2 TOTAL_ENERGY_PLOT_SIZE = ImVec2(385, 200);
         const ImVec2 BODY_ENERGY_PLOT_SIZE = ImVec2(385, 200);
@@ -44,7 +46,8 @@ namespace SimulationData {
 
         const string RESET_TEXT = ICON_MDI_REFRESH + string(" Reset Data");
 
-        const unsigned int MAX_DATA_POINTS = 700;
+        const double UPDATE_INTERVAL = 0.1;
+        const unsigned int MAX_DATA_POINTS = 100;
 
         auto AddEnergyDeviation() -> void {
             ZoneScoped;
@@ -200,25 +203,29 @@ namespace SimulationData {
         originalEnergy = SimulationEnergy::GetSimulationTotalEnergy();
     }
 
-    auto Draw() -> void {
-        ImPlot::ShowDemoWindow();
+    auto Draw(const double deltaTime) -> void {
+        // Update time
+        timeSinceLastUpdate += deltaTime;
 
         // Set original energy if it hasn't been set
         if (originalEnergy == -1) {
             originalEnergy = SimulationEnergy::GetSimulationTotalEnergy();
         }
 
-        // Update values
-        timeValues.push_back(Simulation::GetTimeStep());
-        UpdateEnergyDeviation();
-        UpdateSimulationEnergy();
-        for (const auto &pair : Bodies::GetMassiveBodies()) {
-            UpdateBodyEnergy(pair);
+        // Update values if necessary
+        if (timeSinceLastUpdate > UPDATE_INTERVAL) {
+            timeSinceLastUpdate = 0;
+            timeValues.push_back(Simulation::GetTimeStep());
+            UpdateEnergyDeviation();
+            UpdateSimulationEnergy();
+            for (const auto &pair : Bodies::GetMassiveBodies()) {
+                UpdateBodyEnergy(pair);
+            }
+            for (const auto &pair : Bodies::GetMasslessBodies()) {
+                UpdateBodyEnergy(pair);
+            }
+            ClipData();
         }
-        for (const auto &pair : Bodies::GetMasslessBodies()) {
-            UpdateBodyEnergy(pair);
-        }
-        ClipData();
 
         // Render graphs
         ImGui::PushFont(Fonts::Data());

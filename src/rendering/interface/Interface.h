@@ -4,5 +4,5 @@
 
 namespace Interface {
     auto Init() -> void;
-    auto Update() -> void;
+    auto Update(const double deltaTime) -> void;
 }

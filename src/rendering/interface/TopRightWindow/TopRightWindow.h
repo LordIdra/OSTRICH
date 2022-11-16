@@ -3,5 +3,5 @@
 
 
 namespace TopRightWindow {
-    auto Draw() -> void;
+    auto Draw(const double deltaTime) -> void;
 }

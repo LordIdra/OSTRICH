@@ -17,13 +17,13 @@ namespace TopRightWindow {
         bool windowOpen = true;
     }
 
-    auto Draw() -> void {
+    auto Draw(const double deltaTime) -> void {
         ZoneScoped;
         ImGui::Begin("Top Right Window", &windowOpen, WINDOW_FLAGS);
         ImGui::SetWindowSize(WINDOW_SIZE);
         ImGui::SetWindowPos(WINDOW_POSITION);
 
-        SimulationData::Draw();
+        SimulationData::Draw(deltaTime);
 
         ImGui::End();
     }

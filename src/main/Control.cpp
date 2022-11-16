@@ -167,7 +167,7 @@ namespace Control {
             MassiveRender::Update();
             OrbitPaths::Update();
             Icons::Update();
-            Interface::Update();
+            Interface::Update(deltaTime);
 
 
             Mouse::Update();
