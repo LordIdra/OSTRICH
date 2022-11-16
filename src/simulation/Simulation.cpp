@@ -1,4 +1,5 @@
 #include "Simulation.h"
+#include "simulation/SimulationState.h"
 
 #include <rendering/world/OrbitPaths.h>
 #include <bodies/Body.h>
@@ -20,6 +21,8 @@
 namespace Simulation {
 
     namespace {
+        const unsigned int STATE_CACHE_RESERVE = 128;
+
         const unsigned int INITIAL_SPEED_VALUE = 1;
         const unsigned int INITIAL_SPEED_DEGREE = 1;
         const unsigned int INITIAL_TIME_STEP = 0;
@@ -29,21 +32,29 @@ namespace Simulation {
         const unsigned int MAX_SPEED_DEGREE = 13;
         const unsigned int MAX_SPEED = 2000000; // (speedMultiplier^maxSpeedDegree) + 1
         const unsigned int MIN_SPEED = 1;
-        const unsigned int MAX_FUTURE_STATES = 5000;
+        const unsigned int MAX_FUTURE_STEP = 5000;
         const unsigned int MAX_PAST_STATES = 500;
 
         const unsigned int TIME_STEP_SIZE = 1000;
 
-        // danger: rawFutureStates and rawPastStates are used by multiple threads, use stateVectorMutex
-        std::mutex stateVectorMutex;
-        vector<SimulationState> futureStates;
-        vector<SimulationState> pastStates;
+
+        // important: staticState is updated at the end of each frame and represents a snapshot of the simulation
+        // important: This prevents incoherent states, since the state might be changed over multiple update calls to other functions
+        // important: staticState should be the ONLY state container that can be queried or modified from outside the update thread
+        std::mutex stateMutex;
+        SimulationState staticState;
+        SimulationState state;
+        SimulationState futureState;
+
+        vector<SimulationState> stateCache;
 
         double speedValue = INITIAL_SPEED_VALUE;
         double speedDegree = INITIAL_SPEED_DEGREE;
 
         double timeStep = INITIAL_TIME_STEP;
         double timeSinceLastStateUpdate = INITIAL_TIME_SINCE_LAST_STATE_UPDATE;
+        
+        unsigned int futureStep = 0;
 
         auto IncreaseSimulationSpeed() -> void {
             if (speedValue < MAX_SPEED) {
@@ -60,23 +71,22 @@ namespace Simulation {
         }
         
         auto StepBodyToNextState(const string &id) -> void {
-            SimulationState nextState = futureStates.at(1);
-            OrbitPoint point = nextState.GetOrbitPoints().at(id);
+            OrbitPoint point = state.GetOrbitPoints().at(id);
             Bodies::UpdateBody(id, point);
         }
 
-        auto GetInitialState() -> unordered_map<string, OrbitPoint> {
+        auto AcquireInitialState() -> SimulationState {
             unordered_map<string, OrbitPoint> initialStateMap;
 
             for (const auto &pair : Bodies::GetMassiveBodies()) {
-                OrbitPoint initialOrbitPoint = OrbitPoint{
+                OrbitPoint initialOrbitPoint{
                     pair.second.GetPosition(), 
                     pair.second.GetVelocity()};
                 initialStateMap.insert(std::make_pair(pair.first, initialOrbitPoint));
             }
 
             for (const auto &pair : Bodies::GetMasslessBodies()) {
-                OrbitPoint initialOrbitPoint = OrbitPoint{
+                OrbitPoint initialOrbitPoint{
                     pair.second.GetPosition(), 
                     pair.second.GetVelocity()};
                 initialStateMap.insert(std::make_pair(pair.first, initialOrbitPoint));
@@ -84,76 +94,62 @@ namespace Simulation {
 
             return initialStateMap;
         }
-
-        auto MoveLatestFutureStateToPastState() -> void {
-            std::lock_guard<std::mutex> lock(stateVectorMutex);
-            pastStates.push_back(futureStates.at(1));
-            futureStates.erase(futureStates.begin());
-            if (pastStates.size() > MAX_PAST_STATES) {
-                pastStates.erase(pastStates.begin());
-            }
-        }
     }
 
     auto Init() -> void {
         Keys::BindFunctionToKeyPress(GLFW_KEY_COMMA, DecreaseSimulationSpeed);
         Keys::BindFunctionToKeyPress(GLFW_KEY_PERIOD, IncreaseSimulationSpeed);
+        stateCache.reserve(STATE_CACHE_RESERVE);
     }
 
     auto PreReset() -> void {
-        std::lock_guard<std::mutex> lock(stateVectorMutex);
         speedValue = INITIAL_SPEED_VALUE;
         speedDegree = INITIAL_SPEED_DEGREE;
         timeStep = INITIAL_TIME_STEP;
         timeSinceLastStateUpdate = INITIAL_TIME_SINCE_LAST_STATE_UPDATE;
-        pastStates.clear();
-        futureStates.clear();
     }
 
     auto NewBodyReset() -> void {
         // To be called when a new body is added to the system
-        std::lock_guard<std::mutex> lock(stateVectorMutex);
-        pastStates.clear();
-        futureStates.clear();
-        unordered_map<string, OrbitPoint> initialStateMap = GetInitialState();
-        SimulationState initialState(initialStateMap);
-        futureStates.push_back(initialState);
+        std::lock_guard<std::mutex> lock(stateMutex);
+        staticState = futureState = state = AcquireInitialState();
+    }
+
+    auto FrameUpdate() -> void {
+        std::lock_guard<std::mutex> lock(stateMutex);
+        staticState = state;
+
+        // Update all the paths
+        // If we did this in the main update function, the paths would be indepedently updated from the other update functions
+        // So depending on where the update function was called in the frame, we might end up with an inconsistent state
+        // where the orbit paths indicate the body is somewhere else
+        for (SimulationState state : stateCache) {
+            OrbitPaths::StepToNextState(state);
+        }
+
+        stateCache.clear();
     }
 
     auto Update(const double deltaTime) -> void {
+        // This function is run async to basically everything else
         ZoneScoped;
         timeStep += deltaTime * speedValue;
         timeSinceLastStateUpdate += deltaTime * speedValue;
 
-        while ((timeSinceLastStateUpdate >= Simulation::GetTimeStepSize()) && (futureStates.size() > 1)) {
+        while (timeSinceLastStateUpdate >= Simulation::GetTimeStepSize()) {
             timeSinceLastStateUpdate -= Simulation::GetTimeStepSize();
+            state.StepToNextState(TIME_STEP_SIZE);
+            stateCache.push_back(state);
             for (const auto &pair : Bodies::GetMassiveBodies())  { StepBodyToNextState(pair.first); }
             for (const auto &pair : Bodies::GetMasslessBodies()) { StepBodyToNextState(pair.first); }
-            OrbitPaths::StepToNextState(futureStates.at(0));
-            MoveLatestFutureStateToPastState();
+            futureStep--;
         }
 
-        while (futureStates.size() < MAX_FUTURE_STATES) {
-            SimulationState latestState = futureStates.at(futureStates.size()-1);
-            latestState.StepToNextState(TIME_STEP_SIZE);
-            OrbitPaths::AddNewState(latestState);
-            std::lock_guard<std::mutex> lock(stateVectorMutex);
-            futureStates.push_back(latestState);
+        while (futureStep < MAX_FUTURE_STEP) {
+            futureState.StepToNextState(TIME_STEP_SIZE);
+            OrbitPaths::AddNewState(futureState);
+            futureStep++;
         }
-    }
-
-    auto GetPastStates() -> vector<SimulationState> {
-        std::lock_guard<std::mutex> lock(stateVectorMutex);
-        return pastStates;
-    }
-
-    auto GetFutureStates() -> vector<SimulationState> {
-        std::lock_guard<std::mutex> lock(stateVectorMutex);
-        return futureStates;
-    }
-
-    auto GetMaxFutureStates() -> unsigned int {
-        return MAX_FUTURE_STATES;
     }
 
     auto GetSpeedValue() -> double {
@@ -170,6 +166,10 @@ namespace Simulation {
 
     auto GetTimeStepSize() -> unsigned int {
         return TIME_STEP_SIZE;
+    }
+
+    auto GetAcceleration(const string &id) -> dvec3 {
+        return staticState.CalculateTotalAcceleration(id);
     }
 
     auto GetTimeStep() -> double {

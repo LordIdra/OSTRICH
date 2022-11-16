@@ -74,9 +74,6 @@ set(FILES
     "src/simulation/SimulationState.cpp"
 )
 
-# Enable clang tidy checks
-#set(CMAKE_CXX_CLANG_TIDY clang-tidy -checks=bugprone-*,clang-analyzer-*,concurrency-*,cppcoreguidelines-*,misc-*,modernize-*,performance-*,portability-*,readability-*,-misc-unused-using-decls,-cppcoreguidelines-pro-type-union-access,-readability-implicit-bool-conversion,-readability-magic-numbers,-bugprone-narrowing-conversions,-modernize-pass-by-value,-cppcoreguidelines-pro-type-vararg)
-
 # Use vscode toolchain file
 set(CMAKE_TOOLCHAIN_FILE "~/vcpkg/scripts/buildsystems/vcpkg.cmake")
 
@@ -111,6 +108,9 @@ target_link_libraries (dependencies PRIVATE imgui::imgui)
 option(TRACY_ENABLE "" ON)
 option(TRACY_ON_DEMAND "" ON)
 add_subdirectory(src/depend/tracy-0.9)
+
+# Enable clang tidy checks
+#set(CMAKE_CXX_CLANG_TIDY clang-tidy -header-filter="" -checks=bugprone-*,clang-analyzer-*,concurrency-*,cppcoreguidelines-*,misc-*,modernize-*,performance-*,portability-*,readability-*,-misc-unused-using-decls,-cppcoreguidelines-pro-type-union-access,-readability-implicit-bool-conversion,-readability-magic-numbers,-bugprone-narrowing-conversions,-modernize-pass-by-value,-cppcoreguidelines-pro-type-vararg,-cppcoreguidelines-pro-bounds-array-to-pointer-decay)
 
 # Build OSTRICH
 add_executable(${PROJECT_NAME} ${FILES})

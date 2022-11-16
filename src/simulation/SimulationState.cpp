@@ -7,8 +7,10 @@
 
 
 
+SimulationState::SimulationState() {}
+
 SimulationState::SimulationState(unordered_map<string, OrbitPoint> _points)
-    : points(_points) {}
+    : points(std::move(_points)) {}
 
 auto SimulationState::CalculateIndividualAcceleration(const string &accelerationOf, const string &withRespectTo) -> dvec3 {
     // Calculate force that the massive object is enacting on the body using Newton's Universal Law of Gravitation

@@ -1,6 +1,7 @@
 #include "BodyData.h"
-#include "simulation/SimulationEnergy.h"
 
+#include "simulation/Simulation.h"
+#include "simulation/SimulationEnergy.h"
 #include <main/Bodies.h>
 #include <rendering/interface/Fonts.h>
 
@@ -83,7 +84,7 @@ namespace BodyData {
 
              ImGui::PushFont(Fonts::Data());
              ImGui::TableNextColumn();
-             ImGui::Text("%s", "todo fix this");
+             ImGui::Text("%.2e", glm::length(Simulation::GetAcceleration(body.GetId())));
              ImGui::PopFont();
          }
 
