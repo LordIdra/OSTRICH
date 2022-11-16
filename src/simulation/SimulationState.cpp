@@ -1,11 +1,14 @@
 #include "SimulationState.h"
-#include "main/OrbitPoint.h"
+#include <glm/gtx/string_cast.hpp>
+#include <simulation/OrbitPoint.h>
+#include "rendering/geometry/Rays.h"
 
 #include <main/Bodies.h>
 
 
 
-SimulationState::SimulationState() {}
+SimulationState::SimulationState(unordered_map<string, OrbitPoint> _points)
+    : points(_points) {}
 
 auto SimulationState::CalculateIndividualAcceleration(const string &accelerationOf, const string &withRespectTo) -> dvec3 {
     // Calculate force that the massive object is enacting on the body using Newton's Universal Law of Gravitation
@@ -30,24 +33,29 @@ auto SimulationState::CalculateTotalAcceleration(const string &id) -> dvec3 {
             continue;
         }
 
-        acceleration -= CalculateIndividualAcceleration(pair.first, id);
+        acceleration -= CalculateIndividualAcceleration(id, pair.first);
     }
 
     return acceleration;
 }
 
-auto SimulationState::StepOrbitPoint(const string &id, const OrbitPoint &point, const double deltaTime) -> OrbitPoint {
+auto SimulationState::StepOrbitPoint(const string &id, OrbitPoint &point, const double timeStep) -> void {
     dvec3 acceleration = CalculateTotalAcceleration(id);
-    OrbitPoint newPoint = point;
-
-    newPoint.velocity += acceleration * deltaTime;
-    newPoint.position += point.velocity * deltaTime;
-    
-    return newPoint;
+    point.velocity += acceleration * timeStep;
+    point.position += point.velocity * timeStep;
 }
 
-auto SimulationState::StepToNextState(const double deltaTime) -> void {
+auto SimulationState::StepToNextState(const double timeStep) -> void {
     for (auto &pair : points) {
-        StepOrbitPoint(pair.first, pair.second, deltaTime);
+        StepOrbitPoint(pair.first, pair.second, timeStep);
     }
+}
+
+auto SimulationState::Scale() -> void {
+    for (auto &pair : points) {
+        pair.second.position = Rays::Scale(pair.second.position);
+    }
+}
+auto SimulationState::GetOrbitPoints() const -> unordered_map<string, OrbitPoint> {
+    return points;
 }

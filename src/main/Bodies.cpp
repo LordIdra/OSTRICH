@@ -1,6 +1,6 @@
 #include "Bodies.h"
 
-#include "main/Simulation.h"
+#include "simulation/Simulation.h"
 #include "util/Log.h"
 #include <bodies/Body.h>
 #include <bodies/Massive.h>
@@ -12,7 +12,7 @@
 #include <input/Keys.h>
 #include <input/Mouse.h>
 #include <rendering/world/MassiveRender.h>
-#include <main/OrbitPoint.h>
+#include <simulation/OrbitPoint.h>
 
 #include <GLFW/glfw3.h>
 #include <string>
@@ -62,10 +62,12 @@ namespace Bodies {
     auto AddBody(const Massive &body) -> void {
         massiveBodies.insert(std::make_pair(body.GetId(), body));
         MassiveRender::AddBody(body);
+        Simulation::NewBodyReset();
     }
 
     auto AddBody(const Massless &body) -> void {
         masslessBodies.insert(std::make_pair(body.GetId(), body));
+        Simulation::NewBodyReset();
     }
 
     auto UpdateBody(const string &id, const OrbitPoint &point) -> void {

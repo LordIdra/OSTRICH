@@ -1,8 +1,10 @@
 #include "SimulationData.h"
+
 #include "depend/IconsMaterialDesignIcons_c.h"
 #include "main/Bodies.h"
-#include "main/Simulation.h"
+#include "simulation/Simulation.h"
 #include "rendering/interface/Fonts.h"
+#include "simulation/SimulationEnergy.h"
 
 #include <imgui.h>
 #include <depend/implot/implot.h>
@@ -43,6 +45,7 @@ namespace SimulationData {
         const string RESET_TEXT = ICON_MDI_REFRESH + string(" Reset Data");
 
         auto AddEnergyDeviation() -> void {
+            ZoneScoped;
             if (ImPlot::BeginPlot("Energy Deviation", ENERGY_DEVIATION_PLOT_SIZE)) {
 
                 // Axes
@@ -58,6 +61,7 @@ namespace SimulationData {
         }
 
         auto AddSimulationEnergy() -> void {
+            ZoneScoped;
             if (ImPlot::BeginPlot("Simulation Energy", TOTAL_ENERGY_PLOT_SIZE)) {
 
                 // Axes
@@ -83,6 +87,7 @@ namespace SimulationData {
         }
 
         auto AddBodyEnergy() -> void {
+            ZoneScoped;
             if (ImPlot::BeginPlot("Body Energy", BODY_ENERGY_PLOT_SIZE)) {
 
                 // Axes
@@ -116,16 +121,19 @@ namespace SimulationData {
         }
 
         auto UpdateEnergyDeviation() -> void {
-            energyDeviation.push_back(100 * (Simulation::GetSimulationTotalEnergy() - originalEnergy) / originalEnergy); //NOLINT(cppcoreguidelines-avoid-magic-numbers)
+            ZoneScoped;
+            energyDeviation.push_back(100 * (SimulationEnergy::GetSimulationTotalEnergy() - originalEnergy) / originalEnergy); //NOLINT(cppcoreguidelines-avoid-magic-numbers)
         }
 
         auto UpdateSimulationEnergy() -> void {
-            simulationEnergyKinetic.push_back(Simulation::GetSimulationKineticEnergy());
-            simulationEnergyPotential.push_back(Simulation::GetSimulationPotentialEnergy());
-            simulationEnergyTotal.push_back(Simulation::GetSimulationTotalEnergy());
+            ZoneScoped;
+            simulationEnergyKinetic.push_back(SimulationEnergy::GetSimulationKineticEnergy());
+            simulationEnergyPotential.push_back(SimulationEnergy::GetSimulationPotentialEnergy());
+            simulationEnergyTotal.push_back(SimulationEnergy::GetSimulationTotalEnergy());
         }
 
         auto UpdateBodyEnergy(const std::pair<string, Body> &pair) -> void {
+            ZoneScoped;
             if (bodyEnergyKinetic.count(pair.first) == 0) {
                 bodyEnergyKinetic.insert(std::make_pair(pair.first, vector<double>()));
             }
@@ -138,9 +146,9 @@ namespace SimulationData {
                 bodyEnergyTotal.insert(std::make_pair(pair.first, vector<double>()));
             }
 
-            bodyEnergyKinetic.at(pair.first).push_back(Simulation::GetKineticEnergy(pair.second));
-            bodyEnergyPotential.at(pair.first).push_back(Simulation::GetPotentialEnergy(pair.second));
-            bodyEnergyTotal.at(pair.first).push_back(Simulation::GetTotalEnergy(pair.second));
+            bodyEnergyKinetic.at(pair.first).push_back(SimulationEnergy::GetKineticEnergy(pair.second));
+            bodyEnergyPotential.at(pair.first).push_back(SimulationEnergy::GetPotentialEnergy(pair.second));
+            bodyEnergyTotal.at(pair.first).push_back(SimulationEnergy::GetTotalEnergy(pair.second));
         }
     }
 
@@ -173,7 +181,7 @@ namespace SimulationData {
 
     auto PostReset() -> void {
         // Original energy
-        originalEnergy = Simulation::GetSimulationTotalEnergy();
+        originalEnergy = SimulationEnergy::GetSimulationTotalEnergy();
     }
 
     auto Draw() -> void {
@@ -181,7 +189,7 @@ namespace SimulationData {
 
         // Set original energy if it hasn't been set
         if (originalEnergy == -1) {
-            originalEnergy = Simulation::GetSimulationTotalEnergy();
+            originalEnergy = SimulationEnergy::GetSimulationTotalEnergy();
         }
 
         // Update values

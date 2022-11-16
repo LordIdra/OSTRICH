@@ -8,5 +8,5 @@
 namespace Icons {
     auto Init() -> void;
     auto GenerateIcons() -> unordered_map<string, Icon>;
-    auto DrawIcons() -> void;
+    auto Update() -> void;
 }

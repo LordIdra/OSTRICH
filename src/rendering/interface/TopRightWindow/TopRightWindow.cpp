@@ -5,6 +5,8 @@
 
 #include <imgui.h>
 
+#include <util/Types.h>
+
 
 namespace TopRightWindow {
     namespace {
@@ -16,6 +18,7 @@ namespace TopRightWindow {
     }
 
     auto Draw() -> void {
+        ZoneScoped;
         ImGui::Begin("Top Right Window", &windowOpen, WINDOW_FLAGS);
         ImGui::SetWindowSize(WINDOW_SIZE);
         ImGui::SetWindowPos(WINDOW_POSITION);

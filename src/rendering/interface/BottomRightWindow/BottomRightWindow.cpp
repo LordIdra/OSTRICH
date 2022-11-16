@@ -1,7 +1,9 @@
 #include "BottomRightWindow.h"
 
 #include "rendering/interface/BottomRightWindow/SimulationControl.h"
+#include <util/Types.h>
 #include <depend/IconsMaterialDesignIcons_c.h>
+
 
 #include <imgui.h>
 
@@ -17,6 +19,7 @@ namespace BottomRightWindow {
     }
 
     auto Draw() -> void {
+        ZoneScoped;
         ImGui::Begin("Right Window", &windowOpen, WINDOW_FLAGS);
         ImGui::SetWindowSize(WINDOW_SIZE);
         ImGui::SetWindowPos(WINDOW_POSITION);

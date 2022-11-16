@@ -1,6 +1,6 @@
 #pragma once
 
-#include <main/OrbitPoint.h>
+#include <simulation/OrbitPoint.h>
 #include <bodies/BodyType.h>
 #include <bodies/Massless.h>
 #include <bodies/Massive.h>

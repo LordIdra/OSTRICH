@@ -5,7 +5,7 @@
 #include <rendering/interface/BottomRightWindow/SaveScenario.h>
 #include <rendering/interface/BottomRightWindow/LoadScenario.h>
 #include <rendering/interface/Fonts.h>
-#include <main/Simulation.h>
+#include <simulation/Simulation.h>
 #include <depend/IconsMaterialDesignIcons_c.h>
 
 #include <imgui.h>
@@ -49,12 +49,12 @@ namespace SimulationControl {
         auto AddSpeedIndicatorIcons() -> void {
             string simulationSpeedStringActive;
             string simulationSpeedStringInactive;
-
-            for (int i = 0; i < Simulation::GetSimulationSpeedMultiplier(); i++) {
+            
+            for (int i = 0; i < Simulation::GetSpeedDegree(); i++) {
                 simulationSpeedStringActive += SPEED_INDICATOR_ICON;
             }
 
-            for (int i = 0; i < Simulation::MAX_MULTIPLIER - Simulation::GetSimulationSpeedMultiplier(); i++) {
+            for (int i = 0; i < Simulation::GetMaxSpeedDegree() - Simulation::GetSpeedDegree(); i++) {
                 simulationSpeedStringInactive += SPEED_INDICATOR_ICON;
             }
 
@@ -79,7 +79,7 @@ namespace SimulationControl {
             ImGui::Text("%s", SPEED_TEXT.c_str());
             ImGui::SameLine();
             ImGui::PushFont(Fonts::Data());
-            ImGui::Text("%s", TimeFormat::FormatTime(int(Simulation::GetSimulationSpeed())).c_str());
+            ImGui::Text("%s", TimeFormat::FormatTime(int(Simulation::GetSpeedValue())).c_str());
             ImGui::PopFont();
 
             ImGui::Text("%s", TIME_TEXT.c_str());

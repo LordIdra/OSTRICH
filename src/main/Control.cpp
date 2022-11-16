@@ -19,7 +19,7 @@
 #include <util/Log.h>
 #include <window/Window.h>
 #include <main/Bodies.h>
-#include <main/Simulation.h>
+#include <simulation/Simulation.h>
 
 #include <string>
 
@@ -108,7 +108,6 @@ namespace Control {
     auto PostReset() -> void {
         // To be called after a new scenario is loaded
         Bodies::PostReset();
-        Simulation::PostReset();
         SimulationData::PostReset();
     }
 
@@ -160,19 +159,23 @@ namespace Control {
             if (Mouse::RightButtonHeld()) {
                 Camera::AddAngleDelta(Mouse::GetPositionDelta());
             }
+            
+            std::thread simulationUpdateThread(Simulation::Update, deltaTime);
 
-            Simulation::Update(deltaTime);
             Camera::Update();
             CameraTransition::Update(deltaTime);
             MassiveRender::Update();
             OrbitPaths::Update();
-            Icons::DrawIcons();
+            Icons::Update();
             Interface::Update();
+
 
             Mouse::Update();
             Keys::Update();
             glfwPollEvents();
             Window::Update();
+            
+            simulationUpdateThread.join();
 
             FrameMark;
         }

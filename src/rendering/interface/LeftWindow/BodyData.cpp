@@ -1,8 +1,8 @@
 #include "BodyData.h"
+#include "simulation/SimulationEnergy.h"
 
 #include <main/Bodies.h>
 #include <rendering/interface/Fonts.h>
-#include <main/Simulation.h>
 
 #include <imgui.h>
 
@@ -95,7 +95,7 @@ namespace BodyData {
 
             ImGui::PushFont(Fonts::Data());
             ImGui::TableNextColumn();
-            ImGui::Text("%.2e %s", Simulation::GetKineticEnergy(body), "J");
+            ImGui::Text("%.2e %s", SimulationEnergy::GetKineticEnergy(body), "J");
             ImGui::PopFont();
         }
 
@@ -107,7 +107,7 @@ namespace BodyData {
 
             ImGui::PushFont(Fonts::Data());
             ImGui::TableNextColumn();
-            ImGui::Text("%.2e %s", Simulation::GetPotentialEnergy(body), "J");
+            ImGui::Text("%.2e %s", SimulationEnergy::GetPotentialEnergy(body), "J");
             ImGui::PopFont();
         }
 
@@ -119,7 +119,7 @@ namespace BodyData {
 
             ImGui::PushFont(Fonts::Data());
             ImGui::TableNextColumn();
-            ImGui::Text("%.2e %s", Simulation::GetKineticEnergy(body) + Simulation::GetPotentialEnergy(body), "J");
+            ImGui::Text("%.2e %s", SimulationEnergy::GetKineticEnergy(body) + SimulationEnergy::GetPotentialEnergy(body), "J");
             ImGui::PopFont();
         }
     }

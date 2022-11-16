@@ -58,6 +58,8 @@ namespace Camera {
     }
 
     auto Update() -> void {
+        ZoneScoped;
+        
         // Apply deltas
         angle[0] += angleDelta[0];
         angle[1] += angleDelta[1];

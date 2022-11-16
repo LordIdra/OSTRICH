@@ -58,6 +58,7 @@ namespace MassiveRender {
     }
 
     auto Update() -> void {
+        ZoneScoped;
         program->Use();
         program->Set("cameraMatrix", Camera::GetMatrix());
         program->Set("cameraPosition", Camera::GetPosition());

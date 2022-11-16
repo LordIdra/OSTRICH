@@ -183,7 +183,8 @@ namespace Icons {
         return icons;
     }
 
-    auto DrawIcons() -> void {
+    auto Update() -> void {
+        ZoneScoped;
         // Compile a list of all massive bodies to have icons rendered
         unordered_map<string, Icon> icons = GenerateIcons();
 

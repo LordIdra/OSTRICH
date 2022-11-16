@@ -1,5 +1,7 @@
 #pragma once
 
+#include <util/Log.h>
+
 #include <string>
 #include <thread>
 #include <vector>
@@ -8,6 +10,7 @@
 #include <glm/glm.hpp>
 
 #include <depend/tracy-0.9/public/tracy/Tracy.hpp>
+
 
 
 

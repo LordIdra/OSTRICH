@@ -3,7 +3,7 @@
 #include <scenarios/YMLUtil.h>
 #include <scenarios/ScenarioFileUtil.h>
 #include <bodies/Massive.h>
-#include <main/Simulation.h>
+#include <simulation/Simulation.h>
 #include <rendering/shaders/Util.h>
 #include <main/Control.h>
 #include <util/Log.h>

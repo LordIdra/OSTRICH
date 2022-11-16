@@ -17,7 +17,6 @@ set(FILES
     "src/main/Bodies.cpp"
     "src/main/Control.cpp"
     "src/main/Main.cpp"
-    "src/main/Simulation.cpp"
     
     "src/scenarios/Scenarios.cpp"
     "src/scenarios/ScenarioFileUtil.cpp"
@@ -69,6 +68,10 @@ set(FILES
 
     "src/rendering/Texture.cpp"
     "src/rendering/VAO.cpp"
+
+    "src/simulation/Simulation.cpp"
+    "src/simulation/SimulationEnergy.cpp"
+    "src/simulation/SimulationState.cpp"
 )
 
 # Enable clang tidy checks

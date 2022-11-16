@@ -33,7 +33,7 @@ namespace Simulation {
         double simulationSpeed = INITIAL_SIMULATION_SPEED_MULTIPLIER;
         double simulationSpeedMultiplier = INITIAL_SIMULATION_SPEED_MULTIPLIER;
 
-        double timeSinceLastOrbitPointUpdate = 0;
+        double timeSinceLastStateUpdate = 0;
 
         int futurePointCount = 0;
 
@@ -85,8 +85,8 @@ namespace Simulation {
             // that the last frame encompassed
             // For example, if TimeStepSize is 10 and in one frame we moved 100 time steps,
             // we would do 11 updates
-            while (timeSinceLastOrbitPointUpdate >= Simulation::GetTimeStepSize()) {
-                timeSinceLastOrbitPointUpdate -= Simulation::GetTimeStepSize();
+            while (timeSinceLastStateUpdate >= Simulation::GetTimeStepSize()) {
+                timeSinceLastStateUpdate -= Simulation::GetTimeStepSize();
                 futurePointCount -= 1;
                 for (auto &pair : Bodies::GetMassiveBodies())  { UpdateBody(pair.first); }
                 for (auto &pair : Bodies::GetMasslessBodies()) { UpdateBody(pair.first); }
@@ -102,7 +102,7 @@ namespace Simulation {
     auto Update(const double deltaTime) -> void {
         // Update time
         timeStep += deltaTime * simulationSpeed;
-        timeSinceLastOrbitPointUpdate += deltaTime * simulationSpeed;
+        timeSinceLastStateUpdate += deltaTime * simulationSpeed;
 
         IncrementBodyOrbitPoints();
 
@@ -143,7 +143,7 @@ namespace Simulation {
         simulationSpeed = INITIAL_SIMULATION_SPEED_MULTIPLIER;
         simulationSpeedMultiplier = INITIAL_SIMULATION_SPEED_MULTIPLIER;
         timeStep = 0;
-        timeSinceLastOrbitPointUpdate = 0;
+        timeSinceLastStateUpdate = 0;
         pastPoints.clear();
         futurePoints.clear();
     }

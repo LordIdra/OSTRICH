@@ -1,8 +1,10 @@
 #include "Log.h"
 
 #include <iostream>
+#include <unordered_map>
 
 using std::cout;
+using std::unordered_map;
 
 
 namespace {

@@ -1,7 +1,8 @@
 #include "OrbitPaths.h"
-#include "main/OrbitPoint.h"
-#include "main/Simulation.h"
+#include <simulation/OrbitPoint.h>
+#include "simulation/Simulation.h"
 #include "rendering/VAO.h"
+#include "simulation/SimulationState.h"
 #include "util/Constants.h"
 #include "util/Log.h"
 
@@ -17,6 +18,7 @@
 #include <main/Bodies.h>
 
 #include <glad/glad.h>
+#include <utility>
 
 using std::unique_ptr;
 
@@ -37,22 +39,32 @@ namespace OrbitPaths {
         unique_ptr<VAO> pastPointsVAO;
         unique_ptr<Program> program;
 
-        auto ScalePointMap(unordered_map<string, vector<OrbitPoint>> &unscaledPointMap) -> unordered_map<string, vector<vec3>> {
-            unordered_map<string, vector<vec3>> worldPositionMap;
+        auto ScaleStateMap(vector<SimulationState> &unscaledPointMap) -> void {
+            ZoneScoped;
+            for (SimulationState &state : unscaledPointMap) {
+                state.Scale();
+            }
+        }
 
-            // For every body
-            for (auto &pair : unscaledPointMap) {
-                vector<vec3> newPositionVector;
-
-                // For every sequence associated with that body
-                for (OrbitPoint &point : pair.second) {
-                    newPositionVector.push_back(Rays::Scale(point.position));
-                }
-
-                worldPositionMap.insert(std::make_pair(pair.first, newPositionVector));
+        auto GetPositionMap(const vector<SimulationState> &futureStates) -> unordered_map<string, vector<vec3>> {
+            ZoneScoped;
+            unordered_map<string, vector<vec3>> positionMap;
+            
+            // Make sure every body has an entry in the map using the first state
+            for (const auto &pair : futureStates.at(0).GetOrbitPoints()) {
+                ZoneScoped;
+                positionMap.insert(std::make_pair(pair.first, vector<vec3>()));
             }
 
-            return worldPositionMap;
+            // Now add the positions for each body
+            for (const SimulationState &state : futureStates) {
+                ZoneScoped;
+                for (const auto &pair : state.GetOrbitPoints()) {
+                    positionMap.at(pair.first).push_back(pair.second.position);
+                }
+            }
+
+            return positionMap;
         }
 
         auto AddVertex(vector<VERTEX_DATA_TYPE> &vertices, const vec3 position, const vec3 color) -> void {
@@ -64,7 +76,8 @@ namespace OrbitPaths {
             vertices.push_back(color.z);
         }
 
-        auto DrawFuturePointMap(const unordered_map<string, vector<vec3>>&pointMap, const unsigned int drawMethod) -> void {
+        auto DrawFuturePointMap(const unordered_map<string, vector<vec3>> &pointMap, const unsigned int drawMethod) -> void {
+            ZoneScoped;
             // Iterate through every body
             for (const auto &pair : pointMap) {
                 vector<VERTEX_DATA_TYPE> vertices;
@@ -98,9 +111,10 @@ namespace OrbitPaths {
             }
         }
 
-        auto DrawPastPointMap(const unordered_map<string, vector<vec3>>&pointMap, const unsigned int drawMethod) -> void {
+        auto DrawPastPointMap(unordered_map<string, vector<vec3>>  &positionMap, const unsigned int drawMethod) -> void {
+            ZoneScoped;
             // Iterate through every body
-            for (const auto &pair : pointMap) {
+            for (const auto &pair : positionMap) {
                 vector<VERTEX_DATA_TYPE> vertices;
 
                 // Use color of the body for color of orbit path
@@ -175,14 +189,21 @@ namespace OrbitPaths {
     }
 
     auto Update() -> void {
+        ZoneScoped;
         // Future points
-        unordered_map<string, vector<OrbitPoint>> unscaledFuturePointMap = Simulation::GetFutureOrbitPoints();
-        unordered_map<string, vector<vec3>> scaledFuturePointMap = ScalePointMap(unscaledFuturePointMap);
-        DrawFuturePointMap(scaledFuturePointMap, GL_POINTS);
+        vector<SimulationState> futureStates = Simulation::GetFutureStates();
+        if (!futureStates.empty()) {
+            ScaleStateMap(futureStates);
+            unordered_map<string, vector<vec3>> futurePoints = GetPositionMap(futureStates);
+            DrawFuturePointMap(futurePoints, GL_POINTS);
+        }
 
         // Past points
-        unordered_map<string, vector<OrbitPoint>> unscaledPastPointMap = Simulation::GetPastOrbitPoints();
-        unordered_map<string, vector<vec3>> scaledPastPointMap = ScalePointMap(unscaledPastPointMap);
-        DrawPastPointMap(scaledPastPointMap, GL_LINE_STRIP);
+        vector<SimulationState> pastStates = Simulation::GetPastStates();
+        if (!pastStates.empty()) {
+            ScaleStateMap(pastStates);
+            unordered_map<string, vector<vec3>> pastPoints = GetPositionMap(pastStates);
+            DrawPastPointMap(pastPoints, GL_LINE_STRIP);
+        }
     }
 }

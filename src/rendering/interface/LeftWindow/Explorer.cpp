@@ -2,7 +2,7 @@
 
 #include <rendering/interface/Fonts.h>
 #include <rendering/camera/CameraTransition.h>
-#include <main/Simulation.h>
+#include <simulation/Simulation.h>
 #include <main/Bodies.h>
 
 #include <algorithm>
