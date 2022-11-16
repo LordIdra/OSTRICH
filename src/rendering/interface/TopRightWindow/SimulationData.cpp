@@ -44,6 +44,8 @@ namespace SimulationData {
 
         const string RESET_TEXT = ICON_MDI_REFRESH + string(" Reset Data");
 
+        const unsigned int MAX_DATA_POINTS = 700;
+
         auto AddEnergyDeviation() -> void {
             ZoneScoped;
             if (ImPlot::BeginPlot("Energy Deviation", ENERGY_DEVIATION_PLOT_SIZE)) {
@@ -150,6 +152,20 @@ namespace SimulationData {
             bodyEnergyPotential.at(pair.first).push_back(SimulationEnergy::GetPotentialEnergy(pair.second));
             bodyEnergyTotal.at(pair.first).push_back(SimulationEnergy::GetTotalEnergy(pair.second));
         }
+
+        auto RemoveFirstElement(vector<double> &data) -> void {
+            data.erase(data.begin());
+        }
+
+        auto ClipData() -> void {
+            if (timeValues.size() > MAX_DATA_POINTS) {
+                RemoveFirstElement(timeValues);
+                RemoveFirstElement(energyDeviation);
+                RemoveFirstElement(simulationEnergyKinetic);
+                RemoveFirstElement(simulationEnergyPotential);
+                RemoveFirstElement(simulationEnergyTotal);
+            }
+        }
     }
 
     auto PreReset() -> void {
@@ -202,6 +218,7 @@ namespace SimulationData {
         for (const auto &pair : Bodies::GetMasslessBodies()) {
             UpdateBodyEnergy(pair);
         }
+        ClipData();
 
         // Render graphs
         ImGui::PushFont(Fonts::Data());
