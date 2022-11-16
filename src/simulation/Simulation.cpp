@@ -1,6 +1,6 @@
 #include "Simulation.h"
-#include "simulation/SimulationState.h"
 
+#include <rendering/world/OrbitPaths.h>
 #include <bodies/Body.h>
 #include <glm/gtx/string_cast.hpp>
 #include <input/Keys.h>
@@ -129,12 +129,14 @@ namespace Simulation {
             timeSinceLastStateUpdate -= Simulation::GetTimeStepSize();
             for (const auto &pair : Bodies::GetMassiveBodies())  { StepBodyToNextState(pair.first); }
             for (const auto &pair : Bodies::GetMasslessBodies()) { StepBodyToNextState(pair.first); }
+            OrbitPaths::StepToNextState(futureStates.at(0));
             MoveLatestFutureStateToPastState();
         }
 
         while (futureStates.size() < MAX_FUTURE_STATES) {
             SimulationState latestState = futureStates.at(futureStates.size()-1);
             latestState.StepToNextState(TIME_STEP_SIZE);
+            OrbitPaths::AddNewState(latestState);
             std::lock_guard<std::mutex> lock(stateVectorMutex);
             futureStates.push_back(latestState);
         }
@@ -148,6 +150,10 @@ namespace Simulation {
     auto GetFutureStates() -> vector<SimulationState> {
         std::lock_guard<std::mutex> lock(stateVectorMutex);
         return futureStates;
+    }
+
+    auto GetMaxFutureStates() -> unsigned int {
+        return MAX_FUTURE_STATES;
     }
 
     auto GetSpeedValue() -> double {

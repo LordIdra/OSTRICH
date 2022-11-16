@@ -167,6 +167,10 @@ namespace SimulationData {
                 RemoveFirstElement(simulationEnergyKinetic);
                 RemoveFirstElement(simulationEnergyPotential);
                 RemoveFirstElement(simulationEnergyTotal);
+
+                for (auto &pair : bodyEnergyKinetic)   { RemoveFirstElement(pair.second); }
+                for (auto &pair : bodyEnergyPotential) { RemoveFirstElement(pair.second); }
+                for (auto &pair : bodyEnergyTotal)     { RemoveFirstElement(pair.second); }
             }
         }
     }

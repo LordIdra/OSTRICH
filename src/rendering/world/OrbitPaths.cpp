@@ -1,6 +1,6 @@
 #include "OrbitPaths.h"
+
 #include <simulation/OrbitPoint.h>
-#include "simulation/Simulation.h"
 #include "rendering/VAO.h"
 #include "simulation/SimulationState.h"
 #include "util/Constants.h"
@@ -34,37 +34,27 @@ namespace OrbitPaths {
         const float DISTANCE_THRESHOLD = 0.01;
         const float RATIO_OF_FUTURE_POINTS_TO_FADE_OVER = 0.05;
         const float PAST_POINT_BRIGHTNESS = 0.4;
+        const unsigned int MAX_PAST_STATES = 500;
 
         unique_ptr<VAO> futurePointsVAO;
         unique_ptr<VAO> pastPointsVAO;
         unique_ptr<Program> program;
+
+        vector<VERTEX_DATA_TYPE> futureVertices;
+        unordered_map<string, vector<VERTEX_DATA_TYPE>> pastVertices;
+
+        auto RemoveVertex(vector<VERTEX_DATA_TYPE> &data) -> void {
+            // One vertex has STRIDE elements hence the for loop
+            for (int i = 0; i < STRIDE; i++) {
+                data.erase(data.begin());
+            }
+        }
 
         auto ScaleStateMap(vector<SimulationState> &unscaledPointMap) -> void {
             ZoneScoped;
             for (SimulationState &state : unscaledPointMap) {
                 state.Scale();
             }
-        }
-
-        auto GetPositionMap(const vector<SimulationState> &futureStates) -> unordered_map<string, vector<vec3>> {
-            ZoneScoped;
-            unordered_map<string, vector<vec3>> positionMap;
-            
-            // Make sure every body has an entry in the map using the first state
-            for (const auto &pair : futureStates.at(0).GetOrbitPoints()) {
-                ZoneScoped;
-                positionMap.insert(std::make_pair(pair.first, vector<vec3>()));
-            }
-
-            // Now add the positions for each body
-            for (const SimulationState &state : futureStates) {
-                ZoneScoped;
-                for (const auto &pair : state.GetOrbitPoints()) {
-                    positionMap.at(pair.first).push_back(pair.second.position);
-                }
-            }
-
-            return positionMap;
         }
 
         auto AddVertex(vector<VERTEX_DATA_TYPE> &vertices, const vec3 position, const vec3 color) -> void {
@@ -76,68 +66,20 @@ namespace OrbitPaths {
             vertices.push_back(color.z);
         }
 
-        auto DrawFuturePointMap(const unordered_map<string, vector<vec3>> &pointMap, const unsigned int drawMethod) -> void {
+        auto DrawFuturePoints(const unsigned int drawMethod) -> void {
             ZoneScoped;
-            // Iterate through every body
-            for (const auto &pair : pointMap) {
-                vector<VERTEX_DATA_TYPE> vertices;
-
-                // Use color of the body for color of orbit path
-                vec3 color = Bodies::GetBody(pair.first).GetColor();
-
-                int numberOfPointsToFadeOver = int(pair.second.size() * RATIO_OF_FUTURE_POINTS_TO_FADE_OVER);
-
-                // Iterate through every sequence for the corresponding body
-                int i = 0;
-                for (const vec3 &position : pair.second) {
-
-                    // Figure out the color of this vertex
-                    vec3 vertexColor = color;
-                    if (pair.second.size() - i < numberOfPointsToFadeOver) {
-                        float brightness = (float(pair.second.size() - i) / float(numberOfPointsToFadeOver));
-                        vertexColor *= brightness;
-                    }
-
-                    i++;
-
-                    // Add new vertices (two triangles to form a quadrilateral)
-                    AddVertex(vertices, position, vertexColor);
-                }
-
-                program->Use();
-                program->Set("cameraMatrix", Camera::GetMatrix());
-                futurePointsVAO->Data(vertices, vertices.size() / STRIDE, GL_DYNAMIC_DRAW);
-                futurePointsVAO->Render(drawMethod);
-            }
+            program->Use();
+            program->Set("cameraMatrix", Camera::GetMatrix());
+            futurePointsVAO->Data(futureVertices, futureVertices.size() / STRIDE, GL_DYNAMIC_DRAW);
+            futurePointsVAO->Render(drawMethod);
         }
 
-        auto DrawPastPointMap(unordered_map<string, vector<vec3>>  &positionMap, const unsigned int drawMethod) -> void {
+        auto DrawPastPoints(const unsigned int drawMethod) -> void {
             ZoneScoped;
-            // Iterate through every body
-            for (const auto &pair : positionMap) {
-                vector<VERTEX_DATA_TYPE> vertices;
-
-                // Use color of the body for color of orbit path
-                vec3 color = Bodies::GetBody(pair.first).GetColor();
-
-                int numberOfPointsToFadeOver = pair.second.size();
-
-                // Iterate through every sequence for the corresponding body
-                int i = 0;
-                for (const vec3 &position : pair.second) {
-
-                    // Figure out the color of this vertex
-                    float brightness = float(i) / float(numberOfPointsToFadeOver);
-                    vec3 vertexColor = color * brightness * PAST_POINT_BRIGHTNESS;
-                    i++;
-
-                    // Add new vertices (two triangles to form a quadrilateral)
-                    AddVertex(vertices, position, vertexColor);
-                }
-
-                program->Use();
-                program->Set("cameraMatrix", Camera::GetMatrix());
-                futurePointsVAO->Data(vertices, vertices.size() / STRIDE, GL_DYNAMIC_DRAW);
+            program->Use();
+            program->Set("cameraMatrix", Camera::GetMatrix());
+            for (const auto &pair : pastVertices) {
+                futurePointsVAO->Data(pair.second, pair.second.size() / STRIDE, GL_DYNAMIC_DRAW);
                 futurePointsVAO->Render(drawMethod);
             }
         }
@@ -188,22 +130,50 @@ namespace OrbitPaths {
             .offset = (void*)(3 * sizeof(float))}); // NOLINT(cppcoreguidelines-pro-type-cstyle-cast)
     }
 
+    auto NewBodyReset() -> void {
+        futureVertices.clear();
+        pastVertices.clear();
+        for (const auto &pair : Bodies::GetMassiveBodies()) {
+            pastVertices.insert(std::make_pair(pair.first, vector<VERTEX_DATA_TYPE>()));
+        }
+        for (const auto &pair : Bodies::GetMasslessBodies()) {
+            pastVertices.insert(std::make_pair(pair.first, vector<VERTEX_DATA_TYPE>()));
+        }
+    }
+
     auto Update() -> void {
         ZoneScoped;
-        // Future points
-        vector<SimulationState> futureStates = Simulation::GetFutureStates();
-        if (!futureStates.empty()) {
-            ScaleStateMap(futureStates);
-            unordered_map<string, vector<vec3>> futurePoints = GetPositionMap(futureStates);
-            DrawFuturePointMap(futurePoints, GL_POINTS);
-        }
+        DrawFuturePoints(GL_POINTS);
+        DrawPastPoints(GL_LINE_STRIP);
+    }
 
-        // Past points
-        vector<SimulationState> pastStates = Simulation::GetPastStates();
-        if (!pastStates.empty()) {
-            ScaleStateMap(pastStates);
-            unordered_map<string, vector<vec3>> pastPoints = GetPositionMap(pastStates);
-            DrawPastPointMap(pastPoints, GL_LINE_STRIP);
+    auto AddNewState(const SimulationState &state) -> void {
+        ZoneScoped;
+        // Add new state to future vertices
+        for (const auto &pair : state.GetOrbitPoints()) {
+            AddVertex(futureVertices, Rays::Scale(pair.second.position), Bodies::GetBody(pair.first).GetColor());
+        }
+    }
+
+    auto StepToNextState(const SimulationState &state) -> void {
+        ZoneScoped;
+        // The first vertices are now past points, so move them to the past points vector
+        for (const auto &pair : state.GetOrbitPoints()) {
+            vector<VERTEX_DATA_TYPE> &pastBodyVertices = pastVertices.at(pair.first);
+            Body body = Bodies::GetBody(pair.first);
+
+            AddVertex(
+                pastBodyVertices, 
+                Rays::Scale(pair.second.position), 
+                body.GetColor());
+
+            // If there are too many vertices in the past vertex vector, remove the first element of it (tail of the path)
+            if (pastBodyVertices.size() > MAX_PAST_STATES) {
+                RemoveVertex(pastBodyVertices);
+            }
+
+            // Remove the first element of the future vertex map (the one we just moved to)
+            RemoveVertex(futureVertices);
         }
     }
 }

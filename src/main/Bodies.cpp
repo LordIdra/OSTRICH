@@ -12,11 +12,11 @@
 #include <input/Keys.h>
 #include <input/Mouse.h>
 #include <rendering/world/MassiveRender.h>
+#include <rendering/world/OrbitPaths.h>
 #include <simulation/OrbitPoint.h>
 
 #include <GLFW/glfw3.h>
 #include <string>
-
 
 
 
@@ -68,6 +68,7 @@ namespace Bodies {
     auto AddBody(const Massless &body) -> void {
         masslessBodies.insert(std::make_pair(body.GetId(), body));
         Simulation::NewBodyReset();
+        OrbitPaths::NewBodyReset();
     }
 
     auto UpdateBody(const string &id, const OrbitPoint &point) -> void {
@@ -126,5 +127,9 @@ namespace Bodies {
         }
         // Yes, technically the id may not exist, but this is REALLY unlikely unless some code is very obviously wrong in other ways
         return masslessBodies.at(id);
+    }
+
+    auto GetBodyCount() -> unsigned int {
+        return massiveBodies.size() + masslessBodies.size();
     }
 }

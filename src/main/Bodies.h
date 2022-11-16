@@ -32,4 +32,6 @@ namespace Bodies {
 
     auto GetPastPoints() -> unordered_map<string, vector<OrbitPoint>>;
     auto GetFuturePoints() -> unordered_map<string, vector<OrbitPoint>>;
+
+    auto GetBodyCount() -> unsigned int;
 }

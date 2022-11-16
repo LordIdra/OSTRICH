@@ -149,6 +149,7 @@ namespace Control {
     }
 
     auto Mainloop() -> void {
+        int i = 0;
         while (!Window::ShouldClose()) {
             deltaTime = glfwGetTime() - previousTime;
             previousTime = glfwGetTime();
@@ -161,22 +162,18 @@ namespace Control {
             }
             
             std::thread simulationUpdateThread(Simulation::Update, deltaTime);
-
             Camera::Update();
             CameraTransition::Update(deltaTime);
             MassiveRender::Update();
-            OrbitPaths::Update();
             Icons::Update();
             Interface::Update(deltaTime);
-
+            simulationUpdateThread.join();
+            OrbitPaths::Update();
 
             Mouse::Update();
             Keys::Update();
             glfwPollEvents();
             Window::Update();
-            
-            simulationUpdateThread.join();
-
             FrameMark;
         }
     }
