@@ -55,11 +55,13 @@ namespace ScenarioExplorer {
         }
 
         auto AddAllBodies(vector<string> &bodyIds) -> void {
+            ZoneScoped;
             for (const auto &pair : Bodies::GetMassiveBodies())  { bodyIds.push_back(pair.first); }
             for (const auto &pair : Bodies::GetMasslessBodies()) { bodyIds.push_back(pair.first); }
         }
 
         auto AddNameSelectable(const string &id, const string &name) -> void {
+            ZoneScoped;
             ImGui::TableNextColumn();
             if (ImGui::Selectable(Fonts::NormalizeString(Fonts::MainBig(), name, NAME_WIDTH).c_str(), id == Bodies::GetSelectedBody(), ImGuiSelectableFlags_SpanAllColumns)) {
                 CameraTransition::SetTargetBody(id);
@@ -67,11 +69,13 @@ namespace ScenarioExplorer {
         }
 
         auto AddMassiveMassText(const double mass) -> void {
+            ZoneScoped;
             ImGui::TableNextColumn();
             ImGui::Text("%.2e %s", mass, "kg");
         }
 
         auto AddBodiesToTable(const vector<string> &bodyIds) -> void {
+            ZoneScoped;
             ImGui::PushFont(Fonts::Data());
             for (const string &id : bodyIds) {
                 Body body = Bodies::GetBody(id);
@@ -110,6 +114,7 @@ namespace ScenarioExplorer {
     }
 
     auto Draw() -> void {
+        ZoneScoped;
         // Begin
         ImGui::BeginTable("scenario-explorer", 2, EXPLORER_FLAGS, TABLE_SIZE);
 

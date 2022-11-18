@@ -41,6 +41,7 @@ set(FILES
     "src/rendering/geometry/Transition.cpp"
     "src/rendering/geometry/Sphere.cpp"
 
+    "src/rendering/world/VertexQueue.cpp"
     "src/rendering/world/MassiveRender.cpp"
     "src/rendering/world/OrbitPaths.cpp"
     "src/rendering/world/Icon.cpp"

@@ -29,11 +29,9 @@ namespace Simulation {
         const unsigned int INITIAL_TIME_SINCE_LAST_STATE_UPDATE = 0;
 
         const unsigned int SPEED_MULTIPLIER = 4;
-        const unsigned int MAX_SPEED_DEGREE = 13;
-        const unsigned int MAX_SPEED = 2000000; // (speedMultiplier^maxSpeedDegree) + 1
+        const unsigned int MAX_SPEED_DEGREE = 15;
+        const unsigned int MAX_SPEED = 20000000; // (speedMultiplier^maxSpeedDegree) + 1
         const unsigned int MIN_SPEED = 1;
-        const unsigned int MAX_FUTURE_STEP = 5000;
-        const unsigned int MAX_PAST_STATES = 500;
 
         const unsigned int TIME_STEP_SIZE = 1000;
 
@@ -145,7 +143,7 @@ namespace Simulation {
             futureStep--;
         }
 
-        while (futureStep < MAX_FUTURE_STEP) {
+        while (futureStep < OrbitPaths::GetMaxFutureStates()) {
             futureState.StepToNextState(TIME_STEP_SIZE);
             OrbitPaths::AddNewState(futureState);
             futureStep++;

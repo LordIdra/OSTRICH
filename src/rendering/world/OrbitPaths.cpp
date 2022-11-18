@@ -1,5 +1,6 @@
 #include "OrbitPaths.h"
 
+#include <GL/gl.h>
 #include <simulation/OrbitPoint.h>
 #include "rendering/VAO.h"
 #include "simulation/SimulationState.h"
@@ -17,7 +18,6 @@
 #include <util/Types.h>
 #include <main/Bodies.h>
 
-#include <glad/glad.h>
 #include <utility>
 
 using std::unique_ptr;
@@ -28,13 +28,20 @@ namespace OrbitPaths {
 
     namespace {
 
+        const unsigned int MAX_FUTURE_STATES = 5000;
+        const unsigned int MAX_PAST_STATES = 500;
+
         const int STRIDE = 6;
         const float PATH_WIDTH = 0.005;
         const vec3 PATH_COLOR = vec3(0.0, 0.0, 0.9);
         const float DISTANCE_THRESHOLD = 0.01;
         const float RATIO_OF_FUTURE_POINTS_TO_FADE_OVER = 0.05;
         const float PAST_POINT_BRIGHTNESS = 0.4;
-        const unsigned int MAX_PAST_STATES = 500;
+
+        std::mutex threadMutex;
+
+        int pastVerticesToRemoveNextFramePerBody = 0;
+        int futureVerticesToRemoveNextFrame = 0;
 
         unique_ptr<VAO> futurePointsVAO;
         unique_ptr<VAO> pastPointsVAO;
@@ -43,11 +50,14 @@ namespace OrbitPaths {
         vector<VERTEX_DATA_TYPE> futureVertices;
         unordered_map<string, vector<VERTEX_DATA_TYPE>> pastVertices;
 
-        auto RemoveVertex(vector<VERTEX_DATA_TYPE> &data) -> void {
-            // One vertex has STRIDE elements hence the for loop
-            for (int i = 0; i < STRIDE; i++) {
-                data.erase(data.begin());
+        auto RemoveScheduledVertices() -> void {
+            ZoneScoped;
+            std::lock_guard<std::mutex> lock(threadMutex);
+            for (auto &pair : pastVertices) {
+                Log(INFO, std::to_string(pair.second.size()));
+                pair.second.erase(pair.second.begin(), pair.second.begin() + pastVerticesToRemoveNextFramePerBody*STRIDE);
             }
+            futureVertices.erase(futureVertices.begin(), futureVertices.begin() + futureVerticesToRemoveNextFrame*STRIDE);
         }
 
         auto ScaleStateMap(vector<SimulationState> &unscaledPointMap) -> void {
@@ -58,12 +68,13 @@ namespace OrbitPaths {
         }
 
         auto AddVertex(vector<VERTEX_DATA_TYPE> &vertices, const vec3 position, const vec3 color) -> void {
+            ZoneScoped;
             vertices.push_back(position.x);
             vertices.push_back(position.y);
             vertices.push_back(position.z);
-            vertices.push_back(color.x);
-            vertices.push_back(color.y);
-            vertices.push_back(color.z);
+            vertices.push_back(color.r);
+            vertices.push_back(color.g);
+            vertices.push_back(color.b);
         }
 
         auto DrawFuturePoints(const unsigned int drawMethod) -> void {
@@ -78,9 +89,10 @@ namespace OrbitPaths {
             ZoneScoped;
             program->Use();
             program->Set("cameraMatrix", Camera::GetMatrix());
+
             for (const auto &pair : pastVertices) {
-                futurePointsVAO->Data(pair.second, pair.second.size() / STRIDE, GL_DYNAMIC_DRAW);
-                futurePointsVAO->Render(drawMethod);
+                pastPointsVAO->Data(pair.second, pair.second.size() / STRIDE, GL_DYNAMIC_DRAW);
+                pastPointsVAO->Render(drawMethod);
             }
         }
     }
@@ -131,7 +143,9 @@ namespace OrbitPaths {
     }
 
     auto NewBodyReset() -> void {
-        futureVertices.clear();
+        std::lock_guard<std::mutex> lock(threadMutex);
+        futureVertices = vector<VERTEX_DATA_TYPE>();
+
         pastVertices.clear();
         for (const auto &pair : Bodies::GetMassiveBodies()) {
             pastVertices.insert(std::make_pair(pair.first, vector<VERTEX_DATA_TYPE>()));
@@ -143,6 +157,9 @@ namespace OrbitPaths {
 
     auto Update() -> void {
         ZoneScoped;
+        RemoveScheduledVertices();
+        futureVerticesToRemoveNextFrame = 0;
+        pastVerticesToRemoveNextFramePerBody = 0;
         DrawFuturePoints(GL_POINTS);
         DrawPastPoints(GL_LINE_STRIP);
     }
@@ -150,6 +167,7 @@ namespace OrbitPaths {
     auto AddNewState(const SimulationState &state) -> void {
         ZoneScoped;
         // Add new state to future vertices
+        std::lock_guard<std::mutex> lock(threadMutex);
         for (const auto &pair : state.GetOrbitPoints()) {
             AddVertex(futureVertices, Rays::Scale(pair.second.position), Bodies::GetBody(pair.first).GetColor());
         }
@@ -157,10 +175,13 @@ namespace OrbitPaths {
 
     auto StepToNextState(const SimulationState &state) -> void {
         ZoneScoped;
+        std::lock_guard<std::mutex> lock(threadMutex);
         // The first vertices are now past points, so move them to the past points vector
+        bool deletePastVertex = false;
         for (const auto &pair : state.GetOrbitPoints()) {
+            ZoneScoped;
             vector<VERTEX_DATA_TYPE> &pastBodyVertices = pastVertices.at(pair.first);
-            Body body = Bodies::GetBody(pair.first);
+            const Body &body = Bodies::GetBody(pair.first);
 
             AddVertex(
                 pastBodyVertices, 
@@ -169,11 +190,19 @@ namespace OrbitPaths {
 
             // If there are too many vertices in the past vertex vector, remove the first element of it (tail of the path)
             if (pastBodyVertices.size() > MAX_PAST_STATES) {
-                RemoveVertex(pastBodyVertices);
+                deletePastVertex = true;
             }
 
             // Remove the first element of the future vertex map (the one we just moved to)
-            RemoveVertex(futureVertices);
+            futureVerticesToRemoveNextFrame++;
         }
+
+        if (deletePastVertex) {
+            pastVerticesToRemoveNextFramePerBody++;
+        }
+    }
+
+    auto GetMaxFutureStates() -> unsigned int {
+        return MAX_FUTURE_STATES;
     }
 }

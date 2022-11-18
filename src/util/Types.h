@@ -5,6 +5,7 @@
 #include <string>
 #include <thread>
 #include <vector>
+#include <queue>
 #include <unordered_map>
 
 #include <glm/glm.hpp>
@@ -21,6 +22,7 @@ using std::string;
 using std::vector;        // NOLINT(misc-unused-using-decls)
 using std::unordered_map; // NOLINT(misc-unused-using-decls)
 using std::thread;        // NOLINT(misc-unused-using-decls)
+using std::queue;         // NOLINT(misc-unused-using-decls)
 
 using glm::vec2;
 using glm::vec3;

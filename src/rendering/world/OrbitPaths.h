@@ -11,4 +11,6 @@ namespace OrbitPaths {
     
     auto AddNewState(const SimulationState &state) -> void;
     auto StepToNextState(const SimulationState &state) -> void;
+
+    auto GetMaxFutureStates() -> unsigned int;
 }

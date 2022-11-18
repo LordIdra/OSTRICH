@@ -151,12 +151,12 @@ namespace Control {
     auto Mainloop() -> void {
         int i = 0;
         while (!Window::ShouldClose()) {
-            Simulation::FrameUpdate();
-            
-            std::thread simulationUpdateThread(Simulation::Update, deltaTime);
 
             deltaTime = glfwGetTime() - previousTime;
             previousTime = glfwGetTime();
+            
+            Simulation::FrameUpdate();
+            std::thread simulationUpdateThread(Simulation::Update, deltaTime);
 
             Window::Background(WINDOW_BACKGROUND);
             Camera::AddZoomDelta(Mouse::GetScrollDelta().y);
@@ -165,18 +165,20 @@ namespace Control {
                 Camera::AddAngleDelta(Mouse::GetPositionDelta());
             }
             
+            Interface::Update(deltaTime);
             Camera::Update();
             CameraTransition::Update(deltaTime);
             MassiveRender::Update();
             Icons::Update();
-            Interface::Update(deltaTime);
             OrbitPaths::Update();
 
             Mouse::Update();
             Keys::Update();
             glfwPollEvents();
             Window::Update();
+
             simulationUpdateThread.join();
+            
             FrameMark;
         }
     }

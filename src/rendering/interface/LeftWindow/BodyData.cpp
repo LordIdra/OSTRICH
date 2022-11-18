@@ -28,67 +28,73 @@ namespace BodyData {
         const ImGuiTableFlags TABLE_FLAGS = ImGuiTableFlags_SizingFixedFit | ImGuiTableFlags_NoPadOuterX | ImGuiTableFlags_NoPadInnerX | ImGuiTableFlags_SizingFixedFit;
 
         auto AddMass(const Body &body) -> void {
-             ImGui::PushFont(Fonts::Main());
-             ImGui::TableNextColumn();
-             ImGui::Text("%s", MASS_TEXT.c_str());
-             ImGui::PopFont();
+            ZoneScoped;
+            ImGui::PushFont(Fonts::Main());
+            ImGui::TableNextColumn();
+            ImGui::Text("%s", MASS_TEXT.c_str());
+            ImGui::PopFont();
 
-             ImGui::PushFont(Fonts::Data());
-             ImGui::TableNextColumn();
-             ImGui::Text("%.2e %s", body.GetMass(), "kg");
-             ImGui::PopFont();
+            ImGui::PushFont(Fonts::Data());
+            ImGui::TableNextColumn();
+            ImGui::Text("%.2e %s", body.GetMass(), "kg");
+            ImGui::PopFont();
          }
 
          auto AddRadius(const Body &body) -> void {
-             ImGui::PushFont(Fonts::Main());
-             ImGui::TableNextColumn();
-             ImGui::Text("%s", RADIUS_TEXT.c_str());
-             ImGui::PopFont();
+            ZoneScoped;
+            ImGui::PushFont(Fonts::Main());
+            ImGui::TableNextColumn();
+            ImGui::Text("%s", RADIUS_TEXT.c_str());
+            ImGui::PopFont();
 
-             ImGui::PushFont(Fonts::Data());
-             ImGui::TableNextColumn();
-             ImGui::Text("%.2e %s", body.GetRadius(), "m");
-             ImGui::PopFont();
+            ImGui::PushFont(Fonts::Data());
+            ImGui::TableNextColumn();
+            ImGui::Text("%.2e %s", body.GetRadius(), "m");
+            ImGui::PopFont();
          }
 
          auto AddColor(const Body &body) -> void {
-             ImGui::PushFont(Fonts::Main());
-             ImGui::TableNextColumn();
-             ImGui::Text("%s", COLOR_TEXT.c_str());
-             ImGui::PopFont();
+            ZoneScoped;
+            ImGui::PushFont(Fonts::Main());
+            ImGui::TableNextColumn();
+            ImGui::Text("%s", COLOR_TEXT.c_str());
+            ImGui::PopFont();
 
-             ImGui::PushFont(Fonts::Data());
-             ImGui::TableNextColumn();
-             ImVec4 color = ImVec4(body.GetColor().r, body.GetColor().g, body.GetColor().b, 1.0F);
-             ImGui::ColorEdit3("Body Colour", (float*)&color, ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel); //NOLINT(cppcoreguidelines-pro-type-cstyle-cast)
-             ImGui::PopFont();
+            ImGui::PushFont(Fonts::Data());
+            ImGui::TableNextColumn();
+            ImVec4 color = ImVec4(body.GetColor().r, body.GetColor().g, body.GetColor().b, 1.0F);
+            ImGui::ColorEdit3("Body Colour", (float*)&color, ImGuiColorEditFlags_NoInputs |ImGuiColorEditFlags_NoLabel); //NOLINT(cppcoreguidelines-pro-type-cstyle-cast)
+            ImGui::PopFont();
          }
 
          auto AddSpeed(const Body &body) -> void {
-             ImGui::PushFont(Fonts::Main());
-             ImGui::TableNextColumn();
-             ImGui::Text("%s", SPEED_TEXT.c_str());
-             ImGui::PopFont();
+            ZoneScoped;
+            ImGui::PushFont(Fonts::Main());
+            ImGui::TableNextColumn();
+            ImGui::Text("%s", SPEED_TEXT.c_str());
+            ImGui::PopFont();
 
-             ImGui::PushFont(Fonts::Data());
-             ImGui::TableNextColumn();
-             ImGui::Text("%.2e %s", glm::length(body.GetVelocity()), "m/s");
-             ImGui::PopFont();
+            ImGui::PushFont(Fonts::Data());
+            ImGui::TableNextColumn();
+            ImGui::Text("%.2e %s", glm::length(body.GetVelocity()), "m/s");
+            ImGui::PopFont();
          }
 
          auto AddAcceleration(const Body &body) -> void {
-             ImGui::PushFont(Fonts::Main());
-             ImGui::TableNextColumn();
-             ImGui::Text("%s", ACCELERATION_TEXT.c_str());
-             ImGui::PopFont();
+            ZoneScoped;
+            ImGui::PushFont(Fonts::Main());
+            ImGui::TableNextColumn();
+            ImGui::Text("%s", ACCELERATION_TEXT.c_str());
+            ImGui::PopFont();
 
-             ImGui::PushFont(Fonts::Data());
-             ImGui::TableNextColumn();
-             ImGui::Text("%.2e", glm::length(Simulation::GetAcceleration(body.GetId())));
-             ImGui::PopFont();
+            ImGui::PushFont(Fonts::Data());
+            ImGui::TableNextColumn();
+            ImGui::Text("%.2e", glm::length(Simulation::GetAcceleration(body.GetId())));
+            ImGui::PopFont();
          }
 
         auto AddKineticEnergy(const Body &body) -> void {
+            ZoneScoped;
             ImGui::PushFont(Fonts::Main());
             ImGui::TableNextColumn();
             ImGui::Text("%s", KINETIC_ENERGY_TEXT.c_str());
@@ -101,6 +107,7 @@ namespace BodyData {
         }
 
         auto AddPotentialEnergy(const Body &body) -> void {
+            ZoneScoped;
             ImGui::PushFont(Fonts::Main());
             ImGui::TableNextColumn();
             ImGui::Text("%s", POTENTIAL_ENERGY_TEXT.c_str());
@@ -113,6 +120,7 @@ namespace BodyData {
         }
 
         auto AddTotalEnergy(const Body &body) -> void {
+            ZoneScoped;
             ImGui::PushFont(Fonts::Main());
             ImGui::TableNextColumn();
             ImGui::Text("%s", TOTAL_ENERGY_TEXT.c_str());
@@ -126,6 +134,7 @@ namespace BodyData {
     }
 
     auto Draw() -> void {
+        ZoneScoped;
         // If no body is selected, we don't need to add anything for this section
         if (Bodies::GetSelectedType() == BODY_TYPE_NONE) {
             return;

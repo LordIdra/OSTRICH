@@ -20,7 +20,7 @@ public:
     static auto Unbind() -> void;
 
     auto AddVertexAttribute(const VertexAttribute &attribute) const -> void;
-    auto Data(const vector<VERTEX_DATA_TYPE> &data, unsigned int vertexCount, unsigned int mode) -> void;
+    auto Data(const vector<VERTEX_DATA_TYPE> &data, const unsigned int vertexCount, const unsigned int mode) -> void;
 
     auto Render(unsigned int geometryType) const -> void;
 
