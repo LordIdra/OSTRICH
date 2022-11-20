@@ -18,5 +18,5 @@ public:
     auto GetSphereVertices() const -> vector<VERTEX_DATA_TYPE>;
     auto GetMaterial() const -> Material;
     auto GetMatrix() const -> mat4;
-
+    auto GetMinZoom() const -> double;
 };

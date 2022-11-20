@@ -40,16 +40,14 @@ namespace SimulationEnergy {
     auto GetSimulationKineticEnergy() -> double {
         ZoneScoped;
         double energy = 0;
-        for (const auto &pair : Bodies::GetMassiveBodies())  { energy += GetKineticEnergy(pair.second); }
-        for (const auto &pair : Bodies::GetMasslessBodies()) { energy += GetKineticEnergy(pair.second); }
+        for (const auto &pair : Bodies::GetBodies())  { energy += GetKineticEnergy(pair.second); }
         return energy;
     }
 
     auto GetSimulationPotentialEnergy() -> double {
         ZoneScoped;
         double energy = 0;
-        for (const auto &pair : Bodies::GetMassiveBodies())  { energy += GetPotentialEnergy(pair.second); }
-        for (const auto &pair : Bodies::GetMasslessBodies()) { energy += GetPotentialEnergy(pair.second); }
+        for (const auto &pair : Bodies::GetBodies())  { energy += GetPotentialEnergy(pair.second); }
         return energy;
     }
 

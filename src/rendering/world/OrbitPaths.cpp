@@ -54,7 +54,6 @@ namespace OrbitPaths {
             ZoneScoped;
             std::lock_guard<std::mutex> lock(threadMutex);
             for (auto &pair : pastVertices) {
-                Log(INFO, std::to_string(pair.second.size()));
                 pair.second.erase(pair.second.begin(), pair.second.begin() + pastVerticesToRemoveNextFramePerBody*STRIDE);
             }
             futureVertices.erase(futureVertices.begin(), futureVertices.begin() + futureVerticesToRemoveNextFrame*STRIDE);
@@ -147,10 +146,7 @@ namespace OrbitPaths {
         futureVertices = vector<VERTEX_DATA_TYPE>();
 
         pastVertices.clear();
-        for (const auto &pair : Bodies::GetMassiveBodies()) {
-            pastVertices.insert(std::make_pair(pair.first, vector<VERTEX_DATA_TYPE>()));
-        }
-        for (const auto &pair : Bodies::GetMasslessBodies()) {
+        for (const auto &pair : Bodies::GetBodies()) {
             pastVertices.insert(std::make_pair(pair.first, vector<VERTEX_DATA_TYPE>()));
         }
     }

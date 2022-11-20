@@ -1,7 +1,7 @@
 #pragma once
 
-#include <simulation/OrbitPoint.h>
 #include <bodies/BodyType.h>
+#include <simulation/OrbitPoint.h>
 #include <bodies/Massless.h>
 #include <bodies/Massive.h>
 #include <util/Types.h>
@@ -18,20 +18,21 @@ namespace Bodies {
     auto UpdateBody(const string &id, const OrbitPoint &point) -> void;
 
     auto SetSelectedBody(const string &id) -> void;
-    auto GetSelectedBody() -> string;
-    auto GetSelectedType() -> BodyType;
+    auto GetSelectedBody() -> const Body&;
+    auto GetSelectedBodyId() -> string;
+    auto IsBodySelected() -> bool;
 
     auto GetMinZoom() -> float;
 
-    auto GetMassiveBodies() -> unordered_map<string, Massive>;
-    auto GetMasslessBodies() -> unordered_map<string, Massless>;
+    auto GetMassiveBodies() -> const unordered_map<string, Massive>&;
+    auto GetMasslessBodies() -> const unordered_map<string, Massless>&;
+    auto GetBodies() -> const unordered_map<string, Body>&;
 
-    auto GetMassiveBody(const string &id) -> Massive;
-    auto GetMasslessBody(const string &id) -> Massless;
-    auto GetBody(const string &id) -> Body;
+    auto GetBodyIds() -> const vector<string>&;
 
-    auto GetPastPoints() -> unordered_map<string, vector<OrbitPoint>>;
-    auto GetFuturePoints() -> unordered_map<string, vector<OrbitPoint>>;
+    auto GetMassiveBody(const string &id) -> const Massive&;
+    auto GetMasslessBody(const string &id) -> const Massless&;
+    auto GetBody(const string &id) -> const Body&;
 
     auto GetBodyCount() -> unsigned int;
 }

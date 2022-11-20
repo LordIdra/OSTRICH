@@ -67,12 +67,7 @@ namespace CameraTransition {
 
     auto Update(const double deltaTime) -> void {
         ZoneScoped;
-        // Update transition target, so that the camera follows the target
-        if (Bodies::GetSelectedType() == BODY_TYPE_MASSIVE) {
-            transition.UpdateTarget(Bodies::GetMassiveBody(Bodies::GetSelectedBody()).GetScaledPosition());
-        } else if (Bodies::GetSelectedType() == BODY_TYPE_MASSLESS) {
-            transition.UpdateTarget(Bodies::GetMasslessBody(Bodies::GetSelectedBody()).GetScaledPosition());
-        }
+        transition.UpdateTarget(Bodies::GetSelectedBody().GetScaledPosition());
 
         // Step transition
         transition.Step(deltaTime);

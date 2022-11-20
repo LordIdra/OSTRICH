@@ -100,17 +100,17 @@ namespace SimulationData {
 
                 // Kinetic
                 ImPlot::PushStyleColor(ImPlotCol_Line, KINETIC_ENERGY_LINE_COLOR);
-                ImPlot::PlotLine("Kinetic", &timeValues[0], &(bodyEnergyKinetic.at(Bodies::GetSelectedBody())[0]), timeValues.size());
+                ImPlot::PlotLine("Kinetic", &timeValues[0], &(bodyEnergyKinetic.at(Bodies::GetSelectedBodyId())[0]), timeValues.size());
                 ImPlot::PopStyleColor();
 
                 // Potential
                 ImPlot::PushStyleColor(ImPlotCol_Line, POTENTIAL_ENERGY_LINE_COLOR);
-                ImPlot::PlotLine("Potential", &timeValues[0], &(bodyEnergyPotential.at(Bodies::GetSelectedBody())[0]), timeValues.size());
+                ImPlot::PlotLine("Potential", &timeValues[0], &(bodyEnergyPotential.at(Bodies::GetSelectedBodyId())[0]), timeValues.size());
                 ImPlot::PopStyleColor();
 
                 // Total
                 ImPlot::PushStyleColor(ImPlotCol_Line, TOTAL_ENERGY_LINE_COLOR);
-                ImPlot::PlotLine("Total", &timeValues[0], &(bodyEnergyTotal.at(Bodies::GetSelectedBody())[0]), timeValues.size());
+                ImPlot::PlotLine("Total", &timeValues[0], &(bodyEnergyTotal.at(Bodies::GetSelectedBodyId())[0]), timeValues.size());
                 ImPlot::PopStyleColor();
 
                 ImPlot::EndPlot();
@@ -190,15 +190,10 @@ namespace SimulationData {
         simulationEnergyTotal.clear();
 
         // Body energy
-        for (const auto &pair : Bodies::GetMassiveBodies()) {
-            bodyEnergyKinetic.at(pair.first).clear();
-            bodyEnergyPotential.at(pair.first).clear();
-            bodyEnergyTotal.at(pair.first).clear();
-        }
-        for (const auto &pair : Bodies::GetMasslessBodies()) {
-            bodyEnergyKinetic.at(pair.first).clear();
-            bodyEnergyPotential.at(pair.first).clear();
-            bodyEnergyTotal.at(pair.first).clear();
+        for (const string &id : Bodies::GetBodyIds()) {
+            bodyEnergyKinetic.at(id).clear();
+            bodyEnergyPotential.at(id).clear();
+            bodyEnergyTotal.at(id).clear();
         }
     }
 
@@ -222,10 +217,7 @@ namespace SimulationData {
             timeValues.push_back(Simulation::GetTimeStep());
             UpdateEnergyDeviation();
             UpdateSimulationEnergy();
-            for (const auto &pair : Bodies::GetMassiveBodies()) {
-                UpdateBodyEnergy(pair);
-            }
-            for (const auto &pair : Bodies::GetMasslessBodies()) {
+            for (const auto &pair : Bodies::GetBodies()) {
                 UpdateBodyEnergy(pair);
             }
             ClipData();
@@ -235,7 +227,7 @@ namespace SimulationData {
         ImGui::PushFont(Fonts::Data());
         AddEnergyDeviation();
         AddSimulationEnergy();
-        if (Bodies::GetSelectedType() != BODY_TYPE_NONE) { AddBodyEnergy(); }
+        if (Bodies::IsBodySelected()) { AddBodyEnergy(); }
         AddResetButton();
         ImGui::PopFont();
     }

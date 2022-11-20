@@ -6,6 +6,7 @@
 
 class Body {
 protected:
+    const float MASSLESS_MIN_ZOOM = 0.01;
     string id;
     string name;
     vec3 color;
@@ -34,4 +35,6 @@ public:
 
     auto AddVelocity(dvec3 v) -> void;
     auto AddPosition(dvec3 x) -> void;
+
+    virtual auto GetMinZoom() const -> double;
 };

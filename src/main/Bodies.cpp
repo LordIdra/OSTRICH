@@ -23,49 +23,56 @@
 namespace Bodies {
 
     namespace {
+        unordered_map<string, Body> bodies;
         unordered_map<string, Massive> massiveBodies;
         unordered_map<string, Massless> masslessBodies;
+        vector<string> bodyIds;
 
-        BodyType selectedType = BODY_TYPE_NONE;
         string selected;
 
-        const float INITIAL_MASSLESS_MIN_ZOOM = 0.01;
-
-        float masslessMinZoom = INITIAL_MASSLESS_MIN_ZOOM;
-
         auto GetBodyAsReference(const string &id) -> Body& {
-            if (massiveBodies.find(id) != massiveBodies.end()) {
-                return massiveBodies.at(id);
-            }
-            // Yes, technically the id may not exist, but this is REALLY unlikely unless some code is very obviously wrong in other ways
+            return bodies.at(id);
+        }
+
+        auto GetMassiveAsReference(const string &id) -> Massive& {
+            return massiveBodies.at(id);
+        }
+
+        auto GetMasslessAsReference(const string &id) -> Massless& {
             return masslessBodies.at(id);
+        }
+
+        auto IsBodyMassive(const string &id) -> bool {
+            return (massiveBodies.find(id) != massiveBodies.end());
         }
     }
 
     auto PreReset() -> void {
         // Delete bodies
         massiveBodies.clear();
-        masslessBodies.clear();
+        bodies.clear();
 
         // Unselect bodies
-        selectedType = BODY_TYPE_NONE;
         selected = "";
     }
 
     auto PostReset() -> void {
-        if (!massiveBodies.empty()) {
-            selectedType = BODY_TYPE_MASSIVE;
-            selected = massiveBodies.begin()->first;
+        if (!bodies.empty()) {
+            selected = bodies.begin()->first;
         }
     }
 
     auto AddBody(const Massive &body) -> void {
+        bodyIds.push_back(body.GetId());
+        bodies.insert(std::make_pair(body.GetId(), body));
         massiveBodies.insert(std::make_pair(body.GetId(), body));
         MassiveRender::AddBody(body);
         Simulation::NewBodyReset();
     }
 
     auto AddBody(const Massless &body) -> void {
+        bodyIds.push_back(body.GetId());
+        bodies.insert(std::make_pair(body.GetId(), body));
         masslessBodies.insert(std::make_pair(body.GetId(), body));
         Simulation::NewBodyReset();
         OrbitPaths::NewBodyReset();
@@ -74,62 +81,64 @@ namespace Bodies {
     auto UpdateBody(const string &id, const OrbitPoint &point) -> void {
         GetBodyAsReference(id).SetPosition(point.position);
         GetBodyAsReference(id).SetVelocity(point.velocity);
+        if (IsBodyMassive(id)) {
+            GetMassiveAsReference(id).SetPosition(point.position);
+            GetMassiveAsReference(id).SetVelocity(point.velocity);
+        } else {
+            GetMasslessAsReference(id).SetPosition(point.position);
+            GetMasslessAsReference(id).SetVelocity(point.velocity);
+        }
     }
 
-    auto GetSelectedBody() -> string {
+    auto GetSelectedBodyId() -> string {
         return selected;
     }
 
-    auto GetSelectedType() -> BodyType {
-        return selectedType;
+    auto GetSelectedBody() -> const Body& {
+        return bodies.at(selected);
     }
 
     auto GetMinZoom() -> float {
-        if (selectedType == BODY_TYPE_MASSIVE) {
-            return Bodies::GetMassiveBody(Bodies::GetSelectedBody()).GetScaledRadius() * ZOOM_RADIUS_MULTIPLIER;
+        if (IsBodyMassive(selected)) {
+            return massiveBodies.at(selected).GetMinZoom();
         }
-        return masslessMinZoom;
+        return masslessBodies.at(selected).GetMinZoom();
     }
 
     auto SetSelectedBody(const string &id) -> void {
-        // important: this function does not start a transition to the specified body, use CameraTransition::SetTargetBody instead of this
+        // This function does not start a transition to the specified body, use CameraTransition::SetTargetBody for that
         selected = id;
-
-        // If the id corresponds to a massive body
-        if (massiveBodies.find(id) != massiveBodies.end()) {
-            selectedType = BODY_TYPE_MASSIVE;
-            
-        // If the id corresponds to a massless body
-        } else if (masslessBodies.find(id) != masslessBodies.end()) {
-            selectedType = BODY_TYPE_MASSLESS;
-        }
     }
 
-    auto GetMassiveBodies() -> unordered_map<string, Massive> {
+    auto IsBodySelected() -> bool {
+        return selected != "";
+    }
+
+    auto GetMassiveBodies() -> const unordered_map<string, Massive>& {
         return massiveBodies;
     }
 
-    auto GetMasslessBodies() -> unordered_map<string, Massless> {
+    auto GetMasslessBodies() -> const unordered_map<string, Massless>& {
         return masslessBodies;
     }
 
-    auto GetMassiveBody(const string &id) -> Massive {
+    auto GetBodies() -> const unordered_map<string, Body>& {
+        return bodies;
+    }
+
+    auto GetBodyIds() -> const vector<string>& {
+        return bodyIds;
+    }
+
+    auto GetMassiveBody(const string &id) -> const Massive& {
         return massiveBodies.at(id);
     }
 
-    auto GetMasslessBody(const string &id) -> Massless {
-        return masslessBodies.at(id);
-    }
-
-    auto GetBody(const string &id) -> Body {
-        if (massiveBodies.find(id) != massiveBodies.end()) {
-            return massiveBodies.at(id);
-        }
-        // Yes, technically the id may not exist, but this is REALLY unlikely unless some code is very obviously wrong in other ways
-        return masslessBodies.at(id);
+    auto GetBody(const string &id) -> const Body& {
+        return bodies.at(id);
     }
 
     auto GetBodyCount() -> unsigned int {
-        return massiveBodies.size() + masslessBodies.size();
+        return bodies.size();
     }
 }

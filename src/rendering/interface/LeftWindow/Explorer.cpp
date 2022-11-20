@@ -54,17 +54,16 @@ namespace ScenarioExplorer {
             ImGui::PopFont();
         }
 
-        auto AddAllBodies(vector<string> &bodyIds) -> void {
-            ZoneScoped;
-            for (const auto &pair : Bodies::GetMassiveBodies())  { bodyIds.push_back(pair.first); }
-            for (const auto &pair : Bodies::GetMasslessBodies()) { bodyIds.push_back(pair.first); }
-        }
-
         auto AddNameSelectable(const string &id, const string &name) -> void {
             ZoneScoped;
             ImGui::TableNextColumn();
-            if (ImGui::Selectable(Fonts::NormalizeString(Fonts::MainBig(), name, NAME_WIDTH).c_str(), id == Bodies::GetSelectedBody(), ImGuiSelectableFlags_SpanAllColumns)) {
-                CameraTransition::SetTargetBody(id);
+            if (ImGui::Selectable(
+                Fonts::NormalizeString(Fonts::MainBig(), 
+                name, 
+                NAME_WIDTH).c_str(), 
+                id == Bodies::GetSelectedBodyId(), 
+                ImGuiSelectableFlags_SpanAllColumns)) {
+                    CameraTransition::SetTargetBody(id);
             }
         }
 
@@ -77,10 +76,9 @@ namespace ScenarioExplorer {
         auto AddBodiesToTable(const vector<string> &bodyIds) -> void {
             ZoneScoped;
             ImGui::PushFont(Fonts::Data());
-            for (const string &id : bodyIds) {
-                Body body = Bodies::GetBody(id);
-                AddNameSelectable(id, body.GetName());
-                AddMassiveMassText(body.GetMass());
+            for (const auto &pair : Bodies::GetBodies()) {
+                AddNameSelectable(pair.first, pair.second.GetName());
+                AddMassiveMassText(pair.second.GetMass());
             }
             ImGui::PopFont();
         }
@@ -127,8 +125,7 @@ namespace ScenarioExplorer {
 
         // Sort body ids according to the columns the user has selected
         sortSpecs = ImGui::TableGetSortSpecs();
-        vector<string> bodyIds;
-        AddAllBodies(bodyIds);
+        vector<string> bodyIds = Bodies::GetBodyIds();
         std::sort(bodyIds.begin(), bodyIds.end(), CompareBodies);
 
         // Add said body ids to the table

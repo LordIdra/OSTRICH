@@ -136,13 +136,13 @@ namespace BodyData {
     auto Draw() -> void {
         ZoneScoped;
         // If no body is selected, we don't need to add anything for this section
-        if (Bodies::GetSelectedType() == BODY_TYPE_NONE) {
+        if (!Bodies::IsBodySelected()) {
             return;
         }
 
         ImGui::Separator();
 
-        Body selectedBody = Bodies::GetBody(Bodies::GetSelectedBody());
+        Body selectedBody = Bodies::GetSelectedBody();
 
         // Title text
         ImGui::PushFont(Fonts::MainBig());

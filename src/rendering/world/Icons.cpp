@@ -93,13 +93,13 @@ namespace Icons {
 
         auto MergeIcon(unordered_map<string, Icon> &icons, const string &icon1, const string &icon2) -> void {
             // If i is the selected icon, merge j into i
-            if (Bodies::GetSelectedBody() == icons.at(icon1).GetId()) {
+            if (Bodies::GetSelectedBodyId() == icons.at(icon1).GetId()) {
                 MergeIconIntoIcon(icons, icon2, icon1);
                 return;
             }
 
             // If i is the selected icon, merge i into j
-            if (Bodies::GetSelectedBody() == icons.at(icon2).GetId()) {
+            if (Bodies::GetSelectedBodyId() == icons.at(icon2).GetId()) {
                 MergeIconIntoIcon(icons, icon1, icon2);
                 return;
             }

@@ -134,7 +134,7 @@ auto Icon::AddVertices(vector<float> &vertices) const -> void {
     AddIconBorder(vertices);
 
     // Selected
-    if (Bodies::GetSelectedBody() == GetId()) {
+    if (Bodies::GetSelectedBodyId() == GetId()) {
         AddIconSelected(vertices);
     }
 

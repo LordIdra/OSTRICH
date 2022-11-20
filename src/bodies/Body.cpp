@@ -60,3 +60,7 @@ auto Body::AddVelocity(const dvec3 v) -> void {
 auto Body::AddPosition(const dvec3 x) -> void {
     position += x;
 }
+
+auto Body::GetMinZoom() const -> double {
+    return MASSLESS_MIN_ZOOM;
+}

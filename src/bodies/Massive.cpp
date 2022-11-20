@@ -26,3 +26,7 @@ auto Massive::GetMaterial() const -> Material {
 auto Massive::GetMatrix() const -> mat4 {
     return glm::translate(mat4(1.0), GetScaledPosition());
 }
+
+auto Massive::GetMinZoom() const -> double {
+    return GetScaledRadius() * ZOOM_RADIUS_MULTIPLIER;
+}

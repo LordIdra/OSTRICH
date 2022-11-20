@@ -76,14 +76,7 @@ namespace Simulation {
         auto AcquireInitialState() -> SimulationState {
             unordered_map<string, OrbitPoint> initialStateMap;
 
-            for (const auto &pair : Bodies::GetMassiveBodies()) {
-                OrbitPoint initialOrbitPoint{
-                    pair.second.GetPosition(), 
-                    pair.second.GetVelocity()};
-                initialStateMap.insert(std::make_pair(pair.first, initialOrbitPoint));
-            }
-
-            for (const auto &pair : Bodies::GetMasslessBodies()) {
+            for (const auto &pair : Bodies::GetBodies()) {
                 OrbitPoint initialOrbitPoint{
                     pair.second.GetPosition(), 
                     pair.second.GetVelocity()};
@@ -138,8 +131,7 @@ namespace Simulation {
             timeSinceLastStateUpdate -= Simulation::GetTimeStepSize();
             state.StepToNextState(TIME_STEP_SIZE);
             stateCache.push_back(state);
-            for (const auto &pair : Bodies::GetMassiveBodies())  { StepBodyToNextState(pair.first); }
-            for (const auto &pair : Bodies::GetMasslessBodies()) { StepBodyToNextState(pair.first); }
+            for (const auto &id : Bodies::GetBodyIds())  { StepBodyToNextState(id); }
             futureStep--;
         }
 
