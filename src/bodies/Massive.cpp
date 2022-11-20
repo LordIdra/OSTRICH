@@ -6,7 +6,7 @@
 
 
 
-Massive::Massive(const string &id, const string &name, const vec3 &color, const dvec3 &position, const dvec3 &velocity, const Material &material, const double mass, const double radius)
+Massive::Massive(const string &id, const string &name, const vec3 &color, const dvec3 &position, const dvec3 &velocity, const double mass, const double radius, const Material &material)
     : Body(id, name, color, mass, radius, position, velocity), material(material) {
         vertices = Sphere::Sphere(GetScaledRadius(), SPHERE_STEP);
 }

@@ -1,21 +1,53 @@
-time: 700007
-massive:
-  moon:
-    name: The Moon
+time: 320366709
+bodies:
+  spacecraft-2:
+    name: Another Spacecraft that is carrying nuclear warheads
     color:
-      - 0.600000024
-      - 0.600000024
-      - 0.600000024
-    radius: 1737400
-    mass: 7.3460000000000003e+22
+      - 0.899999976
+      - 0.899999976
+      - 0.300000012
+    radius: 5
+    mass: 256
     position:
-      - 405500000
-      - 0
-      - 0
+      - 26515130
+      - 13142273
+      - 3.65770829e+09
     velocity:
+      - -248.297867
+      - -2378.01538
+      - 519.544861
+  mr-boniface:
+    name: Mr Boniface
+    color:
+      - 1
       - 0
       - 0
-      - 970
+    radius: 0
+    mass: 1000
+    position:
+      - 8.62737452e+12
+      - -5.45463534e+11
+      - 2140089.75
+    velocity:
+      - 26988.6992
+      - -1710.7522
+      - 0.00670164265
+  spacecraft:
+    name: Spacecraft
+    color:
+      - 0.100000001
+      - 0.899999976
+      - 0.300000012
+    radius: 20
+    mass: 6.6600000000000001
+    position:
+      - 1.35597824e+09
+      - 144993344
+      - 3.21582131e+09
+    velocity:
+      - -63.8784866
+      - -181.820297
+      - 535.297607
   earth:
     name: The Earth
     color:
@@ -25,53 +57,26 @@ massive:
     radius: 63710000
     mass: 5.9722000000000002e+24
     position:
+      - -1370147.75
       - 0
-      - 0
-      - 0
+      - 3.7435177e+09
     velocity:
+      - -9.03448105
       - 0
-      - 0
-      - 0
-massless:
-  mr-boniface:
-    name: Mr Boniface
+      - 21.4222832
+  moon:
+    name: The Moon
     color:
-      - 1
-      - 0
-      - 0
+      - 0.600000024
+      - 0.600000024
+      - 0.600000024
+    radius: 1737400
+    mass: 7.3460000000000003e+22
     position:
+      - -249840848
       - 0
-      - 1.40550003e+09
-      - 0
+      - 3.49910682e+09
     velocity:
-      - 27000
-      - -1700
+      - 729.806458
       - 0
-  spacecraft-2:
-    name: Another Spacecraft that is carrying nuclear warheads
-    color:
-      - 0.899999976
-      - 0.899999976
-      - 0.300000012
-    position:
-      - 0
-      - 140550000
-      - 0
-    velocity:
-      - 270
-      - 190
-      - -1700
-  spacecraft:
-    name: Spacecraft
-    color:
-      - 0.100000001
-      - 0.899999976
-      - 0.300000012
-    position:
-      - -1.40550003e+09
-      - 0
-      - 0
-    velocity:
-      - -270
-      - 170
-      - -470
+      - -788.233398

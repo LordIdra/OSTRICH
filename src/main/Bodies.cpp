@@ -68,6 +68,7 @@ namespace Bodies {
         massiveBodies.insert(std::make_pair(body.GetId(), body));
         MassiveRender::AddBody(body);
         Simulation::NewBodyReset();
+        OrbitPaths::NewBodyReset();
     }
 
     auto AddBody(const Massless &body) -> void {

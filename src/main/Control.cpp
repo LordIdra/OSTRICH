@@ -155,8 +155,8 @@ namespace Control {
             deltaTime = glfwGetTime() - previousTime;
             previousTime = glfwGetTime();
             
-            Simulation::FrameUpdate();
-            std::thread simulationUpdateThread(Simulation::Update, deltaTime);
+            //Simulation::FrameUpdate();
+            //std::thread simulationUpdateThread(Simulation::Update, deltaTime);
 
             Window::Background(WINDOW_BACKGROUND);
             Camera::AddZoomDelta(Mouse::GetScrollDelta().y);
@@ -177,7 +177,7 @@ namespace Control {
             glfwPollEvents();
             Window::Update();
 
-            simulationUpdateThread.join();
+            //simulationUpdateThread.join();
             
             FrameMark;
         }

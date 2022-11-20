@@ -4,6 +4,7 @@
 #include <rendering/interface/Fonts.h>
 #include <rendering/interface/BottomRightWindow/ScenarioTable.h>
 #include <scenarios/Scenarios.h>
+#include <string>
 #include <util/Types.h>
 
 #include <depend/IconsMaterialDesignIcons_c.h>
@@ -65,6 +66,7 @@ namespace SaveScenario {
         auto AddOverwriteButton() -> void {
             ImGui::PushStyleColor(ImGuiCol_Text,OVERWRITE_BUTTON_COLOR);
             if (ImGui::Button(OVERWRITE_TEXT.c_str(), OVERWRITE_BUTTON_SIZE)) {
+                Log(INFO, filename);
                 Scenarios::SaveScenario((char*)filename);
                 ImGui::CloseCurrentPopup(); 
             }
@@ -72,7 +74,10 @@ namespace SaveScenario {
         }
 
         auto AddSaveButton() -> void {
-            if (ImGui::Button(SAVE_TEXT.c_str(), SAVE_BUTTON_SIZE)) {
+            bool buttonPressed = ImGui::Button(SAVE_TEXT.c_str(), SAVE_BUTTON_SIZE);
+            Log(INFO, std::to_string(buttonPressed));
+            if (buttonPressed) {
+                Log(INFO, filename);
                 Scenarios::SaveScenario((char*)filename);
                 ImGui::CloseCurrentPopup(); 
             }

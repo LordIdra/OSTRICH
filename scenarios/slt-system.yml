@@ -1,5 +1,5 @@
 time: 49942
-massive:
+bodies:
   msmills:
     name: Ms Mills
     color:
@@ -128,18 +128,3 @@ massive:
       - 0
       - 1.0e+2
       - 0
-massless:
-  spacecraft:
-    name: Spacecraft
-    color:
-      - 0.100000001
-      - 0.899999976
-      - 0.300000012
-    position:
-      - -1.40550003e+09
-      - 0
-      - 0
-    velocity:
-      - -270
-      - 170
-      - -470

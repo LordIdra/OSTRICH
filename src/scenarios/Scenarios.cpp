@@ -21,52 +21,33 @@
 namespace Scenarios {
 
     namespace {
+        const double MASS_THRESHOLD = 100000; // Bodies above this mass (in kg) will be considered Massive
+
         auto ScenarioContainsRequiredKeys(const YAML::Node &scenario) -> bool {
-            return scenario["time"]  && scenario["massive"]  && scenario["massless"];
+            return scenario["time"]  && scenario["bodies"];
         }
 
-        auto LoadMassive(const string &id, const YAML::Node &node) -> Massive {
+        auto LoadBody(const string &id, const YAML::Node &node) -> void {
             string name =   YMLUtil::GetString(node, "name");
             vec3 color =    YMLUtil::GetVec3  (node, "color");
             double radius = YMLUtil::GetDouble(node, "radius");
             double mass =   YMLUtil::GetDouble(node, "mass");
             vec3 position = YMLUtil::GetVec3  (node, "position");
             vec3 velocity = YMLUtil::GetVec3  (node, "velocity");
-            Material material = ScenarioFileUtil::GenerateMaterial(color);
-            return Massive(id, name, color, position, velocity, material, mass, radius);
-        }
-
-        auto LoadMassless(const string &id, const YAML::Node &node) -> Massless {
-            string name =   YMLUtil::GetString(node, "name");
-            vec3 color =    YMLUtil::GetVec3  (node, "color");
-            vec3 position = YMLUtil::GetVec3  (node, "position");
-            vec3 velocity = YMLUtil::GetVec3  (node, "velocity");
-            return Massless(id, name, color, position, velocity);
-        }
-
-        auto LoadMassiveBodies(const YAML::Node &scenario) -> void {
-            YAML::Node massive = scenario["massive"];
-            for (YAML::const_iterator i = massive.begin(); i != massive.end(); i++) {
-
-                // 'massive' node id and 'massive' node body
-                auto id = i->first.as<string>();
-                YAML::Node node = i->second;
-
-                // Load body
-                Bodies::AddBody(LoadMassive(id, node));
+            if (mass > MASS_THRESHOLD) {
+                Material material = ScenarioFileUtil::GenerateMaterial(color);
+                Bodies::AddBody(Massive(id, name, color, position, velocity, mass, radius, material));
+            } else {
+                Bodies::AddBody(Massless(id, name, color, position, velocity, mass, radius));
             }
         }
 
-        auto LoadMasslessBodies(const YAML::Node &scenario) -> void {
-            YAML::Node massless = scenario["massless"];
-            for (YAML::const_iterator i = massless.begin(); i != massless.end(); i++) {
-
-                // 'massive' node id and 'massive' node body
+        auto LoadBodies(const YAML::Node &scenario) -> void {
+            YAML::Node bodies = scenario["bodies"];
+            for (YAML::const_iterator i = bodies.begin(); i != bodies.end(); i++) {
                 auto id = i->first.as<string>();
                 YAML::Node node = i->second;
-
-                // Load body
-                Bodies::AddBody(LoadMassless(id, node));
+                LoadBody(id, node);
             }
         }
         
@@ -75,7 +56,7 @@ namespace Scenarios {
             Simulation::SetTimeStep(time);
         }
 
-        auto SaveMassive(const string &id, YAML::Emitter &scenario, const Massive &body) -> void {
+        auto SaveBody(const string &id, YAML::Emitter &scenario, const Body &body) -> void {
             scenario << id;
             scenario << YAML::BeginMap;
             YMLUtil::SetString(scenario, "name", body.GetName());
@@ -87,35 +68,13 @@ namespace Scenarios {
             scenario << YAML::EndMap;
         }
 
-        auto SaveMassless(const string &id, YAML::Emitter &scenario, const Massless &body) -> void {
-            scenario << id;
-            scenario << YAML::BeginMap;
-            YMLUtil::SetString(scenario, "name", body.GetName());
-            YMLUtil::SetVec3(scenario, "color", body.GetColor());
-            YMLUtil::SetVec3(scenario, "position", body.GetPosition());
-            YMLUtil::SetVec3(scenario, "velocity", body.GetVelocity());
-            scenario << YAML::EndMap;
-        }
-
-        auto SaveMassiveBodies(YAML::Emitter &scenario) -> void {
-            scenario << YAML::Key << "massive";
+        auto SaveBodies(YAML::Emitter &scenario) -> void {
+            scenario << YAML::Key << "bodies";
             scenario << YAML::Value << YAML::BeginMap;
-            for (const auto &pair : Bodies::GetMassiveBodies()) {
+            for (const auto &pair : Bodies::GetBodies()) {
                 string id = pair.first;
-                Massive body = pair.second;
-                SaveMassive(id, scenario, body);
-            }
-            scenario << YAML::EndMap;
-        }
-
-        auto SaveMasslessBodies(YAML::Emitter &scenario) -> void {
-            // Save massless bodies
-            scenario << YAML::Key << "massless";
-            scenario << YAML::Value << YAML::BeginMap;
-            for (const auto &pair : Bodies::GetMasslessBodies()) {
-                string id = pair.first;
-                Massless body = pair.second;
-                SaveMassless(id, scenario, body);
+                Body body = pair.second;
+                SaveBody(id, scenario, body);
             }
             scenario << YAML::EndMap;
         }
@@ -144,8 +103,7 @@ namespace Scenarios {
         Control::PreReset();
 
         LoadTime(scenario);
-        LoadMassiveBodies(scenario);
-        LoadMasslessBodies(scenario);
+        LoadBodies(scenario);
 
         Control::PostReset();
     }
@@ -158,8 +116,7 @@ namespace Scenarios {
         scenario << YAML::BeginMap;
 
         SaveTime(scenario);
-        SaveMassiveBodies(scenario);
-        SaveMasslessBodies(scenario);
+        SaveBodies(scenario);
 
         scenario << YAML::EndMap;
 

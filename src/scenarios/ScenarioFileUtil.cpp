@@ -50,11 +50,9 @@ namespace ScenarioFileUtil {
     auto GetBodyCount(const YAML::Node &scenario) -> int {
         int bodyCount = 0;
 
-        YAML::Node massive = scenario["massive"];
-        YAML::Node massless = scenario["massless"];
+        YAML::Node bodies = scenario["bodies"];
 
-        for (YAML::const_iterator i = massive.begin(); i != massive.end(); i++)   { bodyCount++; }
-        for (YAML::const_iterator i = massless.begin(); i != massless.end(); i++) { bodyCount++; }
+        for (YAML::const_iterator i = bodies.begin(); i != bodies.end(); i++)   { bodyCount++; }
 
         return bodyCount;
     }
