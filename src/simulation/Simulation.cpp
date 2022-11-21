@@ -70,7 +70,6 @@ namespace Simulation {
         
         auto StepBodyToNextState(const string &id) -> void {
             OrbitPoint point = state.GetOrbitPoints().at(id);
-            Bodies::UpdateBody(id, point);
         }
 
         auto AcquireInitialState() -> SimulationState {
@@ -117,6 +116,13 @@ namespace Simulation {
         // where the orbit paths indicate the body is somewhere else
         for (SimulationState state : stateCache) {
             OrbitPaths::StepToNextState(state);
+        }
+
+        // Now update the body to correspond to the latest state
+        if (!stateCache.empty()) {
+            SimulationState latestState = stateCache.at(stateCache.size()-1);
+            for (const auto &pair : latestState.GetOrbitPoints())
+            Bodies::UpdateBody(pair.first, pair.second);
         }
 
         stateCache.clear();
