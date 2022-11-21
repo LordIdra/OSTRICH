@@ -33,7 +33,9 @@ namespace Simulation {
         const unsigned int MAX_SPEED = 10000000;
         const unsigned int MIN_SPEED = 1;
 
-        const unsigned int TIME_STEP_SIZE = 1000;
+        const unsigned int TIME_STEP_SIZE = 100;
+
+        std::atomic_bool terminateUpdate = false;
 
 
         // important: staticState is updated at the end of each frame and represents a snapshot of the simulation
@@ -84,6 +86,27 @@ namespace Simulation {
 
             return initialStateMap;
         }
+
+        auto UpdateState() -> void {
+            ZoneScoped;
+            while (timeSinceLastStateUpdate >= Simulation::GetTimeStepSize()) {
+                timeSinceLastStateUpdate -= Simulation::GetTimeStepSize();
+                state.StepToNextState(TIME_STEP_SIZE);
+                stateCache.push_back(state);
+                for (const string &id : Bodies::GetBodyIds())  { StepBodyToNextState(id); }
+                futureStep--;
+            }
+        }
+
+        auto UpdateFutureState() -> void {
+            ZoneScoped;
+            terminateUpdate = false;
+            while ((futureStep < OrbitPaths::GetMaxFutureStates()) && (!terminateUpdate)) {
+                futureState.StepToNextState(TIME_STEP_SIZE);
+                OrbitPaths::AddNewState(futureState);
+                futureStep++;
+            }
+        }
     }
 
     auto Init() -> void {
@@ -133,20 +156,13 @@ namespace Simulation {
         ZoneScoped;
         timeStep += deltaTime * speedValue;
         timeSinceLastStateUpdate += deltaTime * speedValue;
+        UpdateState();
+        UpdateFutureState();        
+    }
 
-        while (timeSinceLastStateUpdate >= Simulation::GetTimeStepSize()) {
-            timeSinceLastStateUpdate -= Simulation::GetTimeStepSize();
-            state.StepToNextState(TIME_STEP_SIZE);
-            stateCache.push_back(state);
-            for (const auto &id : Bodies::GetBodyIds())  { StepBodyToNextState(id); }
-            futureStep--;
-        }
-
-        while (futureStep < OrbitPaths::GetMaxFutureStates()) {
-            futureState.StepToNextState(TIME_STEP_SIZE);
-            OrbitPaths::AddNewState(futureState);
-            futureStep++;
-        }
+    auto TerminateUpdate() -> void {
+        // Signal that we need to finish updating and prepare for the thread to be joined
+        terminateUpdate = true;
     }
 
     auto GetSpeedValue() -> double {

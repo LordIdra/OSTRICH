@@ -12,6 +12,7 @@ namespace Simulation {
     auto NewBodyReset() -> void;
     auto FrameUpdate() -> void;
     auto Update(const double deltaTime) -> void;
+    auto TerminateUpdate() -> void;
     
     auto GetSpeedValue() -> double;
     auto GetSpeedDegree() -> double;

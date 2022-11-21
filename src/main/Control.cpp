@@ -38,6 +38,8 @@ namespace Control {
 
         const vec4 WINDOW_BACKGROUND = vec4(0.0, 0.0, 0.0, 1.0);
 
+        const double MAX_FRAME_TIME = 0.015;
+
         double previousTime = 0;
         double deltaTime = 0;
 
@@ -174,12 +176,16 @@ namespace Control {
             OrbitPaths::Update();
             Interface::Update(deltaTime);
 
+            // Wait until frame complete
+            while (glfwGetTime() - previousTime < MAX_FRAME_TIME) {}
+
+            Simulation::TerminateUpdate();
+            simulationUpdateThread.join();
+
             Mouse::Update();
             Keys::Update();
             glfwPollEvents();
             Window::Update();
-
-            simulationUpdateThread.join();
             
             FrameMark;
         }
