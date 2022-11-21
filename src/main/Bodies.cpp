@@ -1,5 +1,6 @@
 #include "Bodies.h"
 
+#include "rendering/interface/TopRightWindow/SimulationData.h"
 #include "simulation/Simulation.h"
 #include "util/Log.h"
 #include <bodies/Body.h>
@@ -51,6 +52,7 @@ namespace Bodies {
         // Delete bodies
         massiveBodies.clear();
         bodies.clear();
+        bodyIds.clear();
 
         // Unselect bodies
         selected = "";
@@ -69,6 +71,7 @@ namespace Bodies {
         MassiveRender::AddBody(body);
         Simulation::NewBodyReset();
         OrbitPaths::NewBodyReset();
+        SimulationData::NewBodyReset();
     }
 
     auto AddBody(const Massless &body) -> void {
@@ -77,6 +80,7 @@ namespace Bodies {
         masslessBodies.insert(std::make_pair(body.GetId(), body));
         Simulation::NewBodyReset();
         OrbitPaths::NewBodyReset();
+        SimulationData::NewBodyReset();
     }
 
     auto UpdateBody(const string &id, const OrbitPoint &point) -> void {

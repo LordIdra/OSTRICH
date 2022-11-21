@@ -66,7 +66,6 @@ namespace SaveScenario {
         auto AddOverwriteButton() -> void {
             ImGui::PushStyleColor(ImGuiCol_Text,OVERWRITE_BUTTON_COLOR);
             if (ImGui::Button(OVERWRITE_TEXT.c_str(), OVERWRITE_BUTTON_SIZE)) {
-                Log(INFO, filename);
                 Scenarios::SaveScenario((char*)filename);
                 ImGui::CloseCurrentPopup(); 
             }
@@ -74,10 +73,7 @@ namespace SaveScenario {
         }
 
         auto AddSaveButton() -> void {
-            bool buttonPressed = ImGui::Button(SAVE_TEXT.c_str(), SAVE_BUTTON_SIZE);
-            Log(INFO, std::to_string(buttonPressed));
-            if (buttonPressed) {
-                Log(INFO, filename);
+            if (ImGui::Button(SAVE_TEXT.c_str(), SAVE_BUTTON_SIZE)) {
                 Scenarios::SaveScenario((char*)filename);
                 ImGui::CloseCurrentPopup(); 
             }
@@ -104,8 +100,7 @@ namespace SaveScenario {
 
         if (ImGui::BeginPopupModal("Save Scenario", nullptr, POPUP_FLAGS)) {
             AddTitle();
-            ScenarioTable::AddFileTable();
-            strncpy((char*)filename, ScenarioTable::GetSelectedFile().c_str(), TEXT_BUFFER_SIZE); // I hate C
+            ScenarioTable::AddFileTable(false);
             AddFilenameEntry();
             AddButtons();
             ImGui::EndPopup();

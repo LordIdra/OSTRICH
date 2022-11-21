@@ -87,8 +87,14 @@ namespace ScenarioTable {
             return CompareScenarioFileTimes(scenario1, scenario2);
         }
 
-        auto AddNameText(const string &text) -> void {
+        auto AddNameText(const string &text, const bool selectable) -> void {
+
             ImGui::TableNextColumn();
+            if (!selectable) {
+                ImGui::Text("%s", text.c_str());
+                return;
+            }
+            
             if (ImGui::Selectable(Fonts::NormalizeString(Fonts::MainBig(), text, NAME_WIDTH).c_str(), selectedFile == text, ImGuiSelectableFlags_SpanAllColumns)) {
                 selectedFile = text;
             }
@@ -105,7 +111,7 @@ namespace ScenarioTable {
         }
     }
     
-    auto AddFileTable() -> void {
+    auto AddFileTable(const bool selectable) -> void {
         if (ImGui::BeginTable("file-table", 3, TABLE_FLAGS, TABLE_SIZE)) {
             AddHeader();
 
@@ -115,7 +121,7 @@ namespace ScenarioTable {
 
             ImGui::PushFont(Fonts::Data());
             for (const ScenarioFile &scenario : scenarios) {
-                AddNameText(scenario.nameWithoutExtension);
+                AddNameText(scenario.nameWithoutExtension, selectable);
                 AddBodiesText(scenario.bodyCount);
                 AddTimeText(scenario.formattedTime);
             }

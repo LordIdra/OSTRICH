@@ -29,8 +29,8 @@ namespace Simulation {
         const unsigned int INITIAL_TIME_SINCE_LAST_STATE_UPDATE = 0;
 
         const unsigned int SPEED_MULTIPLIER = 4;
-        const unsigned int MAX_SPEED_DEGREE = 15;
-        const unsigned int MAX_SPEED = 20000000; // (speedMultiplier^maxSpeedDegree) + 1
+        const unsigned int MAX_SPEED_DEGREE = 13;
+        const unsigned int MAX_SPEED = 10000000;
         const unsigned int MIN_SPEED = 1;
 
         const unsigned int TIME_STEP_SIZE = 1000;
@@ -98,6 +98,7 @@ namespace Simulation {
         speedDegree = INITIAL_SPEED_DEGREE;
         timeStep = INITIAL_TIME_STEP;
         timeSinceLastStateUpdate = INITIAL_TIME_SINCE_LAST_STATE_UPDATE;
+        futureStep = 0;
     }
 
     auto NewBodyReset() -> void {

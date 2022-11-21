@@ -149,6 +149,9 @@ namespace OrbitPaths {
         for (const auto &pair : Bodies::GetBodies()) {
             pastVertices.insert(std::make_pair(pair.first, vector<VERTEX_DATA_TYPE>()));
         }
+
+        pastVerticesToRemoveNextFramePerBody = 0;
+        futureVerticesToRemoveNextFrame = 0;
     }
 
     auto Update() -> void {

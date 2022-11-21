@@ -21,7 +21,10 @@
 namespace Scenarios {
 
     namespace {
+
         const double MASS_THRESHOLD = 100000; // Bodies above this mass (in kg) will be considered Massive
+        
+        string scenarioToLoadNextFrame = "";
 
         auto ScenarioContainsRequiredKeys(const YAML::Node &scenario) -> bool {
             return scenario["time"]  && scenario["bodies"];
@@ -83,29 +86,40 @@ namespace Scenarios {
             scenario << YAML::Key << "time";
             scenario << YAML::Value << int(Simulation::GetTimeStep());
         }
+
+        auto LoadScheduledScenario() -> void {
+            const string path = ScenarioFileUtil::AddPrefixAndSuffix(scenarioToLoadNextFrame);
+
+            if (!FileExists(path)) {
+                YMLUtil::SetCurrentError(YMLUtil::FILE_NOT_FOUND);
+                return;
+            }
+
+            YAML::Node scenario = YAML::LoadFile(path);
+
+            if (!ScenarioContainsRequiredKeys(scenario)) { 
+                YMLUtil::SetCurrentError(YMLUtil::MISSING_BASE_KEY);
+                return; 
+            }
+
+            Control::PreReset();
+
+            LoadTime(scenario);
+            LoadBodies(scenario);
+
+            Control::PostReset();
+        }
     }
 
-    auto LoadScenario(const string &filenameWithoutExtension) -> void {
-        const string path = ScenarioFileUtil::AddPrefixAndSuffix(filenameWithoutExtension);
-
-        if (!FileExists(path)) {
-            YMLUtil::SetCurrentError(YMLUtil::FILE_NOT_FOUND);
-            return;
+    auto FrameUpdate() -> void {
+        if (scenarioToLoadNextFrame != "") {
+            LoadScheduledScenario();
+            scenarioToLoadNextFrame = "";
         }
+    }
 
-        YAML::Node scenario = YAML::LoadFile(path);
-
-        if (!ScenarioContainsRequiredKeys(scenario)) { 
-            YMLUtil::SetCurrentError(YMLUtil::MISSING_BASE_KEY);
-            return; 
-        }
-
-        Control::PreReset();
-
-        LoadTime(scenario);
-        LoadBodies(scenario);
-
-        Control::PostReset();
+    auto ScheduleLoadScenario(const string &filenameWithoutExtension) -> void {
+        scenarioToLoadNextFrame = filenameWithoutExtension;
     }
 
     auto SaveScenario(const string &filenameWithoutExtension) -> void {

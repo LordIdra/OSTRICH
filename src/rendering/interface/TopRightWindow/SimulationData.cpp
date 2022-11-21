@@ -139,18 +139,6 @@ namespace SimulationData {
 
         auto UpdateBodyEnergy(const std::pair<string, Body> &pair) -> void {
             ZoneScoped;
-            if (bodyEnergyKinetic.count(pair.first) == 0) {
-                bodyEnergyKinetic.insert(std::make_pair(pair.first, vector<double>()));
-            }
-
-            if (bodyEnergyPotential.count(pair.first) == 0) {
-                bodyEnergyPotential.insert(std::make_pair(pair.first, vector<double>()));
-            }
-
-            if (bodyEnergyTotal.count(pair.first) == 0) {
-                bodyEnergyTotal.insert(std::make_pair(pair.first, vector<double>()));
-            }
-
             bodyEnergyKinetic.at(pair.first).push_back(SimulationEnergy::GetKineticEnergy(pair.second));
             bodyEnergyPotential.at(pair.first).push_back(SimulationEnergy::GetPotentialEnergy(pair.second));
             bodyEnergyTotal.at(pair.first).push_back(SimulationEnergy::GetTotalEnergy(pair.second));
@@ -176,30 +164,26 @@ namespace SimulationData {
     }
 
     auto PreReset() -> void {
-        PostReset();
-        
-        // Time values
         timeValues.clear();
-
-        // Energy deviation
         energyDeviation.clear();
-
-        // Simulation energy
         simulationEnergyKinetic.clear();
         simulationEnergyPotential.clear();
         simulationEnergyTotal.clear();
-
-        // Body energy
-        for (const string &id : Bodies::GetBodyIds()) {
-            bodyEnergyKinetic.at(id).clear();
-            bodyEnergyPotential.at(id).clear();
-            bodyEnergyTotal.at(id).clear();
-        }
+        bodyEnergyKinetic.clear();
+        bodyEnergyPotential.clear();
+        bodyEnergyTotal.clear();
     }
 
     auto PostReset() -> void {
-        // Original energy
         originalEnergy = SimulationEnergy::GetSimulationTotalEnergy();
+    }
+
+    auto NewBodyReset() -> void {
+        for (const string &id : Bodies::GetBodyIds()) { 
+            bodyEnergyKinetic.insert(std::make_pair(id, vector<double>()));\
+            bodyEnergyPotential.insert(std::make_pair(id, vector<double>()));\
+            bodyEnergyTotal.insert(std::make_pair(id, vector<double>()));\
+        }
     }
 
     auto Draw(const double deltaTime) -> void {

@@ -8,5 +8,6 @@
 
 namespace Scenarios {
     auto SaveScenario(const string &filenameWithoutExtension) -> void;
-    auto LoadScenario(const string &filenameWithoutExtension) -> void;
+    auto FrameUpdate() -> void;
+    auto ScheduleLoadScenario(const string &filenameWithoutExtension) -> void;
 }

@@ -9,7 +9,6 @@
 namespace ScenarioTable {
     const ImVec2 TABLE_SIZE = ImVec2(600, 400);
 
-    auto AddFileTable() -> void;
-
+    auto AddFileTable(const bool selectable) -> void;
     auto GetSelectedFile() -> string;
 }

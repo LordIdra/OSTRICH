@@ -54,7 +54,7 @@ namespace LoadScenario {
 
         auto AddLoadScenarioButton() -> void {
             if (ImGui::Button(LOAD_TEXT.c_str(), LOAD_BUTTON_SIZE)) {
-                Scenarios::LoadScenario(ScenarioTable::GetSelectedFile());
+                Scenarios::ScheduleLoadScenario(ScenarioTable::GetSelectedFile());
                 scenarioLoaded = true;
                 ImGui::CloseCurrentPopup();
             }
@@ -81,7 +81,7 @@ namespace LoadScenario {
 
         if (ImGui::BeginPopupModal("Load Scenario", nullptr, POPUP_FLAGS)) {
             AddTitle();
-            ScenarioTable::AddFileTable();
+            ScenarioTable::AddFileTable(true);
             AddButtons(allowCancel);
             ImGui::EndPopup();
         }

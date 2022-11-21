@@ -16,6 +16,7 @@
 
 #include <rendering/geometry/Rays.h>
 
+#include <thread>
 #include <util/Log.h>
 #include <window/Window.h>
 #include <main/Bodies.h>
@@ -155,8 +156,9 @@ namespace Control {
             deltaTime = glfwGetTime() - previousTime;
             previousTime = glfwGetTime();
             
-            //Simulation::FrameUpdate();
-            //std::thread simulationUpdateThread(Simulation::Update, deltaTime);
+            Simulation::FrameUpdate();
+            Scenarios::FrameUpdate();
+            std::thread simulationUpdateThread(Simulation::Update, deltaTime);
 
             Window::Background(WINDOW_BACKGROUND);
             Camera::AddZoomDelta(Mouse::GetScrollDelta().y);
@@ -165,19 +167,19 @@ namespace Control {
                 Camera::AddAngleDelta(Mouse::GetPositionDelta());
             }
             
-            Interface::Update(deltaTime);
             Camera::Update();
             CameraTransition::Update(deltaTime);
-            MassiveRender::Update();
             Icons::Update();
+            MassiveRender::Update();
             OrbitPaths::Update();
+            Interface::Update(deltaTime);
 
             Mouse::Update();
             Keys::Update();
             glfwPollEvents();
             Window::Update();
 
-            //simulationUpdateThread.join();
+            simulationUpdateThread.join();
             
             FrameMark;
         }
