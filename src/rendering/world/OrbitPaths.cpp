@@ -28,7 +28,7 @@ namespace OrbitPaths {
 
     namespace {
 
-        const unsigned int MAX_FUTURE_STATES = 1000000;
+        const unsigned int MAX_FUTURE_STATES = 100000;
         const unsigned int MAX_PAST_STATES = 500;
 
         const int STRIDE = 6;

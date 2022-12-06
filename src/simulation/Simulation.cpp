@@ -22,6 +22,7 @@ namespace Simulation {
 
     namespace {
         const unsigned int STATE_CACHE_RESERVE = 128;
+        const unsigned int POINT_RENDER_INTERVAL = 40;
 
         const unsigned int INITIAL_SPEED_VALUE = 1;
         const unsigned int INITIAL_SPEED_DEGREE = 1;
@@ -33,7 +34,7 @@ namespace Simulation {
         const unsigned int MAX_SPEED = 10000000;
         const unsigned int MIN_SPEED = 1;
 
-        const unsigned int TIME_STEP_SIZE = 100;
+        const unsigned int TIME_STEP_SIZE = 50;
 
         std::atomic_bool terminateUpdate = false;
 
@@ -55,6 +56,28 @@ namespace Simulation {
         double timeSinceLastStateUpdate = INITIAL_TIME_SINCE_LAST_STATE_UPDATE;
         
         unsigned int futureStep = 0;
+
+        auto ShouldNewStateBeAdded() -> bool {
+            // Returns true every 'POINT_RENDER_INTERVAL'th time it is called
+            static int x = 0;
+            x++;
+            if (x >= POINT_RENDER_INTERVAL) {
+                x = 0;
+                return true;
+            }
+            return false;
+        }
+
+        auto ShouldNewStateBeRendered() -> bool {
+            // Returns true every 'POINT_RENDER_INTERVAL'th time it is called
+            static int x = 0;
+            x++;
+            if (x >= POINT_RENDER_INTERVAL) {
+                x = 0;
+                return true;
+            }
+            return false;
+        }
 
         auto IncreaseSimulationSpeed() -> void {
             if (speedValue < MAX_SPEED) {
@@ -103,7 +126,9 @@ namespace Simulation {
             terminateUpdate = false;
             while ((futureStep < OrbitPaths::GetMaxFutureStates()) && (!terminateUpdate)) {
                 futureState.StepToNextState(TIME_STEP_SIZE);
-                OrbitPaths::AddNewState(futureState);
+                if (ShouldNewStateBeAdded()) {
+                    OrbitPaths::AddNewState(futureState);
+                }
                 futureStep++;
             }
         }
@@ -138,7 +163,9 @@ namespace Simulation {
         // So depending on where the update function was called in the frame, we might end up with an inconsistent state
         // where the orbit paths indicate the body is somewhere else
         for (SimulationState state : stateCache) {
-            OrbitPaths::StepToNextState(state);
+            if (ShouldNewStateBeRendered()) {
+                OrbitPaths::StepToNextState(state);
+            }
         }
 
         // Now update the body to correspond to the latest state
