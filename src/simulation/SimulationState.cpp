@@ -10,7 +10,11 @@
 SimulationState::SimulationState() {}
 
 SimulationState::SimulationState(unordered_map<string, OrbitPoint> _points)
-    : points(std::move(_points)) {}
+    : points(std::move(_points)) {
+        for (const auto &pair : points) {
+            oldAcceleration.insert(std::make_pair(pair.first, 0));
+        }
+    }
 
 auto SimulationState::CalculateIndividualAcceleration(const string &accelerationOf, const string &withRespectTo) -> dvec3 {
     // Calculate force that the massive object is enacting on the body using Newton's Universal Law of Gravitation
@@ -42,9 +46,13 @@ auto SimulationState::CalculateTotalAcceleration(const string &id) -> dvec3 {
 }
 
 auto SimulationState::StepOrbitPoint(const string &id, OrbitPoint &point, const double timeStep) -> void {
-    dvec3 acceleration = CalculateTotalAcceleration(id);
-    point.velocity += acceleration * timeStep;
-    point.position += point.velocity * timeStep;
+    // https://web.archive.org/web/20120713004111/http://wiki.vdrift.net:80/Numerical_Integration
+    point.position += (point.velocity * timeStep) + (0.5 * oldAcceleration.at(id) * timeStep * timeStep);
+    point.velocity += 0.5 * oldAcceleration.at(id) * timeStep;
+    dvec3 newAcceleration = CalculateTotalAcceleration(id);
+    point.velocity += 0.5 * newAcceleration * timeStep;
+    oldAcceleration[id] = newAcceleration;
+
 }
 
 auto SimulationState::StepToNextState(const double timeStep) -> void {

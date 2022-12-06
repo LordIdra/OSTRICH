@@ -77,10 +77,12 @@ namespace OrbitPaths {
         }
 
         auto DrawFuturePoints(const unsigned int drawMethod) -> void {
-            ZoneScoped;
+            ZoneNamed(prepareProgram, "Prepare Program");
             program->Use();
             program->Set("cameraMatrix", Camera::GetMatrix());
+            ZoneNamed(dataTransfer, "Data Transfer");
             futurePointsVAO->Data(futureVertices, futureVertices.size() / STRIDE, GL_DYNAMIC_DRAW);
+            ZoneNamed(rendering, "Rendering");
             futurePointsVAO->Render(drawMethod);
         }
 
