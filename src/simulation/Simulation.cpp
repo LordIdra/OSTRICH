@@ -92,10 +92,6 @@ namespace Simulation {
                 speedValue /= SPEED_MULTIPLIER;
             }
         }
-        
-        auto StepBodyToNextState(const string &id) -> void {
-            OrbitPoint point = state.GetOrbitPoints().at(id);
-        }
 
         auto AcquireInitialState() -> SimulationState {
             unordered_map<string, OrbitPoint> initialStateMap;
@@ -111,12 +107,12 @@ namespace Simulation {
         }
 
         auto UpdateState() -> void {
-            ZoneScoped;
             while (timeSinceLastStateUpdate >= Simulation::GetTimeStepSize()) {
+                ZoneNamedN(STEP, "Step to next state", true);
                 timeSinceLastStateUpdate -= Simulation::GetTimeStepSize();
                 state.StepToNextState(TIME_STEP_SIZE);
+                ZoneNamedN(BODY_STEP, "Step bodies to next state", true);
                 stateCache.push_back(state);
-                for (const string &id : Bodies::GetBodyIds())  { StepBodyToNextState(id); }
                 futureStep--;
             }
         }
