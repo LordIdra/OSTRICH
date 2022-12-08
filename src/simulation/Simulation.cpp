@@ -22,7 +22,7 @@ namespace Simulation {
 
     namespace {
         const unsigned int STATE_CACHE_RESERVE = 128;
-        const unsigned int POINT_RENDER_INTERVAL = 40;
+        const unsigned int POINT_RENDER_INTERVAL = 5;
 
         const unsigned int INITIAL_SPEED_VALUE = 1;
         const unsigned int INITIAL_SPEED_DEGREE = 1;
@@ -30,11 +30,11 @@ namespace Simulation {
         const unsigned int INITIAL_TIME_SINCE_LAST_STATE_UPDATE = 0;
 
         const unsigned int SPEED_MULTIPLIER = 4;
-        const unsigned int MAX_SPEED_DEGREE = 13;
-        const unsigned int MAX_SPEED = 10000000;
+        const unsigned int MAX_SPEED_DEGREE = 12;
+        const unsigned int MAX_SPEED = 2000000;
         const unsigned int MIN_SPEED = 1;
 
-        const unsigned int TIME_STEP_SIZE = 50;
+        const unsigned int TIME_STEP_SIZE = 10000;
 
         std::atomic_bool terminateUpdate = false;
 
