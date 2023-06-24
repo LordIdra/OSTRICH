@@ -6,13 +6,9 @@
 
 
 
-Massive::Massive(const string &id, const string &name, const dvec3 &position, const dvec3 &velocity, const Material &material, const double mass, const double radius)
-    : Body(id, name, position, velocity), material(material), mass(mass), radius(radius) {
+Massive::Massive(const string &id, const string &name, const vec3 &color, const dvec3 &position, const dvec3 &velocity, const double mass, const double radius, const Material &material)
+    : Body(id, name, color, mass, radius, position, velocity), material(material) {
         vertices = Sphere::Sphere(GetScaledRadius(), SPHERE_STEP);
-}
-
-auto Massive::GetMass() const -> double {
-    return mass;
 }
 
 auto Massive::GetScaledRadius() const -> float {
@@ -29,4 +25,8 @@ auto Massive::GetMaterial() const -> Material {
 
 auto Massive::GetMatrix() const -> mat4 {
     return glm::translate(mat4(1.0), GetScaledPosition());
+}
+
+auto Massive::GetMinZoom() const -> double {
+    return GetScaledRadius() * ZOOM_RADIUS_MULTIPLIER;
 }

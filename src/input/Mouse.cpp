@@ -21,6 +21,7 @@ namespace Mouse {
     }
 
     auto Update() -> void {
+        ZoneScoped;
         // Buttons
         if (leftActive) {
             if (glfwGetTime() - timeOfLastLeftClick > DOUBLE_CLICK_DURATION) {

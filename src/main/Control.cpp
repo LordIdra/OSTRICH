@@ -1,18 +1,28 @@
 #include "Control.h"
+#include "rendering/interface/BottomRightWindow/LoadScenario.h"
+#include "scenarios/Scenarios.h"
+#include "rendering/camera/CameraTransition.h"
+#include "rendering/interface/TopRightWindow/SimulationData.h"
 
 #include <glm/gtx/string_cast.hpp>
+#include <depend/implot/implot.h>
 #include <input/Keys.h>
 #include <input/Mouse.h>
 #include <rendering/camera/Camera.h>
 #include <rendering/interface/Interface.h>
-#include <string>
-#include <util/Log.h>
-#include <window/Window.h>
-#include <main/Render.h>
-#include <main/Bodies.h>
-#include <main/Simulation.h>
+#include <rendering/world/Icons.h>
+#include <rendering/world/MassiveRender.h>
+#include <rendering/world/OrbitPaths.h>
 
 #include <rendering/geometry/Rays.h>
+
+#include <thread>
+#include <util/Log.h>
+#include <window/Window.h>
+#include <main/Bodies.h>
+#include <simulation/Simulation.h>
+
+#include <string>
 
 #include <imgui.h>
 #include <imgui_impl_glfw.h>
@@ -25,6 +35,10 @@ namespace Control {
         const int MAJOR_VERSION = 3;
         const int MINOR_VERSION = 3;
         const char* GLSL_VERSION = "#version 330";
+
+        const vec4 WINDOW_BACKGROUND = vec4(0.0, 0.0, 0.0, 1.0);
+
+        const double MAX_FRAME_TIME = 0.015;
 
         double previousTime = 0;
         double deltaTime = 0;
@@ -70,6 +84,7 @@ namespace Control {
             // Initialize Imgui
             IMGUI_CHECKVERSION();
             ImGui::CreateContext();
+            ImPlot::CreateContext();
             ImGui::StyleColorsDark();
 
             // Initialise GLFW and OpenGL backends
@@ -82,44 +97,49 @@ namespace Control {
         }
     }
 
+    auto PreReset() -> void {
+        // To be called before a new scenario is loaded
+        CameraTransition::PreReset();
+        Bodies::PreReset();
+        MassiveRender::PreReset();
+        Camera::PreReset();
+        Bodies::PreReset();
+        Simulation::PreReset();
+        SimulationData::PreReset();
+    }
+
+    auto PostReset() -> void {
+        // To be called after a new scenario is loaded
+        Bodies::PostReset();
+        SimulationData::PostReset();
+    }
+
     auto Init(const bool fullscreen, const string &windowTitle) -> void {
         InitGLFW();
         Window::Init(fullscreen, windowTitle);
         InitGlad();
         Mouse::Init();
         Keys::Init();
+        CameraTransition::Init();
         InitImGui(); // Must be done after mouse/keys init because mouse/keys init will overwrite whatever imgui needs to set
+        Icons::Init();
+        MassiveRender::Init();
+        OrbitPaths::Init();
         Interface::Init();
         Camera::Init();
-        Bodies::Init();
         Simulation::Init();
     }
 
-    auto Mainloop() -> void {
-        while (!Window::ShouldClose()) {
+    auto PromptScenarioLoad() -> void {
+        while ((!LoadScenario::ScenarioLoaded()) && (!Window::ShouldClose())) {
+            Window::Background(WINDOW_BACKGROUND);
 
             ImGui_ImplOpenGL3_NewFrame();
             ImGui_ImplGlfw_NewFrame();
             ImGui::NewFrame();
 
-            deltaTime = glfwGetTime() - previousTime;
-            previousTime = glfwGetTime();
-
-            Window::Background(vec4(0.0, 0.0, 0.0, 1.0));
-            Camera::AddZoomDelta(Mouse::GetScrollDelta().y);
-
-            if (Mouse::RightButtonHeld()) {
-                Camera::AddAngleDelta(Mouse::GetPositionDelta());
-            }
-
-            vec3 direction = Rays::ScreenToWorld(Mouse::GetScreenPosition());
-
-            Log(INFO, "MOUSE " + glm::to_string(direction));
-
-            Bodies::Update();
-            Interface::Update();
-            Camera::Update();
-            Render::Update(deltaTime);
+            ImGui::OpenPopup("Load Scenario");
+            LoadScenario::Draw(false);
 
             ImGui::Render();
             ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
@@ -128,6 +148,46 @@ namespace Control {
             Keys::Update();
             glfwPollEvents();
             Window::Update();
+        }
+    }
+
+    auto Mainloop() -> void {
+        int i = 0;
+        while (!Window::ShouldClose()) {
+
+            deltaTime = glfwGetTime() - previousTime;
+            previousTime = glfwGetTime();
+            
+            Simulation::FrameUpdate();
+            Scenarios::FrameUpdate();
+            std::thread simulationUpdateThread(Simulation::Update, deltaTime);
+
+            Window::Background(WINDOW_BACKGROUND);
+            Camera::AddZoomDelta(Mouse::GetScrollDelta().y);
+
+            if (Mouse::LeftButtonHeld()) {
+                Camera::AddAngleDelta(Mouse::GetPositionDelta());
+            }
+            
+            Camera::Update();
+            CameraTransition::Update(deltaTime);
+            Icons::Update();
+            MassiveRender::Update();
+            OrbitPaths::Update();
+            Interface::Update(deltaTime);
+
+            // Wait until frame complete
+            while (glfwGetTime() - previousTime < MAX_FRAME_TIME) {}
+
+            Simulation::TerminateUpdate();
+            simulationUpdateThread.join();
+
+            Mouse::Update();
+            Keys::Update();
+            glfwPollEvents();
+            Window::Update();
+            
+            FrameMark;
         }
     }
 }

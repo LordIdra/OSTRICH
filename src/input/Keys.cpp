@@ -48,6 +48,7 @@ namespace Keys {
     }
 
     auto Update() -> void {
+        ZoneScoped;
         // Loop through every entry in the functionCalledWhenKeyHeld map
         for (const auto &pair : functionCalledWhenKeyHeld) {
 

@@ -1,5 +1,6 @@
 #include "VAO.h"
 #include "util/Log.h"
+#include "util/Types.h"
 
 #include <glad/glad.h>
 
@@ -38,7 +39,7 @@ auto VAO::AddVertexAttribute(const VertexAttribute &a) const -> void {
     Unbind();
 }
 
-auto VAO::Data(const vector<VERTEX_DATA_TYPE> &data, unsigned int vertexCount, unsigned int mode) -> void {
+auto VAO::Data(const vector<VERTEX_DATA_TYPE> &data, const unsigned int vertexCount, const unsigned int mode) -> void {
     // Set buffer data
     Bind();
     glBufferData(GL_ARRAY_BUFFER, data.size() * sizeof(VERTEX_DATA_TYPE), &data[0], mode);
@@ -48,8 +49,8 @@ auto VAO::Data(const vector<VERTEX_DATA_TYPE> &data, unsigned int vertexCount, u
     this->vertexCount = vertexCount;
 }
 
-auto VAO::Render() const -> void {
+auto VAO::Render(unsigned int geometryType) const -> void {
     Bind();
-    glDrawArrays(GL_TRIANGLES, 0, vertexCount);
+    glDrawArrays(geometryType, 0, vertexCount);
     Unbind();
 }

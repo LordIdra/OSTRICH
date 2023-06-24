@@ -1,0 +1,50 @@
+time: 0
+bodies:
+  spacecraft:
+    name: Spacecraft
+    color:
+      - 0.100000001
+      - 0.899999976
+      - 0.300000012
+    radius: 20
+    mass: 0
+    position:
+      - 4.35597824e+08
+      - 144993344
+      - 3.21582131e+06
+    velocity:
+      - 50.0
+      - -0.820297
+      - 875.297607
+  earth:
+    name: The Earth
+    color:
+      - 0.100000001
+      - 0.400000006
+      - 0.899999976
+    radius: 63710000
+    mass: 5.9722000000000002e+24
+    position:
+      - 0
+      - 0
+      - 0
+    velocity:
+      - 0
+      - 0
+      - 0
+  moon:
+    name: The Moon
+    color:
+      - 0.600000024
+      - 0.600000024
+      - 0.600000024
+    radius: 1737400
+    mass: 7.3460000000000003e+22
+    position:
+      - 0.3633e+9
+      - 0
+      - 0
+    velocity:
+      - 0
+      - 0
+      - 1.082e+3

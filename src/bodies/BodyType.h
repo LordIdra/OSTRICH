@@ -1,0 +1,5 @@
+enum BodyType {
+    BODY_TYPE_NONE,
+    BODY_TYPE_MASSIVE,
+    BODY_TYPE_MASSLESS
+};

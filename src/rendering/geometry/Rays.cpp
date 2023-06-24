@@ -1,7 +1,9 @@
 #include "Rays.h"
+#include "util/Constants.h"
 
 #include <window/Window.h>
 #include <rendering/camera/Camera.h>
+#include <rendering/camera/Settings.h>
 #include <util/Log.h>
 
 #include <glm/geometric.hpp>
@@ -16,6 +18,14 @@ namespace Rays {
     
     namespace {
         vec3 UP_DIRECTION = vec3(0, 1, 0);
+    }
+
+    auto Scale(const dvec3 coordinate) -> vec3 {
+        return coordinate / SCALE_FACTOR;
+    }
+
+    auto Unscale(const vec3 coordinate) -> dvec3 {
+        return dvec3(coordinate) * SCALE_FACTOR;
     }
 
     auto ScreenToWorld(const vec2 coords) -> vec3 {
@@ -41,14 +51,11 @@ namespace Rays {
     }
 
     auto WorldToScreen(const vec3 coords) -> vec2 {
-        // Get model matrix
-        mat4 modelMatrix = glm::translate(mat4(1.0), coords);
-
         // Transform from world space to eye space
-        vec4 coords2 = Camera::GetMatrix() * modelMatrix * vec4(0, 0, 0, 1);
+        vec4 coords2 = Camera::GetMatrix() * vec4(coords, 1);
 
         // Rasterize 3D coordinates to screen
-        vec2 coords3 = vec2(coords2.x / coords2.z, coords2.y / coords2.z);
+        vec2 coords3 = vec2(coords2.x / coords2.w, coords2.y / coords2.w);
 
         return coords3;
     }
@@ -96,5 +103,16 @@ namespace Rays {
 
         // Get the distance between them
         return glm::distance(screenBodyPosition, screenEdgePosition);
+    }
+
+    auto IsCoordinateOffCamera(const vec3 &coordinate) -> bool {
+        vec3 cameraDirection = glm::normalize(Camera::GetPosition() - Camera::GetTarget());
+        vec3 coordinateDirection = glm::normalize(Camera::GetPosition() - coordinate);
+        double angle = acos(glm::dot(cameraDirection, coordinateDirection));
+        return (glm::degrees(angle) > FIELD_OF_VIEW) || (glm::degrees(angle) < -FIELD_OF_VIEW);
+    }
+
+    auto IsCoordinateOffCamera(const vec2 &coordinate) -> bool {
+        return (coordinate.x < -1) || (coordinate.x > 1) || (coordinate.y < -1) || (coordinate.y > 1);
     }
 }

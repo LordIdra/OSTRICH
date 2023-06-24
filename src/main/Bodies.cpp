@@ -1,106 +1,149 @@
 #include "Bodies.h"
-#include "main/Simulation.h"
-#include "util/Log.h"
 
+#include "rendering/interface/TopRightWindow/SimulationData.h"
+#include "simulation/Simulation.h"
+#include "util/Log.h"
 #include <bodies/Body.h>
 #include <bodies/Massive.h>
-#include <glm/gtx/string_cast.hpp>
+#include <bodies/Massless.h>
 #include <rendering/camera/Camera.h>
 #include <rendering/geometry/Rays.h>
 #include <rendering/shaders/Program.h>
 #include <rendering/geometry/Transition.h>
 #include <input/Keys.h>
 #include <input/Mouse.h>
-#include <main/Render.h>
-#include <main/Materials.h>
+#include <rendering/world/MassiveRender.h>
+#include <rendering/world/OrbitPaths.h>
+#include <simulation/OrbitPoint.h>
+
+#include <GLFW/glfw3.h>
+#include <string>
 
 
 
 namespace Bodies {
 
     namespace {
-        unordered_map<string, Massive> massive_bodies;
+        unordered_map<string, Body> bodies;
+        unordered_map<string, Massive> massiveBodies;
+        unordered_map<string, Massless> masslessBodies;
+        vector<string> bodyIds;
 
         string selected;
 
-        auto AddBody(const Massive &body) -> void {
-            massive_bodies.insert(std::make_pair(body.GetId(), body));
-            Render::AddBody(body);
+        auto GetBodyAsReference(const string &id) -> Body& {
+            return bodies.at(id);
         }
 
-        auto SwitchSelectedBody() -> void {
-            // Find the camera direction
-            vec3 direction = Rays::ScreenToWorld(Mouse::GetScreenPosition());
+        auto GetMassiveAsReference(const string &id) -> Massive& {
+            return massiveBodies.at(id);
+        }
 
-            // Loop through every body
-            for (auto &pair : massive_bodies) {
+        auto GetMasslessAsReference(const string &id) -> Massless& {
+            return masslessBodies.at(id);
+        }
 
-                // Check if the camera direction intersects the body
-                if (Rays::IntersectsSphere(
-                    Camera::GetPosition(), 
-                    direction, 
-                    pair.second.GetScaledPosition(), 
-                    pair.second.GetScaledRadius())) {
-
-                        // If so, update the selected body and start a transition
-                        selected = pair.first;
-                        Render::StartTransition(pair.second);
-                }
-            }
+        auto IsBodyMassive(const string &id) -> bool {
+            return (massiveBodies.find(id) != massiveBodies.end());
         }
     }
 
-    auto Init() -> void {
-        // Input
-        Mouse::SetCallbackLeftDouble(SwitchSelectedBody);
+    auto PreReset() -> void {
+        // Delete bodies
+        massiveBodies.clear();
+        bodies.clear();
+        bodyIds.clear();
 
-        // Bodies
-        AddBody(Massive(
-            "earth",
-            "Earth",
-            dvec3(0, 0, 0),
-            dvec3(0, 0, 0),
-            Materials::earth,
-            double(5.9722e24),     // NOLINT(cppcoreguidelines-avoid-magic-numbers)
-            double(6371.0e4)));  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
-        AddBody(Massive(
-            "the-moon",
-            "The Moon",
-            dvec3(double(1.4055e9), double(0), double(0)), // NOLINT(cppcoreguidelines-avoid-magic-numbers)
-            dvec3(double(0), double(0), double(0.570e3)),  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
-            Materials::moon1,
-            double(0.07346e24),    // NOLINT(cppcoreguidelines-avoid-magic-numbers)
-            double(1737.4e3)));  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
-
-        // Render
-        Render::Init();
+        // Unselect bodies
+        selected = "";
     }
 
-    auto Update() -> void {
-        Simulation::Integrate(massive_bodies);
-        
-        // Check that a body has been selected yet
-        if (massive_bodies.find(selected) != massive_bodies.end()) {
-
-            // Update transition target,so that the camera follows the target
-            Render::UpdateTransitionTarget(massive_bodies.at(selected));
+    auto PostReset() -> void {
+        if (!bodies.empty()) {
+            selected = bodies.begin()->first;
         }
     }
 
-    auto GetSelectedBody() -> string {
+    auto AddBody(const Massive &body) -> void {
+        bodyIds.push_back(body.GetId());
+        bodies.insert(std::make_pair(body.GetId(), body));
+        massiveBodies.insert(std::make_pair(body.GetId(), body));
+        MassiveRender::AddBody(body);
+        Simulation::NewBodyReset();
+        OrbitPaths::NewBodyReset();
+        SimulationData::NewBodyReset();
+    }
+
+    auto AddBody(const Massless &body) -> void {
+        bodyIds.push_back(body.GetId());
+        bodies.insert(std::make_pair(body.GetId(), body));
+        masslessBodies.insert(std::make_pair(body.GetId(), body));
+        Simulation::NewBodyReset();
+        OrbitPaths::NewBodyReset();
+        SimulationData::NewBodyReset();
+    }
+
+    auto UpdateBody(const string &id, const OrbitPoint &point) -> void {
+        GetBodyAsReference(id).SetPosition(point.position);
+        GetBodyAsReference(id).SetVelocity(point.velocity);
+        if (IsBodyMassive(id)) {
+            GetMassiveAsReference(id).SetPosition(point.position);
+            GetMassiveAsReference(id).SetVelocity(point.velocity);
+        } else {
+            GetMasslessAsReference(id).SetPosition(point.position);
+            GetMasslessAsReference(id).SetVelocity(point.velocity);
+        }
+    }
+
+    auto GetSelectedBodyId() -> string {
         return selected;
     }
 
+    auto GetSelectedBody() -> const Body& {
+        return bodies.at(selected);
+    }
+
+    auto GetMinZoom() -> float {
+        if (IsBodyMassive(selected)) {
+            return massiveBodies.at(selected).GetMinZoom();
+        }
+        return masslessBodies.at(selected).GetMinZoom();
+    }
+
     auto SetSelectedBody(const string &id) -> void {
+        // This function does not start a transition to the specified body, use CameraTransition::SetTargetBody for that
         selected = id;
-        Render::StartTransition(massive_bodies.at(id));
     }
 
-    auto GetMassiveBodies() -> unordered_map<string, Massive> {
-        return massive_bodies;
+    auto IsBodySelected() -> bool {
+        return selected != "";
     }
 
-    auto GetMassiveBody(const string &id) -> Massive {
-        return massive_bodies.at(id);
+    auto GetMassiveBodies() -> const unordered_map<string, Massive>& {
+        return massiveBodies;
+    }
+
+    auto GetMasslessBodies() -> const unordered_map<string, Massless>& {
+        return masslessBodies;
+    }
+
+    auto GetBodies() -> const unordered_map<string, Body>& {
+        return bodies;
+    }
+
+    auto GetBodyIds() -> const vector<string>& {
+        return bodyIds;
+    }
+
+    auto GetMassiveBody(const string &id) -> const Massive& {
+        return massiveBodies.at(id);
+    }
+
+    auto GetBody(const string &id) -> const Body& {
+        return bodies.at(id);
+    }
+
+    auto GetBodyCount() -> unsigned int {
+        return bodies.size();
     }
 }

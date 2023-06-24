@@ -47,9 +47,6 @@ namespace Mouse {
         }
 
         auto ButtonCallbackPressRight() -> void {
-            // Mouse should be hidden when right mouse button held
-            Mouse::Hide();
-
             // General callback stuff
             rightHeld = true;
             for (void (*function)() : rightPress) {
@@ -66,9 +63,6 @@ namespace Mouse {
         }
 
         auto ButtonCallbackReleaseRight() -> void {
-            // Mouse should be shown again when right mouse button released
-            Mouse::Show();
-
             // General callback stuff
             rightHeld = false;
             for (void (*function)() : rightRelease) {
@@ -110,23 +104,23 @@ namespace Mouse {
         }
     }
 
-    auto SetCallbackLeftPress(void (*function)()) -> void {
+    auto AddCallbackLeftPress(void (*function)()) -> void {
         leftPress.push_back(function);
     }
 
-    auto SetCallbackLeftRelease(void (*function)()) -> void {
+    auto AddCallbackLeftRelease(void (*function)()) -> void {
         leftRelease.push_back(function);
     }
 
-    auto SetCallbackLeftDouble(void (*function)()) -> void {
+    auto AddCallbackLeftDouble(void (*function)()) -> void {
         leftDouble.push_back(function);
     }
 
-    auto SetCallbackRightPress(void (*function)()) -> void {
+    auto AddCallbackRightPress(void (*function)()) -> void {
         rightPress.push_back(function);
     }
 
-    auto SetCallbackRightRelease(void (*function)()) -> void {
+    auto AddCallbackRightRelease(void (*function)()) -> void {
         rightRelease.push_back(function);
     }
 

@@ -6,7 +6,7 @@
 
 const float STARTING_ZOOM = 0.05;
 
-const float MIN_ZOOM = 0.002;
+// Min zoom is dynamic, so not defined here
 const float MAX_ZOOM = 95.0;
 
 const float MAX_ANGLE = PI * 0.45F;
