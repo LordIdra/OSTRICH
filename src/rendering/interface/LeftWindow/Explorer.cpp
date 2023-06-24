@@ -116,9 +116,6 @@ namespace ScenarioExplorer {
         // Begin
         ImGui::BeginTable("scenario-explorer", 2, EXPLORER_FLAGS, TABLE_SIZE);
 
-        // For debugging purposes, will be removed later
-        ImGui::ShowDemoWindow();
-
         // Explorer header
         AddHeader();
         //ImGui::Separator();

@@ -6,7 +6,7 @@
 
 class Body {
 protected:
-    const float MASSLESS_MIN_ZOOM = 0.01;
+    const float MASSLESS_MIN_ZOOM = 0.0001;
     string id;
     string name;
     vec3 color;

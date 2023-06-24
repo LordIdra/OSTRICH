@@ -29,7 +29,7 @@ namespace Interface {
         TopRightWindow::Draw(deltaTime);
         BottomRightWindow::Draw();
         LeftWindow::Draw();
-        
+
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
     }

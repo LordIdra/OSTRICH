@@ -1,7 +1,7 @@
 time: 49942
 bodies:
   msmills:
-    name: Ms Mills
+    name: Anith
     color:
       - 1.0
       - 1.0
@@ -13,9 +13,9 @@ bodies:
       - 0
       - 0
     velocity:
-      - 0
+      - 0.2e+2
       - 1.0e+2
-      - 0
+      - 0.2e+2
   theshoutyteacher:
     name: Mr Macinerny
     color:
@@ -49,7 +49,7 @@ bodies:
       - 1.0e+2
       - 0
   ono2:
-    name: Mr Patel
+    name: Ms Mills
     color:
       - 0.6
       - 0.2
@@ -63,7 +63,7 @@ bodies:
     velocity:
       - 0
       - 1.0e+2
-      - 0
+      - 0.2e+3
   ono3:
     name: Mr Poole
     color:
@@ -81,7 +81,7 @@ bodies:
       - 1.0e+2
       - 0
   ono4:
-    name: Ms Polemidioti
+    name: Mr Boniface
     color:
       - 0.6
       - 0.2
@@ -97,7 +97,7 @@ bodies:
       - 1.0e+2
       - 0
   ono5:
-    name: Ms Opie
+    name: Siavash
     color:
       - 0.6
       - 0.2
@@ -109,7 +109,7 @@ bodies:
       - 0
       - 0
     velocity:
-      - 0
+      - -3.5e+3
       - 1.0e+2
       - 0
   ono6:

@@ -165,7 +165,7 @@ namespace Control {
             Window::Background(WINDOW_BACKGROUND);
             Camera::AddZoomDelta(Mouse::GetScrollDelta().y);
 
-            if (Mouse::RightButtonHeld()) {
+            if (Mouse::LeftButtonHeld()) {
                 Camera::AddAngleDelta(Mouse::GetPositionDelta());
             }
             
